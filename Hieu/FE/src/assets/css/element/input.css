@@ -1,0 +1,19 @@
+.m-input{
+    font-size: 14px;
+    min-height: 40px;
+    color: inherit;
+    position: relative;
+    padding: 0 34px;
+    border-radius: 10px;
+    border: 1px solid #babec5;
+    box-sizing: border-box;
+    width: 100%;
+    outline: none;
+    font-family: GoogleSans;
+}
+
+
+.m-input:focus-within{
+    outline: none;
+    border-color: #8a6bf6;
+}

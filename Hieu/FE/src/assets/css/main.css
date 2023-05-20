@@ -1,0 +1,184 @@
+@import url(./element/button.css);
+@import url(./element/icon.css);
+@import url(./element/input.css);
+
+body {
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
+    box-sizing: border-box;
+    outline: none;
+    text-transform: none;
+    text-decoration: none;
+    text-decoration-line: none;
+    text-decoration-style: solid;
+    text-decoration-color: initial;
+    overflow: hidden;
+    font-size: 14px;
+    font-family: GoogleSans;
+    font-weight: 500;
+    background: #f4f5f8;
+    max-width: 100%;
+    position: relative;
+}
+
+#app{
+    height: 100%;
+}
+
+a{
+    color: inherit;
+    text-decoration: none;
+}
+
+.m-label{
+    display: block;
+    color: #000;
+    font-size: 14px;
+    font-weight: 400;
+    height: 20px;
+    margin-bottom: 8px;
+    padding: 0;
+    width: auto;
+}
+
+input::placeholder{
+    opacity: 1;
+    font-family: GoogleSans;
+    font-size: 14px;
+}
+
+textarea::placeholder{
+    opacity: 1;
+    font-family: GoogleSans;
+    font-size: 14px;
+}
+
+input[type='radio'] {
+    accent-color: #2979ff;
+}
+
+button:focus-visible{
+    border: 1px solid #e0e0e0;
+    outline: none;
+}
+
+input[type="checkbox"]:focus-visible{
+    outline: 1px solid #2979ff;
+}
+
+.disable-outline:focus-visible{
+    border: 1px solid #e0e0e0;
+    outline: none;
+}
+
+strong{
+    font-weight: 700;
+    padding: 0 6px;
+}
+
+.asterik{
+    color: #e54848;
+}
+
+.flex {
+    display: flex;
+    align-items: center;
+}
+
+.center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.w-full{
+    width: 100%;
+}
+
+.text-center{
+    text-align: center;
+}
+
+.pointer{
+    opacity: 1;
+    cursor: pointer;
+}
+
+.not-allowed{
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+#over {
+    /* display: none; */
+    background: #000;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.4;
+    z-index: 999;
+    transition: all 0.3s;
+}
+
+#loading {
+    position: absolute;
+    top: calc(50% - 20px);
+    left: calc(50% - 20px);
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+
+    border: 8px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 8px solid #3498db;
+    border-bottom: 8px solid #3498db;
+    width: 40px;
+    height: 40px;
+
+    -webkit-animation: spin 2s linear infinite;
+    /* Safari */
+    animation: spin 2s linear infinite;
+}
+
+::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+    background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: #bbbbbb;
+}
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: #F5F5F5;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+
+@font-face {
+    font-family: GoogleSans;
+    src: url("../fonts/GoogleSans/GoogleSans-Regular.woff2");
+}
+
+@font-face {
+    font-family: GoogleSans Italic;
+    src: url("../fonts/GoogleSans/GoogleSans-Italic.woff2");
+}
+
+@font-face {
+    font-family: GoogleSans Bold;
+    src: url("../fonts/GoogleSans/GoogleSans-Bold.woff2");
+}
+
+:root{
+    --color-text: #4e5b6a;
+}
