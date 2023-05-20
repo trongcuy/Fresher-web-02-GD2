@@ -1,6 +1,6 @@
 <template>
     <div class="div-main">
-        <img src="../../assets/img/emis.jpg" />
+        <img src="../../../assets/img/emis.jpg" />
         <MSInput defaultValue="Nhập tên môn học để tìm kiếm" />
         <div class="div-combobox">
             <MSCombobox class="cb-document"
@@ -30,10 +30,10 @@
 </template>
 
 <script>
-import MSInput from '../input/MSInput.vue'
-import MSCombobox from '../input/MSCombobox.vue'
-import MSCard from '../card/MSCard.vue'
-import MSButton from '../button/MSButton.vue'
+import MSInput from '../../input/MSInput.vue'
+import MSCombobox from '../../input/MSCombobox.vue'
+import MSCard from '../../card/MSCard.vue'
+import MSButton from '../../button/MSButton.vue'
 export default {
     name: "CourseMain",
     props: [],

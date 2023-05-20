@@ -14,8 +14,8 @@
 </template>
 
 <script>
-import MSButton from '../button/MSButton.vue'
-import MSSubMenuItem from '../menu/MSSubMenuItem.vue'
+import MSButton from '../../button/MSButton.vue'
+import MSSubMenuItem from '../../menu/MSSubMenuItem.vue'
 export default {
     name: "CourseHeader",
     props: [],
@@ -57,7 +57,7 @@ export default {
 }
 .header-share {
     min-width: 113px;
-    margin-right: 8px;
+    margin-right: 16px;
     background-color: #f1f2f7;
     border: 1px solid #b6b9ce;
 }

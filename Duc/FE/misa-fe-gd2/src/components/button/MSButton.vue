@@ -14,14 +14,16 @@ export default {
 
 <style scoped>
 .button {
+    min-width: 113px;
+    background-color: #f1f2f7;
+    border: 1px solid #b6b9ce;
     height: 40px;
     border-radius: 10px;
-    border: 0px solid #E0E0E0;
     padding: 0 12px;
     position: relative;
     font-size: 14px;
-    font-weight: 550;
-    background-color: inherit;
+    color: #606266;
+    font-weight: 500;
 }
 
 .button:hover {

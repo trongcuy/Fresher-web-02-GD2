@@ -2,8 +2,8 @@
     <!-- phan tư combobox -->
     <div class="block">
         <p v-if="title">{{ title }}</p>
-        <div style="position: relative;">
-            <input type="text" class="input-select" v-model="optionValue" placeholder="defaultValue" readonly/>
+        <div style="position: relative;" :class="customClass">
+            <input type="text" class="input-select" v-model="optionValue" placeholder="defaultValue"/>
             <div class="icon-select" @click="onClickShowOption"><img :src="src" /></div>
             <div class="div-option"
                 :class="{ 'div-option-reverse2': optionReverse && !title, 'div-option-reverse': optionReverse && title }"
@@ -29,7 +29,7 @@ export default {
         },
         src: {
             type: String,
-            default: ''
+            default: 'https://sisapapp.misacdn.net/lms/img/ic_multi.7d8b269c.svg'
         },
         listSelect: {
             type: Array,
@@ -38,6 +38,10 @@ export default {
         optionReverse: {
             type: Boolean,
             default: false
+        },
+        customClass: {
+            type: String,
+            default: ''
         }
     },
     data() {
@@ -79,7 +83,7 @@ export default {
     margin: 0px 0px 8px 0px
 }
 
-.input-select {
+input {
     width: 100%;
     padding-left: 12px;
     padding-right: 34px;
@@ -89,8 +93,9 @@ export default {
     box-sizing: border-box;
     color: #606266;
 }
-
-
+.input-select:focus {
+    border-color: #8a6bf6;
+}
 .icon-select {
     position: absolute;
     top: 0px;

@@ -1,21 +1,24 @@
-body {
-    margin: 0;
-}
 
 @font-face {
-    font-family: roboto;
+    font-family: GoogleSans;
     src: url('../assets/font/GoogleSans-Regular.woff2');
 }
 
 /* thiết lập font cho các thẻ */
 * {
-    font-family: roboto;
+    font-family: GoogleSans;
 }
-
+*, body, html {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 body {
     background-color: #fff;
 }
-
+#app {
+    height: calc(100vh);
+}
 ::-webkit-scrollbar-thumb {
     background-color: #aaa;
     /* Màu nền của thanh cuộn */
@@ -35,7 +38,9 @@ body {
     border-radius: 5px;
     /* Bo góc của thanh cuộn */
 }
-
+p {
+    margin: 0px;
+}
 img {
     width: 24px;
     height: 24px;

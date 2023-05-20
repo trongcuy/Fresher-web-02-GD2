@@ -7,8 +7,8 @@
 </template>
 
 <script>
-import CourseHeader from './CourseHeader.vue'
-import CourseMain from './CourseMain.vue'
+import CourseHeader from '../course/CourseHeader.vue'
+import CourseMain from '../course/CourseMain.vue'
 export default {
     name: "CoursePage",
     props: [],

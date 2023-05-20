@@ -1,7 +1,7 @@
 
 import HelloWorld from '../components/HelloWorld.vue'
-import CoursePage from '../components/page/CoursePage.vue'
-import CourseMain from '../components/page/CourseMain.vue'
+import CoursePage from '../components/page/course/CoursePage.vue'
+import CourseMain from '../components/page/course/CourseMain.vue'
 import CreatePage from '../components/page/CreatePage.vue'
 const routes =
 	[
