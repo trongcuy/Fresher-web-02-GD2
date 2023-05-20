@@ -1,7 +1,7 @@
 
 <template>
-	<TheHeader />
-	<RouterView />
+	<TheHeader v-if="!$route.path.includes('/course/create')"/>
+	<RouterView name="main"/>
 </template>
 <script>
 import TheHeader from './components/TheHeader.vue'

@@ -1,3 +1,42 @@
 body {
     margin: 0;
 }
+
+@font-face {
+    font-family: roboto;
+    src: url('../assets/font/GoogleSans-Regular.woff2');
+}
+
+/* thiết lập font cho các thẻ */
+* {
+    font-family: roboto;
+}
+
+body {
+    background-color: #fff;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #aaa;
+    /* Màu nền của thanh cuộn */
+    border-radius: 5px;
+    /* Bo góc của thanh cuộn */
+}
+
+/* Thay đổi độ rộng của thanh cuộn dọc */
+::-webkit-scrollbar {
+    width: 8px;
+    /* Độ rộng của thanh cuộn */
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #aaa;
+    /* Màu nền của thanh cuộn */
+    border-radius: 5px;
+    /* Bo góc của thanh cuộn */
+}
+
+img {
+    width: 24px;
+    height: 24px;
+}

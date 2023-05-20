@@ -3,7 +3,7 @@
     <div class="block">
         <p v-if="title">{{ title }}</p>
         <div style="position: relative;">
-            <input type="text" class="input-select" v-on:input="setOptionValue(optionValue)" v-model="optionValue" />
+            <input type="text" class="input-select" v-model="optionValue" placeholder="defaultValue" readonly/>
             <div class="icon-select" @click="onClickShowOption"><img :src="src" /></div>
             <div class="div-option"
                 :class="{ 'div-option-reverse2': optionReverse && !title, 'div-option-reverse': optionReverse && title }"
@@ -17,7 +17,7 @@
 
 <script>
 export default {
-    name: 'InputSelect',
+    name: 'MSCombobox',
     props: {
         title: {
             type: String,
@@ -71,7 +71,7 @@ export default {
 <style scoped>
 .block {
     padding: 0px;
-    width: 100%;
+    width: auto;
     box-sizing: border-box;
 }
 
@@ -81,12 +81,13 @@ export default {
 
 .input-select {
     width: 100%;
-    padding-left: 8px;
-    padding-right: 32px;
-    height: 33px;
-    border-radius: 4px;
-    border: 1px solid #E0E0E0;
+    padding-left: 12px;
+    padding-right: 34px;
+    height: 40px;
+    border-radius: 8px;
+    border: 1px solid #b6b9ce;
     box-sizing: border-box;
+    color: #606266;
 }
 
 
@@ -94,8 +95,8 @@ export default {
     position: absolute;
     top: 0px;
     right: 0px;
-    width: 34px;
-    height: 33px;
+    width: 25px;
+    height: 40px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -123,19 +124,13 @@ input:focus {
     outline: none;
 }
 
-input:hover,
-input:focus {
-    border: 1px solid #0062CC;
-}
-
 .div-option {
-    margin-top: 4px;
     padding: 8px;
     width: 100%;
     border-radius: 4px;
     box-shadow: 0 0 16px rgb(23 27 42 / 16%);
     position: absolute;
-    top: 32px;
+    top: 45px;
     left: 0px;
     box-sizing: border-box;
     z-index: 11;
@@ -156,5 +151,8 @@ input:focus {
 img {
     width: 10px;
     height: 10px;
+}
+p {
+    font-size: 14px;
 }
 </style>

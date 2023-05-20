@@ -1,3 +1,3 @@
 export default {
-    name: state => state.name,
+    username: state => state.username,
 }

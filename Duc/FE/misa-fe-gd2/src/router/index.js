@@ -1,24 +1,53 @@
 
 import HelloWorld from '../components/HelloWorld.vue'
+import CoursePage from '../components/page/CoursePage.vue'
+import CourseMain from '../components/page/CourseMain.vue'
+import CreatePage from '../components/page/CreatePage.vue'
 const routes =
 	[
 		{
-			path: "/login",
-			component: HelloWorld,
+			path: "/overview",
+			components: {main:HelloWorld},
 			props: {
 
 			}
 		},
 		{
-			path: "/home",
-			component: HelloWorld,
+			path: "/class",
+			components: {main:HelloWorld},
 			props: {
-				title: "Trang chủ"
+				title: "class"
 			}
 		},
 		{
-			path: "/compete",
-			component: HelloWorld,
+			path: "/course",
+			components: {main:CoursePage},
+			children: [
+				{
+					path: "/course",
+					redirects: "/course/personal",
+				},
+				{
+					path: "/course/personal",
+					components: {course:CourseMain},
+				},
+				{
+					path: "/course/school",
+					components: {course:HelloWorld},
+				},
+				{
+					path: "/course/community",
+					components: {course:HelloWorld},
+				},
+			]
+		},
+		{
+			path: "/course/create",
+			components: {main:CreatePage},
+		},
+		{
+			path: "/training",
+			components: {main:HelloWorld},
 			props: {
 
 			}

@@ -7,21 +7,21 @@
 
 <script>
 export default {
-    name: 'Button',
+    name: 'MSButton',
     props: ["title", "src"]
 }
 </script>
 
 <style scoped>
 .button {
-    height: 36px;
-    border-radius: 4px;
-    border: 1px solid #E0E0E0;
-    min-width: 100px;
-    background-color: #ffff;
-    padding-left: 16px;
-    padding-right: 16px;
+    height: 40px;
+    border-radius: 10px;
+    border: 0px solid #E0E0E0;
+    padding: 0 12px;
     position: relative;
+    font-size: 14px;
+    font-weight: 550;
+    background-color: inherit;
 }
 
 .button:hover {

@@ -1,3 +1,3 @@
 export default {
-    name: "Duc",
+    username: "Trịnh Huỳnh Đức",
 }

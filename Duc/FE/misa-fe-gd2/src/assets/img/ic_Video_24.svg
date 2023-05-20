@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="Rectangle_22025" data-name="Rectangle 22025" width="24" height="24" transform="translate(728 561)" fill="#fff" stroke="#707070" stroke-width="1"/>
+    </clipPath>
+  </defs>
+  <g id="ic_Video_24" transform="translate(-728 -561)" clip-path="url(#clip-path)">
+    <g id="_3601317" data-name="3601317" transform="translate(728 546)">
+      <path id="Path_97002" data-name="Path 97002" d="M174.9,16h-3.282l-5.625,4.219h3.282Z" transform="translate(-158.212)" fill="#ff588c"/>
+      <path id="Path_97003" data-name="Path 97003" d="M294.947,16h-3.329l-5.625,4.219h3.282Z" transform="translate(-272.587)" fill="#ff588c"/>
+      <path id="Path_97004" data-name="Path 97004" d="M405.991,31.407h4.969V27.892a.676.676,0,0,0-.031-.153Z" transform="translate(-386.96 -11.189)" fill="#ff588c"/>
+      <path id="Path_97005" data-name="Path 97005" d="M44.993,20.219h3.329L53.947,16H50.665Z" transform="translate(-42.884)" fill="#ff588c"/>
+      <path id="Path_97006" data-name="Path 97006" d="M0,152.172a.7.7,0,0,0,.7.7H23.3a.7.7,0,0,0,.7-.7V136H0Zm8.484-12.656a.7.7,0,0,1,1.065-.6l7.031,4.219a.7.7,0,0,1,0,1.206l-7.031,4.219a.7.7,0,0,1-1.065-.6Z" transform="translate(0 -114.375)" fill="#ff588c"/>
+      <path id="Path_97007" data-name="Path 97007" d="M.7,16a.7.7,0,0,0-.7.7v3.34L5.438,16Z" fill="#ff588c"/>
+      <path id="Path_97008" data-name="Path 97008" d="M211,237.5v5.953l4.962-2.977Z" transform="translate(-201.109 -211.116)" fill="#ff588c"/>
+    </g>
+  </g>
+</svg>

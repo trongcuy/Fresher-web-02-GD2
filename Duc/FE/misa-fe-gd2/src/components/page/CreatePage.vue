@@ -1,15 +1,13 @@
 <template>
-	<div style="margin-top: 100px;">		
-		<h3>
-			You’ve successfully created a project with {{ username }}
-		</h3>
+	<div class="div-create">		
+		
 	</div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 export default {
-    name: "HelloWorld",
+    name: "CreatePage",
     props: [],
     components: {
         
@@ -20,10 +18,16 @@ export default {
 		}
     },
 	computed: {
-		...mapGetters(['username'])
+		...mapGetters([''])
 	}
 }
 </script>
 <style scoped>
-
+.div-create {
+    z-index: 100;
+    width: calc(vw);
+    height: calc(vh);
+    background-color: aqua;
+    margin-top: 100px;
+}
 </style>

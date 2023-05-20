@@ -2,7 +2,7 @@
     <!-- phan tư input -->
     <div class="div-input">
         <p style="margin:0px" v-if="title">{{ title }}<span style="color: red;" v-if="require"> *</span></p>
-        <input class="input" :placeholder="defaultValue" v-model="inputValue"
+        <input class="input" type="text" :placeholder="defaultValue" v-model="inputValue"
             @input="() => this.$emit('setValueProps', this.inputValue)" />
     </div>
 </template>
@@ -22,22 +22,11 @@ export default {
         require: {
             type: Boolean,
             default: false
-        },
-        valueProps: {
-            type: String,
-            default: ''
         }
     },
     data() {
         return {
-            inputValue: this.valueProps,
-        }
-    },
-    watch: {
-        //khi prop cha truyền lại valueProps thì cập nhật lại value input con
-        //->binding chiều cha sang con
-        valueProps(newValue) {
-            this.inputValue = newValue
+            inputValue: "",
         }
     },
     methods: {
@@ -48,20 +37,17 @@ export default {
 
 <style scoped>
 .input {
-    padding-left: 8px;
-    padding-right: 62px;
-    height: 36px;
-    width: 250px;
-    font-size: 14px;
-    border-radius: 4px;
-    color: #000000;
-    border: 1px solid #E0E0E0;
-    box-sizing: border-box;
+    border-radius: 9.5px;
+    border: 1px solid #b6b9ce;
+    width: 100%;
+    height: 40px;
+    padding: 0px 34px;
+    outline: none;
 }
-
+.input:focus {
+    border: 1px solid #8a6bf6;
+}
 .div-input {
-    width: 250px;
     display: flex;
 }
-
 </style>
