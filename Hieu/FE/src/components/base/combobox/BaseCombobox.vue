@@ -380,7 +380,7 @@ export default {
     /* flex-direction: row; */
     border-radius: 10px;
     box-sizing: border-box;
-    min-width: 150px;
+    /* min-width: 150px; */
     cursor: pointer;
 }
 

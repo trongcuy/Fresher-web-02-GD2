@@ -103,4 +103,26 @@
     transition: all .1s ease;
 }
 
+.btn-40{
+    min-width: unset!important;
+    width: 40px!important;
+}
+
+.btn-onlyicon{
+    min-width: unset!important;
+}
+
+.btn-upload{
+    background-color: #ece7fe!important;
+    color: #8a6bf6!important;
+    border: none;
+}
+
+.btn-green{
+    color: #00c542;
+    background-color: rgba(0,197,66,.2);
+    border: none;
+}
+
+
 

@@ -1,6 +1,6 @@
 <template>
     <button :class="str" :disabled="disabled" ref="btn">
-        <slot></slot>
+        <slot name="icon"></slot>
         <div class="btn-text">
             {{ text }}
         </div>
