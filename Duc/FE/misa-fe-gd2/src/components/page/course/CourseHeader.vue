@@ -64,7 +64,6 @@ export default {
 .header-share:hover {
     background-color: #f1f2f7;
     color: #4e5b6a;
-    opacity: .8;
 }
 .header-game {
     margin-right: 16px;
@@ -74,7 +73,6 @@ export default {
     color: #fff;
 }
 .header-game:hover {
-    opacity: .8;
     background-color: #8a6bf6;
 }
 .header-edit {

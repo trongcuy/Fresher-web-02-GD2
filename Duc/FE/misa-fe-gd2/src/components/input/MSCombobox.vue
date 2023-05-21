@@ -119,10 +119,11 @@ input {
     padding-top: 8px;
     box-sizing: border-box;
     border-radius: 4px;
+    color: #606266;
 }
 
 .option:hover {
-    background-color: #dfecff;
+    background-color: #ece7fe;
 }
 
 input:focus {
@@ -132,11 +133,12 @@ input:focus {
 .div-option {
     padding: 8px;
     width: 100%;
+    max-width: 245px;
     border-radius: 4px;
     box-shadow: 0 0 16px rgb(23 27 42 / 16%);
     position: absolute;
     top: 45px;
-    left: 0px;
+    right: 0px;
     box-sizing: border-box;
     z-index: 11;
     background-color: #ffffff;

@@ -48,18 +48,18 @@
                 <div class="list-btn">
                     <MSButtonQuestion title="Thư viện học tập" src="https://sisapapp.misacdn.net/lms/img/library.fc851823.svg"/>
                     <img src="../../assets/img/line.svg"/>
-                    <MSButtonQuestion title="Chọn đáp án" src="https://sisapapp.misacdn.net/lms/img/select.c15dfe74.svg"/>
-                    <MSButtonQuestion title="Đúng sai" src="https://sisapapp.misacdn.net/lms/img/yesorno.7f4f0b5a.svg"/>
-                    <MSButtonQuestion title="Điền vào chỗ trống" src="https://sisapapp.misacdn.net/lms/img/fill.af676902.svg"/>
-                    <MSButtonQuestion title="Ghép nối" src="https://sisapapp.misacdn.net/lms/img/pairing.4e1fb31f.svg"/>
-                    <MSButtonQuestion title="Câu hỏi nhóm" src="	https://sisapapp.misacdn.net/lms/img/group.ca2a19ef.svg"/>
-                    <MSButtonQuestion @click="onClickEssay" title="Tự luận" src="https://sisapapp.misacdn.net/lms/img/essay.e07e1e68.svg"/>
+                    <MSButtonQuestion @click="onClickNewQuesion('select')" title="Chọn đáp án" src="https://sisapapp.misacdn.net/lms/img/select.c15dfe74.svg"/>
+                    <MSButtonQuestion @click="onClickNewQuesion('rightwrong')" title="Đúng sai" src="https://sisapapp.misacdn.net/lms/img/yesorno.7f4f0b5a.svg"/>
+                    <MSButtonQuestion @click="onClickNewQuesion('fill')" title="Điền vào chỗ trống" src="https://sisapapp.misacdn.net/lms/img/fill.af676902.svg"/>
+                    <MSButtonQuestion @click="onClickNewQuesion('match')" title="Ghép nối" src="https://sisapapp.misacdn.net/lms/img/pairing.4e1fb31f.svg"/>
+                    <MSButtonQuestion @click="onClickNewQuesion('group')" title="Câu hỏi nhóm" src="	https://sisapapp.misacdn.net/lms/img/group.ca2a19ef.svg"/>
+                    <MSButtonQuestion @click="onClickNewQuesion('essay')" title="Tự luận" src="https://sisapapp.misacdn.net/lms/img/essay.e07e1e68.svg"/>
                 </div>
             </div>
         </div>
 
         <!-- popup thêm câu hỏi -->
-        <MSPopupAdd v-if="showPopupAdd"/>
+        <MSPopupAdd v-if="showPopupAdd" @onClosePopup="onClosePopup"/>
     </div>
 
     
@@ -87,10 +87,10 @@ export default {
         }
     },
     computed: {
-        ...mapGetters([''])
+        ...mapGetters(['typePopupAdd'])
     },
     methods: {
-        ...mapMutations(['setShowOverlay']),
+        ...mapMutations(['setShowOverlay', 'setTypePopupAdd']),
         /**
          * click back về trang chủ
          * CreatedBy: Trịnh Huỳnh Đức (20-5-2023)
@@ -99,12 +99,21 @@ export default {
             this.$router.push("/course/personal")
         },
         /**
-         * click câu tự luận
+         * click tạo câu hỏi mới -> hiện popup tương ứng
          * CreatedBy: Trịnh Huỳnh Đức (20-5-2023)
          */
-        onClickEssay(){
+        onClickNewQuesion(typeQuestion){
+            this.setTypePopupAdd(typeQuestion)//set loại popup là loại tự luận
             this.setShowOverlay(true)  
             this.showPopupAdd = true      
+        },
+        /**
+         * bắt sự kiện emit đóng popup
+         * CreatedBy: Trịnh Huỳnh Đức (21-5-2023)
+         */
+        onClosePopup(){
+            this.showPopupAdd = false
+            this.setShowOverlay(false)  
         }
     }
 }

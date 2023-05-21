@@ -25,4 +25,7 @@ app.use(Vuex);
 const store = new Vuex.Store(Store)
 app.use(store)
 
+//khai báo biến dùng chung
+import Resource from './helper/resource'
+window.Resource = Resource.VI
 app.mount('#app')

@@ -27,7 +27,7 @@ export default {
 }
 
 .button:hover {
-    background-color: #F5F5F5;
+    opacity: .8;
 }
 
 img {
