@@ -1,5 +1,6 @@
 const state = {
     showListQuestion: true,
+    showFormQuestion: false,
 }
 
 const mutations = {
@@ -11,6 +12,16 @@ const mutations = {
      */
     showListQuestion(state, payload) {
         state.showListQuestion = payload;
+    },
+
+    /**
+     * Hiển thị form tạo câu hỏi theo mẫu đã chọn
+     * @param {*} context 
+     * @param {*} data 
+     * CreatedBy VMHieu 21/05/2023
+     */
+    showFormQuestion(state, payload) {
+        state.showFormQuestion = payload;
     }
 }
 
@@ -23,6 +34,15 @@ const actions = {
      */
     showListQuestion(context, data) {
         context.commit("showListQuestion", data);
+    },
+    /**
+     * Hiển thị form tạo câu hỏi theo mẫu đã chọn
+     * @param {*} context 
+     * @param {*} data 
+     * CreatedBy VMHieu 21/05/2023
+     */
+    showFormQuestion(context, data) {
+        context.commit("showFormQuestion", data);
     }
 }
 

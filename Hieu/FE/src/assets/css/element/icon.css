@@ -3,3 +3,17 @@
     width: 16px;
     height: 16px;
 }
+
+.icon {
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    min-height: 24px;
+    cursor: pointer;
+    display: block;
+}
+
+
+.icon-exit {
+    background: transparent url(../../icon/sprite_cegov.svg) no-repeat -242px -26px;
+}

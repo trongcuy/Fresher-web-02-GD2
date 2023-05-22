@@ -4,7 +4,7 @@
             <div class="list-my-post">
                 <div class="list-header">
                     <div class="list-search w-full">
-                        <BaseInput inputClass="m-input" placeholder="Nhập tên học liệu để tìm kiếm"></BaseInput>
+                        <BaseInput showIcon="true" inputClass="m-input" placeholder="Nhập tên học liệu để tìm kiếm"></BaseInput>
                     </div>
                     <div class="list-filter flex">
                         <div class="filter-courseware">

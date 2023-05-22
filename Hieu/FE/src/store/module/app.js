@@ -5,6 +5,7 @@ const state = {
     popupMsg: "",
     popupStatus: 0,
     hideMainPage: false,
+    showOver: false,
 }
 
 const mutations = {
@@ -61,6 +62,16 @@ const mutations = {
      */
     updateHideMainPage(state, payload) {
         state.hideMainPage = payload;
+    },
+
+    /**
+     * Ẩn hiện over màn hình
+     * @param {*} context 
+     * @param {*} data 
+     * CreatedBy VMHieu 21/05/2023
+     */
+    showOver(state, payload) {
+        state.showOver = payload;
     }
 }
 
@@ -119,8 +130,16 @@ const actions = {
      */
     updateHideMainPage(context, data) {
         context.commit('updateHideMainPage', data);
+    },
+    /**
+     * Ẩn hiện over màn hình
+     * @param {*} context 
+     * @param {*} data 
+     * CreatedBy VMHieu 21/05/2023
+     */
+    showOver(context, data) {
+        context.commit('showOver', data);
     }
-
 }
 
 export default {

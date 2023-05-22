@@ -1,6 +1,6 @@
 <template>
     <div>
-      <div class="combobox" v-clickOutside="hideListData" ref="combobox">
+      <div class="combobox" :autoFocus="autoFocus" :class="cbbClass" v-clickOutside="hideListData" @click="btnSelectDataOnClick" ref="combobox">
         <input
           :id="id"
           type="text"
@@ -10,7 +10,6 @@
           @input="inputOnChange"
           @keydown="selecItemUpDown"
           @mouseover="handleMouse"
-          @click="btnSelectDataOnClick"
           :tabindex="tabidx"
           :placeholder="placeholder"
           :resetValue="resetValue"
@@ -18,7 +17,7 @@
           autocomplete="off"
         />
         <div class="combobox-icon">
-            <i class="icon-dropdown"></i>
+            <img src="@/assets/img/icon_arrow.svg" alt="">
         </div>
         
         <div
@@ -104,6 +103,7 @@ const keyCode = {
 export default {
     name: "MSCombobox",
     props: {
+    cbbClass: null,
     valueDefault: null,
     resetValue: true,
     url: String,
@@ -141,36 +141,38 @@ export default {
     tabidx: {
         type: Number,
         default: -1
+    },
+    autoFocus: {
+        type: Number,
+        default: null
     }
     },
     watch: {
-    resetValue: function() {
-        this.indexItemSelected = null;
-        this.indexItemFocus = null;
-        this.textInput = null;
-        this.showError = false;
-    }, 
-    emulation: function() {
-        if (this.showForm) {
-        for (let i = 0; i < this.data.length; i++) {
-            if (this.data[i].Data == this.emulation.RewardLevelName) {
-            this.indexItemSelected = i;
-            this.indexItemFocus = i;
-            this.textInput = this.data[i].Data;
+        resetValue: function() {
+            this.indexItemSelected = null;
+            this.indexItemFocus = null;
+            this.textInput = null;
+            this.showError = false;
+        }, 
+
+        showError: function() {
+            if (this.showError) {
+            this.$refs.combobox.classList.add("combobox__error");
+            this.indexItemSelected = null;
+            this.indexItemFocus = null;
+            this.$emit("getValueCombobox");
+            } else {
+            this.$refs.combobox.classList.remove("combobox__error");
+            }
+        },
+
+        autoFocus: function() {
+            if (this.autoFocus) {
+                let value = this.data[this.autoFocus - 1][this.propValue];
+                this.textInput = this.data[this.autoFocus - 1].Data;
+                this.$emit("update:modelValue", value);
             }
         }
-        }
-    },
-    showError: function() {
-        if (this.showError) {
-        this.$refs.combobox.classList.add("combobox__error");
-        this.indexItemSelected = null;
-        this.indexItemFocus = null;
-        this.$emit("getValueCombobox");
-        } else {
-        this.$refs.combobox.classList.remove("combobox__error");
-        }
-    }
     },
     methods: {
     /**
@@ -217,7 +219,7 @@ export default {
      */
     itemOnSelect(item, index) {
         const text = item[this.propText];
-        const value = item;
+        const value = item[this.propValue];
         this.textInput = text; // Hiển thị text lên input.
         this.indexItemSelected = index;
         this.indexItemFocus = index;
@@ -225,7 +227,7 @@ export default {
         this.showError = false;
         this.$refs.combobox.classList.remove("combobox__error");
 
-        this.$emit("getValueCombobox", value);
+        this.$emit("update:modelValue", value);
     },
     /**
      * Hàm check input để in ra lỗi
@@ -353,24 +355,31 @@ export default {
     },
 
     mounted() {
-    this.dataFilter = this.data;
+        this.dataFilter = this.data;
+        this.indexItemFocus = this.autoFocus - 1;
+        this.indexItemSelected = this.autoFocus - 1;
+        if (this.autoFocus) {
+            let value = this.data[this.autoFocus - 1][this.propValue];
+            this.textInput = this.data[this.autoFocus - 1].Data;
+            this.$emit("update:modelValue", value);
+        }
     },
     beforeDestroy() {
-    this.textInput = "";
+        this.textInput = "";
     },
     data() {
-    return {
-        textInput: null,
-        dataFilter: [], // data đã được filter
-        isShowListData: false, // Hiển thị list data hay không
-        indexItemFocus: null, // Index của item focus hiện tại
-        indexItemSelected: null, // Index của item được selected
-        tabindex: {
-        type: Number,
-        default: 0
-        },
-        showError: false,
-    };
+        return {
+            textInput: null,
+            dataFilter: [], // data đã được filter
+            isShowListData: false, // Hiển thị list data hay không
+            indexItemFocus: null, // Index của item focus hiện tại
+            indexItemSelected: null, // Index của item được selected
+            tabindex: {
+            type: Number,
+            default: 0
+            },
+            showError: false,
+        };
     },
 };
 </script>
@@ -382,6 +391,7 @@ export default {
     box-sizing: border-box;
     /* min-width: 150px; */
     cursor: pointer;
+    background: #fff;
 }
 
 .combobox__input,
@@ -421,8 +431,8 @@ select {
 
 .combobox-icon{
     position: absolute;
-    right: 3%;
-    top: 45%;
+    right: 8px;
+    top: 10px;
 }
 
 .combobox__data {
@@ -450,14 +460,11 @@ select {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    line-height: 32px;
-    padding: 0 8px;
-    height: 32px;
+    padding: 8px 16px;
     cursor: pointer;
     /* border: 1px solid #ccc; */
     outline: none;
     width: -webkit-fill-available;
-    min-height: 32px;
     margin: 1px 0;
 }
 
@@ -487,11 +494,15 @@ select {
 .combobox__item--selected {
     pointer-events: none;
     background-color: #dfebff;
-    color: #000;
+    color: #8a6bf6;
 }
 
 .combobox__item--selected>div{
     display: block;
+}
+
+.combobox__item>span{
+    line-height: initial;
 }
 
 .check-selected {
@@ -501,5 +512,32 @@ select {
 .combobox-error{
     color: #ef5350;
     margin-top: 6px;
+}
+
+.combobox-question{
+    border: none;
+    outline: none;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.combobox-question>input{
+    border: none;
+    outline: none;
+    background-color: #f8e373;
+}
+
+.combobox-question>input:focus{
+    border: none;
+    outline: none;
+}
+
+.combobox-question .combobox-icon{
+    top: 8px;
+}
+
+.combobox-question input{
+    font-weight: 700;
+    font-size: 16px;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
     <div class="input-container">
         <input type="text" :class="inputClass" :placeholder="placeholder">
-        <div class="icon">
+        <div class="icon" v-if="showIcon">
             <img src="@/assets/img/icon-search.svg" alt="">
         </div>
     </div>
@@ -18,6 +18,10 @@ const props = defineProps({
     inputClass: {
         type: String,
         default: null 
+    },
+    showIcon: {
+        type: Boolean,
+        default: false
     }
 })
 
@@ -43,5 +47,9 @@ const props = defineProps({
     width: 16px;
     height: 16px;
     margin: 0 4px;
+}
+
+.no-icon{
+    padding: 0 12px;
 }
 </style>

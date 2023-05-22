@@ -14,6 +14,10 @@ const routes = [
     ,
     children: [
       {
+        path: '/storage',
+        redirect: '/storage/mine'
+      },
+      {
         path: '/storage/mine',
         components: {
           mineview: MinePage

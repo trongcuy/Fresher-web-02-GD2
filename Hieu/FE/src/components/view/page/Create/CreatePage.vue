@@ -21,7 +21,7 @@
                         <BaseCombobox></BaseCombobox>
                     </div>
                     <div class="btn-addinfo">
-                        <BaseButton class="ms-button btn-white btn-active" text="Bổ sung thông tin"></BaseButton>
+                        <BaseButton class="ms-button btn-white btn-active" text="Bổ sung thông tin" @click="openFormExercise"></BaseButton>
                     </div>
                 </div>
                 <div class="header-bottom__right flex">
@@ -81,31 +81,31 @@
                                 </div>
                             </div>
                             <div class="question">
-                                <div class="question-select">
+                                <div class="question-select" @click="openFormQuestion(Enum.FormQuestion.Select)">
                                     <div class="question-avatar question-hover">
                                         <img src="@/assets/img/select.svg" alt="">
                                     </div>
                                     <div class="question-text">Chọn đáp án</div>
                                 </div>
-                                <div class="question-yesno">
+                                <div class="question-yesno" @click="openFormQuestion(Enum.FormQuestion.YesOrNo)">
                                     <div class="question-avatar question-hover">
                                         <img src="@/assets/img/yesorno.svg" alt="">
                                     </div>
                                     <div class="question-text">Đúng sai</div>
                                 </div>
-                                <div class="question-fill">
+                                <div class="question-fill" @click="openFormQuestion(Enum.FormQuestion.Fill)">
                                     <div class="question-avatar question-hover">
                                         <img src="@/assets/img/fill.svg" alt="">
                                     </div>
                                     <div class="question-text">Điền vào chỗ trống</div>
                                 </div>
-                                <div class="question-essay">
+                                <div class="question-essay" @click="openFormQuestion(Enum.FormQuestion.Essay)">
                                     <div class="question-avatar question-hover">
                                         <img src="@/assets/img/essay.svg" alt="">
                                     </div>
                                     <div class="question-text">Tự luận</div>
                                 </div>
-                                <div class="question-group">
+                                <div class="question-group" @click="openFormQuestion(Enum.FormQuestion.Group)">
                                     <div class="question-avatar question-hover">
                                         <img src="@/assets/img/group.svg" alt="">
                                     </div>
@@ -119,6 +119,12 @@
             <div class="create-main__list" v-show="showListQuestion">
                 <div class="question-list">
                     <BaseQuestion></BaseQuestion>
+                    <BaseQuestion></BaseQuestion>
+                    <BaseQuestion></BaseQuestion>
+                    <BaseQuestion></BaseQuestion>
+                    <BaseQuestion></BaseQuestion>
+                    <BaseQuestion></BaseQuestion>
+                    <BaseQuestion></BaseQuestion>
                 </div>
                 <div class="create-option option-list">
                     <div class="question-library">
@@ -126,27 +132,27 @@
                             <img src="@/assets/img/library.svg" alt="">
                         </div>
                     </div>
-                    <div class="question-select">
+                    <div class="question-select" @click="openFormQuestion(Enum.FormQuestion.Select)">
                         <div class="question-avatar question-hover">
                             <img src="@/assets/img/select.svg" alt="">
                         </div>
                     </div>
-                    <div class="question-yesno">
+                    <div class="question-yesno" @click="openFormQuestion(Enum.FormQuestion.YesOrNo)">
                         <div class="question-avatar question-hover">
                             <img src="@/assets/img/yesorno.svg" alt="">
                         </div>
                     </div>
-                    <div class="question-fill">
+                    <div class="question-fill" @click="openFormQuestion(Enum.FormQuestion.Fill)">
                         <div class="question-avatar question-hover">
                             <img src="@/assets/img/fill.svg" alt="">
                         </div>
                     </div>
-                    <div class="question-essay">
+                    <div class="question-essay" @click="openFormQuestion(Enum.FormQuestion.Essay)">
                         <div class="question-avatar question-hover">
                             <img src="@/assets/img/essay.svg" alt="">
                         </div>
                     </div>
-                    <div class="question-group">
+                    <div class="question-group" @click="openFormQuestion(Enum.FormQuestion.Group)">
                         <div class="question-avatar question-hover">
                             <img src="@/assets/img/group.svg" alt="">
                         </div>
@@ -155,28 +161,52 @@
             </div>
         </div>
     </div>
+    <FormQuestion ></FormQuestion>
+    <FormExercise ></FormExercise>
 </template>
 
 <script setup>
 import BaseCombobox from '@/components/base/combobox/BaseCombobox.vue';
 import BaseButton from '@/components/base/button/BaseButton.vue';
 import BaseQuestion from '@/components/base/question/BaseQuestion.vue';
+import FormQuestion from '@/components/view/FormQuestion.vue';
+import FormExercise from '../../FormExercise.vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import { computed, reactive } from 'vue'; 
+import * as Enum from '@/common/enum/Enum.js';
 
 const store = useStore();
 const router = useRouter();
 
 const showListQuestion = computed(() => store.state.question.showListQuestion);
+const showOver = computed(() => store.state.app.showOver);
 
 const dataExercise = reactive({
     ExerciseName: ""
 })
-
+/**
+ * Qua lại router trước
+ * CreatedBy VMHieu 21/05/2023
+ */
 const backMainPage = () => {
     store.dispatch("updateHideMainPage", false);
     router.go(-1);
+}
+/**
+ * Mở form question theo status truyền vào
+ * @param {*} status 
+ * CreatedBy VMHieu 21/05/2023
+ */
+const openFormQuestion = (status) => {
+    store.dispatch("showFormQuestion", status);
+}
+/**
+ * Mở form thông tin bài tập
+ * CreatedBy VMHieu 22/05/2023
+ */
+const openFormExercise = () => {
+    store.dispatch("showFormExercise", true);
 }
 
 </script>
@@ -321,6 +351,11 @@ const backMainPage = () => {
     font-size: 16px;
 }
 
+.question-list{
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-row-gap: 20px;
+}
 .question-library>.question-avatar>img{
     width: 64px;
     height: 64px;
