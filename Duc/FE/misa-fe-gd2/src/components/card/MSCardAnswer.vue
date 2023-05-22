@@ -3,9 +3,9 @@
         <div class="head" :class="{'head-right-check': typePopupAdd=='rightwrong'}">
             <div class="head-left" v-if="typePopupAdd=='select'">{{ answer }}</div>
             <div class="head-right" >
-                <div v-if="typePopupAdd=='select'"><img src="../../assets/img/icon_delete.9097d258.svg"/></div>
-                <div v-if="typePopupAdd=='select'"><img src="../../assets/img/icon_image.svg"/></div>
-                <div><img src="../../assets/img/ic_uncheck.ceabec80.svg"/></div>
+                <div class="zoom-div" v-if="typePopupAdd=='select'"><img src="../../assets/img/icon_delete.9097d258.svg"/></div>
+                <div class="zoom-div" v-if="typePopupAdd=='select'"><img src="../../assets/img/icon_image.svg"/></div>
+                <div class="zoom-div"><img src="../../assets/img/ic_uncheck.ceabec80.svg"/></div>
             </div>
         </div>
         <div class="body">

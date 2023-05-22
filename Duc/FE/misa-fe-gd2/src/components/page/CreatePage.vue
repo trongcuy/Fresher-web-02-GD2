@@ -5,7 +5,7 @@
             <div class="div-header">
                 <!-- Thanh chứa tên -->
                 <div class="div-name">
-                    <img class="icon-back" src="../../assets/img/icon_back.svg" @click="onClickBack"/>
+                    <img class="icon-back" src="../../assets/img/icon_back.svg" @click="onClickBack" />
                     <img class="image" src="../../assets/img/default.png" />
                     <input type="text" placeholder="Nhập tên bài tập..." />
                 </div>
@@ -16,7 +16,7 @@
                             :listSelect="['Toán', 'Tiếng Việt', 'Tiếng Anh', 'Tự nhiên xã hội', 'Lịch sử', 'Địa lý']" />
                         <MSCombobox class="cb-grade" defaultValue="Khối 1"
                             :listSelect="['Khối 1', 'Khối 2', 'Khối 3', 'Khối 4', 'Khối 5']" />
-                        <MSButton title="Bổ sung thông tin" />
+                        <MSButton title="Bổ sung thông tin" @click="onClickAddInfor" />
                         <MSButton title="Đổi kiểu soạn" />
                     </div>
 
@@ -29,40 +29,75 @@
             </div>
         </div>
 
-        <!-- phần body -->
-        <div class="div-body">
+        <!-- phần body khi chưa có câu hỏi-->
+        <div class="div-body" v-if="numQuestion==0">
             <div class="div-import">
                 <p class="title">Tách câu hỏi tự động sử dụng công nghệ AI</p>
                 <div class="import">
                     <img src="../../assets/img/import.svg" />
                     <div class="text">Nhấn để tải lên file bài tập hoặc kéo thả file vào đây.
-                    <br/>File có định dạng xls, xlsx, doc, docx, pdf</div>
+                        <br />File có định dạng xls, xlsx, doc, docx, pdf
+                    </div>
                     <div class="btn-import">
-                        <MSButton title="Tải lên file bài tập" class="btn-dowload-file"/>
-                        <MSButton title="Tải file Excel mẫu" class="btn-dowload-excel"/>
+                        <MSButton title="Tải lên file bài tập" class="btn-dowload-file" />
+                        <MSButton title="Tải file Excel mẫu" class="btn-dowload-excel" />
                     </div>
                 </div>
             </div>
             <div class="div-question">
                 <div class="title">hoặc tự tạo câu hỏi mới</div>
                 <div class="list-btn">
-                    <MSButtonQuestion title="Thư viện học tập" src="https://sisapapp.misacdn.net/lms/img/library.fc851823.svg"/>
-                    <img src="../../assets/img/line.svg"/>
-                    <MSButtonQuestion @click="onClickNewQuesion('select')" title="Chọn đáp án" src="https://sisapapp.misacdn.net/lms/img/select.c15dfe74.svg"/>
-                    <MSButtonQuestion @click="onClickNewQuesion('rightwrong')" title="Đúng sai" src="https://sisapapp.misacdn.net/lms/img/yesorno.7f4f0b5a.svg"/>
-                    <MSButtonQuestion @click="onClickNewQuesion('fill')" title="Điền vào chỗ trống" src="https://sisapapp.misacdn.net/lms/img/fill.af676902.svg"/>
-                    <MSButtonQuestion @click="onClickNewQuesion('match')" title="Ghép nối" src="https://sisapapp.misacdn.net/lms/img/pairing.4e1fb31f.svg"/>
-                    <MSButtonQuestion @click="onClickNewQuesion('group')" title="Câu hỏi nhóm" src="	https://sisapapp.misacdn.net/lms/img/group.ca2a19ef.svg"/>
-                    <MSButtonQuestion @click="onClickNewQuesion('essay')" title="Tự luận" src="https://sisapapp.misacdn.net/lms/img/essay.e07e1e68.svg"/>
+                    <MSButtonQuestion title="Thư viện học tập"
+                        src="https://sisapapp.misacdn.net/lms/img/library.fc851823.svg" />
+                    <img src="../../assets/img/line.svg" />
+                    <MSButtonQuestion @click="onClickNewQuesion('select')" title="Chọn đáp án"
+                        src="https://sisapapp.misacdn.net/lms/img/select.c15dfe74.svg" />
+                    <MSButtonQuestion @click="onClickNewQuesion('rightwrong')" title="Đúng sai"
+                        src="https://sisapapp.misacdn.net/lms/img/yesorno.7f4f0b5a.svg" />
+                    <MSButtonQuestion @click="onClickNewQuesion('fill')" title="Điền vào chỗ trống"
+                        src="https://sisapapp.misacdn.net/lms/img/fill.af676902.svg" />
+                    <MSButtonQuestion @click="onClickNewQuesion('match')" title="Ghép nối"
+                        src="https://sisapapp.misacdn.net/lms/img/pairing.4e1fb31f.svg" />
+                    <MSButtonQuestion @click="onClickNewQuesion('group')" title="Câu hỏi nhóm"
+                        src="	https://sisapapp.misacdn.net/lms/img/group.ca2a19ef.svg" />
+                    <MSButtonQuestion @click="onClickNewQuesion('essay')" title="Tự luận"
+                        src="https://sisapapp.misacdn.net/lms/img/essay.e07e1e68.svg" />
                 </div>
             </div>
         </div>
 
-        <!-- popup thêm câu hỏi -->
-        <MSPopupAdd v-if="showPopupAdd" @onClosePopup="onClosePopup"/>
-    </div>
+        <!-- phần body khi số câu hỏi > 0-->
+        <div class="div-body div-list-question" v-if="numQuestion>0">
+            <div class="list-question div-flex-column">
+                <MSQuestion num="1" title="Câu hỏi 1" type="essay"/>
+                <MSQuestion num="2" title="Câu hỏi 2" type="select"/>
+                <MSQuestion num="3" title="Câu hỏi 3" type=""/>
+            </div>
+            <div class="list-btn list-btn-column">
+                <MSButtonQuestion @click="onClickNewQuesion('select')" dimention="small"
+                    src="https://sisapapp.misacdn.net/lms/img/select.c15dfe74.svg" />
+                <MSButtonQuestion @click="onClickNewQuesion('rightwrong')" dimention="small"
+                    src="https://sisapapp.misacdn.net/lms/img/yesorno.7f4f0b5a.svg" />
+                <MSButtonQuestion @click="onClickNewQuesion('fill')" dimention="small"
+                    src="https://sisapapp.misacdn.net/lms/img/fill.af676902.svg" />
+                <MSButtonQuestion @click="onClickNewQuesion('match')" dimention="small"
+                    src="https://sisapapp.misacdn.net/lms/img/pairing.4e1fb31f.svg" />
+                <MSButtonQuestion @click="onClickNewQuesion('group')" dimention="small"
+                    src="	https://sisapapp.misacdn.net/lms/img/group.ca2a19ef.svg" />
+                <MSButtonQuestion @click="onClickNewQuesion('essay')" dimention="small"
+                    src="https://sisapapp.misacdn.net/lms/img/essay.e07e1e68.svg" />
+                <div class="line"></div>
+                <MSButtonQuestion @click="onClickNewQuesion('essay')" dimention="small"
+                    src="https://sisapapp.misacdn.net/lms/img/sort.220d1765.svg" />
+            </div>
+        </div>
 
-    
+        <!-- popup thêm câu hỏi -->
+        <MSPopupAdd v-if="showPopupAdd" @onClosePopup="onClosePopup" @onClickSaveQuestion="onSaveQuestion"/>
+        <!-- popup bổ sung thông tin -->
+        <MSPopupAddInfor v-if="showPopupAddInfor" name="Test bt" subject="Toán" grade="Khối 1"
+            @onClosePopup="onCloseAddInfor" />
+    </div>
 </template>
 
 <script>
@@ -70,6 +105,8 @@ import MSButton from '../button/MSButton.vue'
 import MSCombobox from '../input/MSCombobox.vue'
 import MSButtonQuestion from '../button/MSButtonQuestion.vue'
 import MSPopupAdd from '../../components/popup/MSPopupAdd.vue'
+import MSPopupAddInfor from '../../components/popup/MSPopupAddInfor.vue'
+import MSQuestion from '../card/MSQuestion.vue'
 import { mapGetters } from 'vuex'
 import { mapMutations } from 'vuex'
 export default {
@@ -79,11 +116,15 @@ export default {
         MSButton,
         MSCombobox,
         MSButtonQuestion,
-        MSPopupAdd
+        MSPopupAdd,
+        MSPopupAddInfor,
+        MSQuestion
     },
     data() {
         return {
             showPopupAdd: false,//biến show popup thêm câu hỏi
+            showPopupAddInfor: false,//biến show popup thêm thông tin cho bài tập
+            numQuestion: 1,//số câu hoir của bài tập
         }
     },
     computed: {
@@ -95,25 +136,51 @@ export default {
          * click back về trang chủ
          * CreatedBy: Trịnh Huỳnh Đức (20-5-2023)
          */
-        onClickBack(){
+        onClickBack() {
             this.$router.push("/course/personal")
         },
         /**
          * click tạo câu hỏi mới -> hiện popup tương ứng
          * CreatedBy: Trịnh Huỳnh Đức (20-5-2023)
          */
-        onClickNewQuesion(typeQuestion){
+        onClickNewQuesion(typeQuestion) {
             this.setTypePopupAdd(typeQuestion)//set loại popup là loại tự luận
-            this.setShowOverlay(true)  
-            this.showPopupAdd = true      
+            this.setShowOverlay(true)
+            this.showPopupAdd = true
         },
         /**
          * bắt sự kiện emit đóng popup
          * CreatedBy: Trịnh Huỳnh Đức (21-5-2023)
          */
-        onClosePopup(){
+        onClosePopup() {
             this.showPopupAdd = false
-            this.setShowOverlay(false)  
+            this.setShowOverlay(false)
+        },
+
+        /**
+         * bắt sự kiện click nút bổ sung thêm thông tin
+         * CreatedBy: Trịnh Huỳnh Đức (22-5-2023)
+         */
+        onClickAddInfor() {
+            this.showPopupAddInfor = true
+            this.setShowOverlay(true)
+        },
+        /**
+         * bắt sự kiện click đóng popup thêm thông tin
+         * CreatedBy: Trịnh Huỳnh Đức (22-5-2023)
+         */
+        onCloseAddInfor() {
+            this.showPopupAddInfor = false
+            this.setShowOverlay(false)
+        },
+        /**
+         * sự kiện lưu câu hỏi
+         * CreatedBy: Trịnh Huỳnh Đức (21-5-2023)
+         */
+        onSaveQuestion() {
+            this.numQuestion++
+            this.showPopupAdd = false
+            this.setShowOverlay(false)
         }
     }
 }
@@ -235,7 +302,7 @@ export default {
 
 .text {
     line-height: 26px;
-    text-align: center;  
+    text-align: center;
     color: #4e5b6a;
 }
 
@@ -271,29 +338,57 @@ export default {
     display: flex;
     align-items: center;
 }
+
 .btn-dowload-file {
     margin-right: 12px;
     background-color: #ece7fe;
     color: #8a6bf6;
     border: none;
 }
+
 .btn-dowload-excel {
     color: #00c542;
-    background-color: rgba(0,197,66,.2);
+    background-color: rgba(0, 197, 66, .2);
     border: none;
 }
+
 .div-question {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
+
 .list-btn {
     display: flex;
     align-items: center;
     gap: 56px;
 }
-.list-btn > img {
+.list-btn-column {
+    flex-direction: column;
+    gap: 12px;
+    position: absolute;
+    top: 164px;
+    right: 88px;
+}
+.list-btn>img {
     width: 2px;
     height: 98px;
+}
+.line {
+    width: 40px;
+    height: 2px;
+    background-color: #b6b9ce;
+    border-radius: 4px;
+    margin: 0;
+}
+.list-question {
+    margin-top: 36px;
+    width: 100%;
+    gap: 20px;
+    padding: 0px 32px 0px 32px;
+}
+.div-list-question {
+    margin: 0px 140px 0px 140px;
+    overflow: scroll;
 }
 </style>

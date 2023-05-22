@@ -1,7 +1,7 @@
 <template>
     <!-- phan tư combobox -->
     <div class="block">
-        <p v-if="title">{{ title }}</p>
+        <p v-if="title">{{ title }}<span style="color: red;" v-if="require"> *</span></p>
         <div style="position: relative;" :class="customClass">
             <input type="text" class="input-select" v-model="optionValue" placeholder="defaultValue"/>
             <div class="icon-select" @click="onClickShowOption"><img :src="src" /></div>
@@ -42,6 +42,10 @@ export default {
         customClass: {
             type: String,
             default: ''
+        },
+        require: {
+            type: Boolean,
+            default: false
         }
     },
     data() {
@@ -80,7 +84,7 @@ export default {
 }
 
 .block>p {
-    margin: 0px 0px 8px 0px
+    margin: 0px 0px 4px 0px
 }
 
 input {

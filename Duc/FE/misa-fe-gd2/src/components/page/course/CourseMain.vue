@@ -17,12 +17,12 @@
 
         <!-- div chứa các card -->
         <div class="div-card">
-            <MSCard grade="Khối 1" subject="Giáo dục thể chất" title="Tập thể dục"/>
-            <MSCard grade="Khối 2" subject="Toán" title="7 hằng đẳng thức đáng nhớ"/>
-            <MSCard grade="Khối 3" subject="Tiếng Việt" title="Luyện đọc"/>
-            <MSCard grade="Khối 4" subject="Lịch sử" title="Chiến tranh biên giới"/>
-            <MSCard grade="Khối 5" subject="Địa lý" title="Diện tích Việt Nam"/>
-            <MSCard grade="Khối 1" subject="Tiếng Anh" title="Bài tập về nhà"/>
+            <MSCard grade="Khối 1" subject="Giáo dục thể chất" title="Tập thể dục" state="Đang soạn" numQuestion="3"/>
+            <MSCard grade="Khối 2" subject="Toán" title="7 hằng đẳng thức đáng nhớ" state="Chia sẻ" numQuestion="1"/>
+            <MSCard grade="Khối 3" subject="Tiếng Việt" title="Luyện đọc" state="Đang soạn"/>
+            <MSCard grade="Khối 4" subject="Lịch sử" title="Chiến tranh biên giới" state="Đang soạn"/>
+            <MSCard grade="Khối 5" subject="Địa lý" title="Diện tích Việt Nam" state="Đang soạn" numQuestion="5"/>
+            <MSCard grade="Khối 1" subject="Tiếng Anh" title="Bài tập về nhà" state="Đang soạn"/>
         </div>
         <!-- button xem thêm -->
         <MSButton title="Xem thêm" class="btn-more"/>

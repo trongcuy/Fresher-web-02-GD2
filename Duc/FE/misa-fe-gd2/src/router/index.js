@@ -25,7 +25,7 @@ const routes =
 			children: [
 				{
 					path: "/course",
-					redirects: "/course/personal",
+					redirect: "/course/personal",
 				},
 				{
 					path: "/course/personal",

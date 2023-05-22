@@ -40,12 +40,12 @@
         </div>
     </div>
     <!-- phần button cuối popup -->
-    <div class="popup-button popup-button-left" v-if="typePopupAdd=='select'||typePopupAdd!='more-explane'">
+    <div class="popup-button popup-button-left" v-if="typePopupAdd=='select'">
         <MSButton title="Thêm đáp án" />
     </div>
     <div class="popup-button" v-if="typePopupAdd!='more-explane'">
         <MSButton title="Hủy" @click="onClickClosePopup"/>
-        <MSButton title="Lưu và đóng" />
+        <MSButton title="Lưu và đóng" @click="onClickSave"/>
         <MSButton id="btn-save-new" title="Lưu và thêm câu" />
     </div>
     <div class="popup-button" v-if="typePopupAdd=='more-explane'">
@@ -154,6 +154,13 @@ export default {
         onClickReturnQuestion() {
             this.setTypePopupAdd(this.typeQuestionBefore)
             this.showMoreExplane=true
+        },
+        /**
+         * sự kiện click nút lưu câu hỏi
+         * CreatedBy: Trịnh Huỳnh Đức (21-5-2023)
+         */
+         onClickSave() {
+            this.$emit('onClickSaveQuestion')
         }
     }
 }

@@ -8,11 +8,11 @@
                 <div class="icon"><img src="https://sisapapp.misacdn.net/lms/img/icon_option.90d8b4a5.svg" /></div>
             </div>
             <div class="div-state">
-                <div class="div-num-question">
+                <div class="div-num-question" v-if="numQuestion>0">
                     <img src="https://sisapapp.misacdn.net/lms/img/ic_number_aswer.e4999537.svg" />
                     <p>{{ numQuestion + ' Câu' }}</p>
                 </div>
-                <div class="state"></div>
+                <div class="state" :class="{'state-share':state=='Chia sẻ', 'state-editing':state=='Đang soạn'}" v-if="state">{{ state }}</div>
             </div>
             <div class="div-state">
                 <img src="https://sisapapp.misacdn.net/lms/img/ic_User_16.2bc4d930.svg" />
@@ -143,7 +143,21 @@ p {
     display: flex;
     height: 20px;
 }
-
+.state {
+    font-size: 12px;
+    padding: 3px 5px 5px 5px;
+    border-radius: 6px;
+    text-align: center;
+    margin-left: 6px;
+}
+.state-editing {
+    color: #8a6bf6;
+    background: #e8e1fd;
+}
+.state-share {
+    background-color: rgba(0,197,66,.1803921568627451);
+    color: #00c542;
+}
 .div-num-question {
     display: flex;
     justify-content: center;
