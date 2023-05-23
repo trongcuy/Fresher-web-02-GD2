@@ -1,0 +1,64 @@
+
+@font-face {
+    font-family: GoogleSans;
+    src: url('../assets/font/GoogleSans-Regular.woff2');
+}
+
+/* thiết lập font cho các thẻ */
+* {
+    font-family: GoogleSans;
+    color: #4E5B6A;
+}
+*, body, html {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    background-color: #fff;
+}
+#app {
+    height: calc(100vh);
+}
+/* Thay đổi độ rộng của thanh cuộn dọc */
+::-webkit-scrollbar {
+    width: 6px;
+    /* Độ rộng của thanh cuộn */
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #a1a1a1;
+    /* Màu nền của thanh cuộn */
+    border-radius: 2px;
+    /* Bo góc của thanh cuộn */
+}
+p {
+    margin: 0px;
+}
+img {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+}
+/* can giữa phần tử con */
+.div-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.div-flex-row {
+    display: flex;
+    align-items: center;
+}
+.div-flex-column {
+    display: flex;
+    flex-direction: column;
+}
+/* phóng to */
+.zoom-div {
+    transition: transform 0.1s ease; /* Đặt thời gian và kiểu chuyển động */
+}
+  
+.zoom-div:hover {
+transform: scale(1.1); /* Áp dụng hiệu ứng phóng to 1.1 lần khi di chuột qua */
+}

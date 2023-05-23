@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <g id="Group_52350" data-name="Group 52350" transform="translate(-877 -506)">
+    <g id="Group_52306" data-name="Group 52306">
+      <rect id="Rectangle_22451" data-name="Rectangle 22451" width="64" height="64" rx="6" transform="translate(877 506)" fill="#d378ff"/>
+      <g id="Group_52304" data-name="Group 52304" transform="translate(-69 -1)">
+        <g id="Rectangle_22499" data-name="Rectangle 22499" transform="translate(960 522)" fill="none" stroke="#fff" stroke-width="3">
+          <rect width="13" height="13" rx="2" stroke="none"/>
+          <rect x="1.5" y="1.5" width="10" height="10" rx="0.5" fill="none"/>
+        </g>
+        <g id="Rectangle_22525" data-name="Rectangle 22525" transform="translate(960 543)" fill="none" stroke="#fff" stroke-width="3">
+          <rect width="13" height="13" rx="2" stroke="none"/>
+          <rect x="1.5" y="1.5" width="10" height="10" rx="0.5" fill="none"/>
+        </g>
+        <g id="Rectangle_22523" data-name="Rectangle 22523" transform="translate(983 522)" fill="none" stroke="#fff" stroke-width="3">
+          <rect width="13" height="13" rx="2" stroke="none"/>
+          <rect x="1.5" y="1.5" width="10" height="10" rx="0.5" fill="none"/>
+        </g>
+        <g id="Rectangle_22524" data-name="Rectangle 22524" transform="translate(983 543)" fill="none" stroke="#fff" stroke-width="3">
+          <rect width="13" height="13" rx="2" stroke="none"/>
+          <rect x="1.5" y="1.5" width="10" height="10" rx="0.5" fill="none"/>
+        </g>
+        <line id="Line_6659" data-name="Line 6659" x2="14" y2="12" transform="translate(970.5 533.5)" fill="none" stroke="#fff" stroke-width="3"/>
+        <line id="Line_6660" data-name="Line 6660" x1="14" y2="12" transform="translate(970.5 533.5)" fill="none" stroke="#fff" stroke-width="3"/>
+      </g>
+    </g>
+  </g>
+</svg>

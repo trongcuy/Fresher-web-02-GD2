@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="Rectangle_22044" data-name="Rectangle 22044" width="24" height="24" transform="translate(24 25)" fill="#fff" stroke="#707070" stroke-width="1"/>
+    </clipPath>
+  </defs>
+  <g id="ic_Arrow_Left_24" transform="translate(-24 -25)" clip-path="url(#clip-path)">
+    <g id="ic_Arrow_Left_24-2" data-name="ic_Arrow_Left_24" transform="translate(24 -4.842)">
+      <g id="Group_47873" data-name="Group 47873" transform="translate(0 31.842)">
+        <path id="Path_97010" data-name="Path 97010" d="M22.557,40.2a1.764,1.764,0,0,0-.3-.021H5.329l.369-.167a3.435,3.435,0,0,0,.97-.667l4.748-4.614a1.691,1.691,0,0,0,.249-2.211,1.75,1.75,0,0,0-2.4-.361,1.708,1.708,0,0,0-.176.144L.5,40.651a1.635,1.635,0,0,0,0,2.36h0l8.586,8.343a1.753,1.753,0,0,0,2.428,0,1.588,1.588,0,0,0-.1-2.374L6.677,44.355a3.432,3.432,0,0,0-.859-.609L5.3,43.521H22.166a1.767,1.767,0,0,0,1.812-1.4A1.675,1.675,0,0,0,22.557,40.2Z" transform="translate(0 -31.842)" fill="#62768e"/>
+      </g>
+    </g>
+  </g>
+</svg>
