@@ -1,0 +1,128 @@
+.m-button {
+    border-radius: 4px;
+    background: #fff;
+    height: 36px;
+    padding: 6px 16px;
+    text-align: center;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: all .2s ease;
+    border: 1px solid #e0e0e0;
+    font-size: 14px ;
+    min-width: 80px;
+}
+
+.ms-button {
+    display: inline-block;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    border: 1px solid #b6b9ce;
+    border-color: #b6b9ce;
+    color: #606266;
+    text-align: center;
+    box-sizing: border-box;
+    outline: none;
+    margin: 0;
+    transition: .1s;
+    font-weight: 500;
+    padding: 12px 20px;
+    font-size: 14px;
+    border-radius: 10px;
+
+    min-width: 113px;
+    padding: 0 12px;
+    margin-right: 12px;
+    margin-left: 0!important;
+    height: 40px;
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.add-icon{
+    margin: 0 5px 0 -4px;
+}
+
+.btn-router{
+    border: none;
+    color: var(--color-text);
+    background: none;
+    height: 40px;
+    border-radius: 10px;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 0 12px;
+    min-width: 0;
+    margin: 0;
+}
+
+.btn-white{
+    background: #f1f2f7;
+}
+
+.btn-white:hover {
+    background-color: #f1f2f7;
+    color: var(--color-text);
+    opacity: .8;
+}
+
+.btn-white:focus {
+    background-color: #f1f2f7;
+    color: var(--color-text);
+    opacity: .8;
+}
+
+.btn-blue {
+    border: none;
+    background-color: #8a6bf6;
+    color: #fff;
+}
+
+.btn-blue:hover{
+    opacity: 0.8;
+}
+
+.btn-blue:focus{
+    opacity: 0.8;
+}   
+
+.btn-margin__left{
+    margin-left: 16px;
+}
+
+.btn-margin__right{
+    margin-right: 16px;
+}
+
+.btn-active:active{
+    transform: translateY(4px);
+    box-shadow: inset 1px 1px 4px #34495e;
+    transition: all .1s ease;
+}
+
+.btn-40{
+    min-width: unset!important;
+    width: 40px!important;
+}
+
+.btn-onlyicon{
+    min-width: unset!important;
+}
+
+.btn-upload{
+    background-color: #ece7fe!important;
+    color: #8a6bf6!important;
+    border: none;
+}
+
+.btn-green{
+    color: #00c542;
+    background-color: rgba(0,197,66,.2);
+    border: none;
+}
+
+
+
