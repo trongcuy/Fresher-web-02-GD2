@@ -11,8 +11,9 @@
 export default {
     name: 'BaseButton',
     props: {
-        text: String,
-        str: String,
+        text: String,   // Nội dung button
+        str: String,    // Class của button
+        // Trạng thái disable của button
         disabled: {
             type: Boolean,
             default: false

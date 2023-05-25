@@ -2,23 +2,29 @@
     <div class="input-container">
         <input type="text" :class="inputClass" :placeholder="placeholder">
         <div class="icon" v-if="showIcon">
-            <img src="@/assets/img/icon-search.svg" alt="">
+            <img :src="searchImg" alt="">
         </div>
     </div>
 </template> 
 
 <script setup>
-import { computed, defineProps, onMounted, ref, watch, defineEmits, onUpdated } from "vue";
+import { defineProps } from "vue";
+
+// Các biến lưu đường dẫn
+const searchImg = require("@/assets/img/icon-search.svg");
 
 const props = defineProps({
+    // Placeholder của input
     placeholder: {
         type: String,
         default: null
     },
+    // Class của input
     inputClass: {
         type: String,
         default: null 
     },
+    // Có hiển thị icon hay không
     showIcon: {
         type: Boolean,
         default: false

@@ -35,14 +35,14 @@
                 <BaseButton class="ms-button btn-white btn-active btn-onlyicon">
                     <template v-slot:icon>
                         <div class="center">
-                            <img src="@/assets/img/duplicate.svg" alt="">
+                            <img :src="duplicateImg" alt="">
                         </div>
                     </template>
                 </BaseButton>
                 <BaseButton class="ms-button btn-white btn-active btn-onlyicon">
                     <template v-slot:icon>
                         <div class="center">
-                            <img src="@/assets/img/trash.svg" alt="">
+                            <img :src="trashImg" alt="">
                         </div>
                     </template>
                 </BaseButton>
@@ -53,6 +53,10 @@
 
 <script setup>
 import BaseButton from '../button/BaseButton.vue';
+
+// Các biến lưu đường dẫn
+const duplicateImg = require("@/assets/img/duplicate.svg");
+const trashImg = require("@/assets/img/trash.svg");
 </script>
 
 <style scoped>

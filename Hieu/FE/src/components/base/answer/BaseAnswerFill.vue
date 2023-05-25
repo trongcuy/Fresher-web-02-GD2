@@ -4,13 +4,10 @@
             <div class="fill-number">
                 Ô trống 1
             </div>
-            <div class="fill-input">
-                <!-- <input type="text"> -->
-                <span class="default-span">Nhập đáp án rồi nhấn Enter...</span>
-            </div>
+            <BaseInputTag></BaseInputTag>
             <div class="fill-remove">
                 <div class="remove-icon">
-                    <img src="@/assets/img/icon-remove.svg" alt="">
+                    <img :src="removeImg" alt="">
                 </div>
             </div>
         </div>
@@ -18,7 +15,7 @@
             <div class="fill-number"></div>
             <div class="fill-add__button flex">
                 <div class="fill-add__img">
-                    <img src="@/assets/img/icon-add.svg" alt="">
+                    <img :src="addImg" alt="">
                 </div>
                 <div class="fill-add__text">
                     Thêm đáp án
@@ -29,7 +26,11 @@
 </template>
 
 <script setup>
+import BaseInputTag from "../input/BaseInputTag.vue";
 
+// Các biến lưu đường dẫn
+const removeImg = require("@/assets/img/icon-remove.svg");
+const addImg = require("@/assets/img/icon-add.svg");
 </script>
 
 <style scoped>
@@ -47,22 +48,6 @@
 .fill-number{
     width: 5rem;
     margin-right: .5rem;
-}
-
-.fill-input{
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    padding-right: 46px;
-    border: 1px solid rgb(182, 185, 206);
-    padding: 0 4px 0px;
-    border-radius: 10px;
-    min-height: 42px;
-    width: 100%;
-}
-
-.default-span{
-    opacity: 0.6;
 }
 
 .fill-remove{
@@ -97,4 +82,7 @@
 .fill-add__img{
     margin-right: 12px;
 }
+
+
+
 </style>

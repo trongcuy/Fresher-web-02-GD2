@@ -17,3 +17,19 @@
 .icon-exit {
     background: transparent url(../../icon/sprite_cegov.svg) no-repeat -242px -26px;
 }
+
+.icon-success{
+    background: transparent url(../../img/toast-success.svg) no-repeat;
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    min-height: 32px;
+}
+
+.icon-fail{
+    background: transparent url(../../img/toast-success.svg) no-repeat;
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    min-height: 32px;
+}

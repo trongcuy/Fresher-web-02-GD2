@@ -19,9 +19,9 @@
                     </div>
                 </div>
                 <div class="form-body__main" ref="main">
-                    <textarea class="question-content" placeholder="Nhập câu hỏi tại đây..."></textarea>
+                    <CKEditor class="question-ckeditor" v-model="editorData"></CKEditor>
                 </div>
-                <div class="form-body__answer" v-show="showFormQuestion == 1">
+                <div class="form-body__answer" v-show="showFormQuestion == Enum.FormQuestion.Select">
                     <div class="list-answer">
                         <BaseAnswer></BaseAnswer>
                         <BaseAnswer></BaseAnswer>
@@ -68,7 +68,7 @@
                     </div>
                 </div>
                 <div class="form-body__main fullscreen">
-                    <textarea class="question-content" placeholder="Nhập câu hỏi tại đây..."></textarea>
+                    <CKEditor class="question-ckeditor" v-model="editorData"></CKEditor>
                 </div>
             </div>
             <div class="form-footer flex">
@@ -80,7 +80,7 @@
         </div>
         <div class="add-note flex" v-show="showNoteQuestion" @click="showNoteQuestion = false">
             <div class="note-img">
-                <img src="@/assets/img/icon-noteadd.svg" alt="">
+                <img :src="noteaddImg" alt="">
             </div>
             <div class="note-text">
                 Thêm lời giải
@@ -88,7 +88,7 @@
         </div>
         <div class="close-note flex" v-show="!showNoteQuestion" @click="showNoteQuestion = true">
             <div class="note-img">
-                <img src="@/assets/img/icon-noteback.svg" alt="">
+                <img :src="notebackImg" alt="">
             </div>
             <div class="note-text">
                 Quay lại câu hỏi
@@ -101,18 +101,24 @@
 import BaseCombobox from '../base/combobox/BaseCombobox.vue';
 import BaseButton from '../base/button/BaseButton.vue';
 import BaseAnswer from '../base/answer/BaseAnswer.vue';
+import CKEditor from '@/components/base/ckeditor/CKEditor.vue';
 import { useStore } from 'vuex';
-import { computed, reactive, ref, watch } from 'vue'; 
+import { computed, ref, watch } from 'vue'; 
 import * as Resource from '@/common/resource/Resource';
 import * as Enum from '@/common/enum/Enum';
 import BaseAnswerFill from '../base/answer/BaseAnswerFill.vue';
+
+// Các biến lưu đường dẫn
+const noteaddImg = require("@/assets/img/icon-noteadd.svg");
+const notebackImg = require("@/assets/img/icon-noteback.svg");
 
 const store = useStore();
 
 const showFormQuestion = computed(() => store.state.question.showFormQuestion);
 
-const typeQuestion = ref();
-const showNoteQuestion = ref(true);
+const typeQuestion = ref(); // Kiểu câu hỏi
+const showNoteQuestion = ref(true); // Show form chú thích
+const editorData = ref();   // Giá trị ô input CKEditor
 const main = ref("main");
 /**
  * Đóng form
@@ -146,6 +152,10 @@ watch((showFormQuestion), () => {
         main.value.classList.remove("fullscreen");
     }
 })
+
+// watch((editorData), () => {
+//     console.log(editorData.value);
+// })
 </script>
 
 <style scoped>
@@ -191,9 +201,13 @@ watch((showFormQuestion), () => {
 }
 
 .form-body__main{
-    height: 45%;
+    height: auto;
     background-color: #fff2ab;
     border-radius: 10px 10px 0 0;
+}
+
+.form-body__main>div{
+    height: 100%;
 }
 
 .question-content{
@@ -322,4 +336,6 @@ watch((showFormQuestion), () => {
 .form-note .form-footer{
     justify-content: flex-end;
 }
+
+
 </style>

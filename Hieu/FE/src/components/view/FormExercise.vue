@@ -16,7 +16,7 @@
                             Ảnh đại diện
                         </label>
                         <div class="img-avatar">
-                            <img src="@/assets/subjects-avatar/toan.png" alt="">
+                            <img :src="avatarImg" alt="">
                         </div>
                     </div>
                 </div>
@@ -77,10 +77,17 @@ import { useStore } from 'vuex';
 import { computed } from 'vue';
 import BaseInput from "../base/input/BaseInput.vue";
 
-const store = useStore();
+// Các biến lưu đường dẫn
+const avatarImg = require("@/assets/subjects-avatar/toan.png");
 
+const store = useStore();
+// Biến giá trị trạng thái form bài tập
 const showFormExercise = computed(() => store.state.exercise.showFormExercise);
 
+/**
+ * Đóng form bài tập
+ * CreatedBy VMHieu 23/05/2023
+ */
 const closeFormExercise = () => {
     store.dispatch("showFormExercise", false);
 }

@@ -1,5 +1,5 @@
 const state = {
-    showListQuestion: true,
+    showListQuestion: false,
     showFormQuestion: false,
 }
 

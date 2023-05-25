@@ -1,7 +1,7 @@
 <template>
     <div class="banner-container">
         <div class="background-banner">
-            <img src="@/assets/img/banner.png" alt="">
+            <img :src="bannerImg" alt="">
         </div>
         <div>
             <slot name="content"></slot>
@@ -10,7 +10,8 @@
 </template>
 
 <script setup>
-
+// Các biến lưu đường dẫn
+const bannerImg = require("@/assets/img/banner.png");
 </script>
 
 <style scoped>

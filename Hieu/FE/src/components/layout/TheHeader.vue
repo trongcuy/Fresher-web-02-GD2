@@ -4,56 +4,53 @@
             <router-link to="/dashboard" active-class="active">
                 <div class="menu-item flex">
                     <div class="menu-item__icon">
-                        <img src="@/assets/img/tongquan.svg" alt="" />
+                        <img :src="tqImg" alt="" />
                     </div>
-                    <div class="menu-item__text">Tổng quan</div>
+                    <div class="menu-item__text">{{ Resource.TextWeb.Header.Overview }}</div>
                 </div>
             </router-link>
             <router-link to="/classroom" active-class="active">
                 <div class="menu-item flex">
                     <div class="menu-item__icon">
-                        <img src="@/assets/img/lophoc.svg" alt="" />
+                        <img :src="lhImg" alt="" />
                     </div>
-                    <div class="menu-item__text">Lớp học</div>
+                    <div class="menu-item__text">{{ Resource.TextWeb.Header.Class }}</div>
                 </div>
             </router-link>
             <router-link to="/storage" active-class="active">
                 <div class="menu-item flex">
                     <div class="menu-item__icon">
-                        <img src="@/assets/img/hoclieu.svg" alt="" />
+                        <img :src="hlImg" alt="" />
                     </div>
-                    <div class="menu-item__text">Học liệu</div>
+                    <div class="menu-item__text">{{ Resource.TextWeb.Header.Courseware }}</div>
                 </div>
             </router-link>
             <router-link to="/training" active-class="active">
                 <div class="menu-item flex">
                     <div class="menu-item__icon">
-                        <img src="@/assets/img/hoclieu.svg" alt="" />
+                        <img :src="hlImg" alt="" />
                     </div>
-                    <div class="menu-item__text">Đào tạo MISA EMIS</div>
+                    <div class="menu-item__text">{{ Resource.TextWeb.Header.Traning }}</div>
                 </div>
             </router-link>  
         </div>
         <div class="header-right flex">
-            <div class="combobox-year">
-                <BaseCombobox></BaseCombobox>
+            <div class="menu-icon">
+                <img :src="tcImg" alt="" />
             </div>
             <div class="menu-icon">
-                <img src="@/assets/img/tuychon.svg" alt="" />
+                <img :src="tlImg" alt="" />
             </div>
             <div class="menu-icon">
-                <img src="@/assets/img/thietlap.svg" alt="" />
+                <img :src="tgImg" alt="" width="24" height="24"/>
             </div>
             <div class="menu-icon">
-                <img src="@/assets/img/trogiup.svg" alt="" width="24" height="24"/>
-            </div>
-            <div class="menu-icon">
-                <img src="@/assets/img/thongbao.svg" alt="" />
+                <img :src="tbImg" alt="" />
             </div>
             <div class="avatar flex">
-                <div class="avatar-context">Xin chào, <strong>Hiếu</strong></div>
+                <div class="avatar-context">{{ Resource.TextWeb.Header.Greeting }} <strong>Hiếu</strong></div>
                 <div class="avatar-img">
-                    <img src="@/assets/img/getavatar.png" alt="" />
+                    <img :src="avatarImg" alt="" />
                 </div>
             </div>
         </div>
@@ -61,7 +58,17 @@
 </template>
 
 <script setup>
-import BaseCombobox from '../base/combobox/BaseCombobox.vue';
+import * as Resource from "@/common/resource/Resource";
+
+// Các biến lưu đường dẫn
+const tqImg = require("@/assets/img/tongquan.svg");
+const lhImg = require("@/assets/img/lophoc.svg");
+const hlImg = require("@/assets/img/hoclieu.svg");
+const tcImg = require("@/assets/img/tuychon.svg");
+const tlImg = require("@/assets/img/thietlap.svg");
+const tgImg = require("@/assets/img/trogiup.svg");
+const tbImg = require("@/assets/img/thongbao.svg");
+const avatarImg = require("@/assets/img/getavatar.png");
 </script>
 
 <style scoped>

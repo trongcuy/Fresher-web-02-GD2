@@ -3,10 +3,10 @@
         <div class="create-header">
             <div class="header-top flex">
                 <div class="btn-back" @click="backMainPage">
-                    <img src="@/assets/img/btn-back.svg" alt="">
+                    <img :src="btnBackImg" alt="">
                 </div>
                 <div class="header-top__avatar">
-                    <img src="@/assets/img/create-default.webp" alt="">
+                    <img :src="createImg" alt="">
                 </div>
                 <div class="header-top__context">
                     <input type="text" class="exercise-name__input" v-model="dataExercise.ExerciseName" placeholder="Nhập tên bài tập...">
@@ -29,7 +29,7 @@
                         <BaseButton class="ms-button btn-white btn-active btn-onlyicon  btn-40">
                             <template v-slot:icon>
                                 <div class="center">
-                                    <img src="@/assets/img/icon-question.svg" alt="">
+                                    <img :src="questionImg" alt="">
                                 </div>
                             </template>
                         </BaseButton>
@@ -51,7 +51,7 @@
                     </div>
                     <div class="import-box flex">
                         <div class="import-box__avatar">
-                            <img src="@/assets/img/import-file.svg" alt="">
+                            <img :src="importImg" alt="">
                         </div>
                         <div class="import-box__content">
                             Nhấn để tải lên file bài tập hoặc kéo thả file vào đây. <br />
@@ -71,43 +71,43 @@
                         <div class="create-toolbar flex">
                             <div class="question-library">
                                 <div class="question-avatar question-hover">
-                                    <img src="@/assets/img/library.svg" alt="">
+                                    <img :src="libraryImg" alt="">
                                 </div>
                                 <div class="question-text">Thư viện học liệu</div>
                             </div>
                             <div class="question-line">
                                 <div class="question-avatar">
-                                    <img src="@/assets/img/line.svg" alt="">
+                                    <img :src="lineImg" alt="">
                                 </div>
                             </div>
                             <div class="question">
                                 <div class="question-select" @click="openFormQuestion(Enum.FormQuestion.Select)">
                                     <div class="question-avatar question-hover">
-                                        <img src="@/assets/img/select.svg" alt="">
+                                        <img :src="selectImg" alt="">
                                     </div>
                                     <div class="question-text">Chọn đáp án</div>
                                 </div>
                                 <div class="question-yesno" @click="openFormQuestion(Enum.FormQuestion.YesOrNo)">
                                     <div class="question-avatar question-hover">
-                                        <img src="@/assets/img/yesorno.svg" alt="">
+                                        <img :src="yesnoImg" alt="">
                                     </div>
                                     <div class="question-text">Đúng sai</div>
                                 </div>
                                 <div class="question-fill" @click="openFormQuestion(Enum.FormQuestion.Fill)">
                                     <div class="question-avatar question-hover">
-                                        <img src="@/assets/img/fill.svg" alt="">
+                                        <img :src="fillImg" alt="">
                                     </div>
                                     <div class="question-text">Điền vào chỗ trống</div>
                                 </div>
                                 <div class="question-essay" @click="openFormQuestion(Enum.FormQuestion.Essay)">
                                     <div class="question-avatar question-hover">
-                                        <img src="@/assets/img/essay.svg" alt="">
+                                        <img :src="essayImg" alt="">
                                     </div>
                                     <div class="question-text">Tự luận</div>
                                 </div>
                                 <div class="question-group" @click="openFormQuestion(Enum.FormQuestion.Group)">
                                     <div class="question-avatar question-hover">
-                                        <img src="@/assets/img/group.svg" alt="">
+                                        <img :src="groupImg" alt="">
                                     </div>
                                     <div class="question-text">Câu hỏi nhóm</div>
                                 </div>
@@ -129,32 +129,32 @@
                 <div class="create-option option-list">
                     <div class="question-library">
                         <div class="question-avatar question-hover">
-                            <img src="@/assets/img/library.svg" alt="">
+                            <img :src="libraryImg" alt="">
                         </div>
                     </div>
                     <div class="question-select" @click="openFormQuestion(Enum.FormQuestion.Select)">
                         <div class="question-avatar question-hover">
-                            <img src="@/assets/img/select.svg" alt="">
+                            <img :src="selectImg" alt="">
                         </div>
                     </div>
                     <div class="question-yesno" @click="openFormQuestion(Enum.FormQuestion.YesOrNo)">
                         <div class="question-avatar question-hover">
-                            <img src="@/assets/img/yesorno.svg" alt="">
+                            <img :src="yesnoImg" alt="">
                         </div>
                     </div>
                     <div class="question-fill" @click="openFormQuestion(Enum.FormQuestion.Fill)">
                         <div class="question-avatar question-hover">
-                            <img src="@/assets/img/fill.svg" alt="">
+                            <img :src="fillImg" alt="">
                         </div>
                     </div>
                     <div class="question-essay" @click="openFormQuestion(Enum.FormQuestion.Essay)">
                         <div class="question-avatar question-hover">
-                            <img src="@/assets/img/essay.svg" alt="">
+                            <img :src="essayImg" alt="">
                         </div>
                     </div>
                     <div class="question-group" @click="openFormQuestion(Enum.FormQuestion.Group)">
                         <div class="question-avatar question-hover">
-                            <img src="@/assets/img/group.svg" alt="">
+                            <img :src="groupImg" alt="">
                         </div>
                     </div>
                 </div>
@@ -176,14 +176,26 @@ import { useStore } from 'vuex';
 import { computed, reactive } from 'vue'; 
 import * as Enum from '@/common/enum/Enum.js';
 
+// Các biến lưu đường dẫn
+const btnBackImg = require("@/assets/img/btn-back.svg");
+const createImg = require("@/assets/img/create-default.webp");
+const questionImg = require("@/assets/img/icon-question.svg");
+const importImg = require("@/assets/img/import-file.svg");
+const libraryImg = require("@/assets/img/library.svg");
+const lineImg = require("@/assets/img/line.svg");
+const selectImg = require("@/assets/img/select.svg");
+const yesnoImg = require("@/assets/img/yesorno.svg");
+const fillImg = require("@/assets/img/fill.svg");
+const essayImg = require("@/assets/img/essay.svg");
+const groupImg = require("@/assets/img/group.svg");
+
 const store = useStore();
 const router = useRouter();
-
+// Show danh sách câu hỏi
 const showListQuestion = computed(() => store.state.question.showListQuestion);
-const showOver = computed(() => store.state.app.showOver);
-
+// Object data bài tập
 const dataExercise = reactive({
-    ExerciseName: ""
+    ExerciseName: "",   // Tên bài tập
 })
 /**
  * Qua lại router trước

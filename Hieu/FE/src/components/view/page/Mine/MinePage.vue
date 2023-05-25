@@ -9,7 +9,7 @@
                     <div class="list-filter flex">
                         <div class="filter-courseware">
                             <BaseCombobox
-                                placeholder="Tất cả học liệu"
+                                :placeholder=Resource.ComboboxDefault.Courseware
                                 :propValue=Resource.PropName.RewardLevel
                                 propText="Data"
                                 :data=Resource.DataRewardLevel
@@ -17,12 +17,12 @@
                         </div>
                         <div class="filter-subject">
                             <BaseCombobox
-                                placeholder="Tất cả các môn"
+                                :placeholder=Resource.ComboboxDefault.Subject
                             ></BaseCombobox>
                         </div>
                         <div class="filter-class">
                             <BaseCombobox
-                                placeholder="Tất cả các khối"
+                                :placeholder=Resource.ComboboxDefault.Class
                             ></BaseCombobox>
                         </div>
                     </div>
@@ -44,6 +44,7 @@
             </div>
         </template>
     </BaseMinePage>
+    <PopupMessage></PopupMessage>
 </template>
 
 <script setup>
@@ -51,7 +52,8 @@ import BaseButton from '@/components/base/button/BaseButton.vue';
 import BaseCombobox from '@/components/base/combobox/BaseCombobox.vue';
 import BaseExercise from '@/components/base/exercise/BaseExercise.vue';
 import BaseInput from '@/components/base/input/BaseInput.vue';
-import BaseMinePage from '@/components/base/minepage/BaseMinePage.vue';
+import BaseMinePage from '@/components/base/minepage/BaseMinePage.vue';4
+import PopupMessage from '../../PopupMessage.vue';
 import * as Resource from '@/common/resource/Resource';
 
 

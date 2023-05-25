@@ -1,27 +1,27 @@
 <template>
     <div class="exercise-container">
         <div class="exercise-img">
-            <img src="@/assets/subjects-avatar/diali.png" alt="">
+            <img :src="subjectImg" alt="">
             <div class="img-content center">Khối 1 - Giáo dục công dân</div>
         </div>
         <div class="exercise-content">
             <div class="content-title flex">
                 <div>Bài tập toán ngày 10/02</div>
                 <div class="btn-more" @click="toggleOption">
-                    <img src="@/assets/img/icon_option.svg" alt="">
+                    <img :src="optionImg" alt="">
                 </div>
             </div>
             <div class="content-number flex">
-                <img src="@/assets/img/socau.svg" alt="">
+                <img :src="numberImg" alt="">
                 <div>10 câu</div>
             </div>
             <div class="content-creater flex">
-                <img src="@/assets/img/user.svg" alt="" />
+                <img :src="userImg" alt="" />
                 <div>Vũ Minh Hiếu</div>
             </div>
             <div class="more-option" v-show="showOption">
-                <div class="option">Xem</div>
-                <div class="option">Xóa</div>
+                <div class="option" @click="handleOpenPopup(Enum.PopupStatus.Error)">Xem</div>
+                <div class="option" @click="handleOpenPopup(Enum.PopupStatus.Delete)">Xóa</div>
             </div>
         </div>
     </div>
@@ -29,11 +29,35 @@
 
 <script setup>
 import { ref } from 'vue';
+import { useStore } from 'vuex';
+import * as Enum from '@/common/enum/Enum';
 
+const store = useStore();
+// Show option xem hoặc xóa bài tập
 const showOption = ref(false);
+// Các đường dẫn hình ảnh
+const subjectImg = require("@/assets/subjects-avatar/diali.png");
+const optionImg = require("@/assets/img/icon_option.svg");
+const numberImg = require("@/assets/img/socau.svg");
+const userImg = require("@/assets/img/user.svg");
 
+/**
+ * Toggle toolbar
+ * CreatedBy VMHieu 23/05/2023
+ */
 const toggleOption = () => {
     showOption.value = !showOption.value;
+}
+
+/**
+ * Mở popup xóa
+ * CreatedBy VMHieu 23/05/2023
+ */
+const handleOpenPopup = (status) => {
+    store.dispatch("updatePopupMsg", "Bài tập toán ngày 10/02");
+    store.dispatch("updatePopupStatus", status);
+    store.dispatch("showPopup", true);
+    showOption.value = false;
 }
 
 </script>

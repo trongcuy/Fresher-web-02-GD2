@@ -20,7 +20,10 @@ export const PropName = {
     RewardLevel: "RewardLevel", // Cấp khen thưởng
     FormQuestion: "FormQuestion", //
 }
-
+/**
+ * Data combobox cho các loại câu hỏi
+ * CreatedBy VMHieu 24/05/2023
+ */
 export const FormQuestionType = [
     {
         Data: "Chọn đáp án",
@@ -43,5 +46,36 @@ export const FormQuestionType = [
         FormQuestion: "5"
     },
 ]
+/**
+ * Các dữ liệu cho CKEditor
+ * CreatedBy VMHieu 24/05/2023
+ */
+export const DataCKEditor = {
+    placeholderQuestion: "Nhập câu hỏi tại đây...",
+    placeholderAnswer: "Nhập đáp án..."
+}
+
+/**
+ * Các dữ liệu mặc định ban đầu của combobox
+ * CreatedBy VMHieu 24/05/2023
+ */
+export const ComboboxDefault = {
+    Courseware: "Tất cả học liệu",
+    Subject: "Tất cả các môn",
+    Class: "Tất cả các khối"
+}
+/**
+ * Các text trong trang web
+ * CreatedBy VMHieu 24/05/2023
+ */
+export const TextWeb = {
+    Header: {
+        Overview: "Tổng quan",
+        Class: "Lớp học",
+        Courseware: "Học liệu",
+        Traning: "Đào tạo MISA EMIS",
+        Greeting: "Xin chào, "
+    }
+}
 
 export default Resource;

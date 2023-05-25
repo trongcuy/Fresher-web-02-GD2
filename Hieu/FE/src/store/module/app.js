@@ -4,6 +4,7 @@ const state = {
     toastMsg: "",
     popupMsg: "",
     popupStatus: 0,
+    toastStatus: 0,
     hideMainPage: false,
     showOver: false,
 }
@@ -35,6 +36,15 @@ const mutations = {
      */
     updateToastMsg(state, payload) {
         state.toastMsg = payload;
+    },
+    /**
+     * Update trạng thái toast
+     * @param {*} context 
+     * @param {*} data 
+     * CreatedBy VMHieu 23/05/2023 
+     */
+    updateToastStatus(state, payload) {
+        state.toastStatus = payload;
     },
     /**
      * Update trạng thái popup
@@ -103,6 +113,16 @@ const actions = {
     updateToastMsg(context, data) {
         context.commit('updateToastMsg', data);
     },
+
+    /**
+     * Update trạng thái toast
+     * @param {*} context 
+     * @param {*} data 
+     * CreatedBy VMHieu 23/05/2023 
+     */
+    updateToastStatus(context, data) {
+        context.commit('updateToastStatus', data);
+    },
     /**
      * Update trạng thái popup
      * @param {*} context 
@@ -131,15 +151,6 @@ const actions = {
     updateHideMainPage(context, data) {
         context.commit('updateHideMainPage', data);
     },
-    /**
-     * Ẩn hiện over màn hình
-     * @param {*} context 
-     * @param {*} data 
-     * CreatedBy VMHieu 21/05/2023
-     */
-    showOver(context, data) {
-        context.commit('showOver', data);
-    }
 }
 
 export default {

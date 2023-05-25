@@ -1,6 +1,6 @@
 <template>
     <div>
-      <div class="combobox" :autoFocus="autoFocus" :class="cbbClass" v-clickOutside="hideListData" @click="btnSelectDataOnClick" ref="combobox">
+      <div class="combobox" :autoFocus="autoFocus" :class="cbbClass" v-clickOutside="hideListData" ref="combobox">
         <input
           :id="id"
           type="text"
@@ -10,13 +10,14 @@
           @input="inputOnChange"
           @keydown="selecItemUpDown"
           @mouseover="handleMouse"
+          @click="btnSelectDataOnClick"
           :tabindex="tabidx"
           :placeholder="placeholder"
           :resetValue="resetValue"
           :bidingValue="bidingValue"
           autocomplete="off"
         />
-        <div class="combobox-icon">
+        <div class="combobox-icon" @click="btnSelectDataOnClick">
             <img src="@/assets/img/icon_arrow.svg" alt="">
         </div>
         
@@ -103,69 +104,59 @@ const keyCode = {
 export default {
     name: "MSCombobox",
     props: {
-    cbbClass: null,
-    valueDefault: null,
-    resetValue: true,
-    url: String,
-    propValue: String,
-    propText: String,
-    isLoadData: {
-        type: Boolean,
-        default: true,
-    },
-    placeholder: {
+    cbbClass: null,     // Class bố sung của combobox
+    valueDefault: null,     // Giá trị ban đầu
+    resetValue: true,   // Reset lại value của cbb
+    propValue: String,  // prop để lấy value
+    propText: String,   // prop để lấy text hiển thị
+    placeholder: {      // giá trị placeholder
         type: String,
         default: ""
     },
-    data: [],
-    refInput: {
-        type: String,
-        default: ""
-    },
-    isPositionTop: {
+    data: [],           // dữ liệu combobox
+    isPositionTop: {    // Vị trí positiop top
         type: Boolean,
         default: false
-    },
-    errorMsg: {
+    },                  
+    errorMsg: {         // Msg lỗi
         type: String,
         default: ""
-    },
-    timer: {
-        type: Number,
-        default: 300
-    },
-    id: {
+    },                  
+    id: {               // id của cbb
         type: String,
         default: ""
-    },
+    },                  // tabindex
     tabidx: {
         type: Number,
         default: -1
-    },
+    },                  // Focus vào vị trí nào lúc ban đầu
     autoFocus: {
         type: Number,
         default: null
     }
     },
     watch: {
-        resetValue: function() {
-            this.indexItemSelected = null;
-            this.indexItemFocus = null;
-            this.textInput = null;
-            this.showError = false;
-        }, 
+        // resetValue: function() {
+        //     this.indexItemSelected = null;
+        //     this.indexItemFocus = null;
+        //     this.textInput = null;
+        //     this.showError = false;
+        // }, 
 
-        showError: function() {
-            if (this.showError) {
-            this.$refs.combobox.classList.add("combobox__error");
-            this.indexItemSelected = null;
-            this.indexItemFocus = null;
-            this.$emit("getValueCombobox");
-            } else {
-            this.$refs.combobox.classList.remove("combobox__error");
-            }
-        },
-
+        // showError: function() {
+        //     if (this.showError) {
+        //     this.$refs.combobox.classList.add("combobox__error");
+        //     this.indexItemSelected = null;
+        //     this.indexItemFocus = null;
+        //     this.$emit("getValueCombobox");
+        //     } else {
+        //     this.$refs.combobox.classList.remove("combobox__error");
+        //     }
+        // },
+        /**
+         * Mặc định focus ban đầu váo ô có vị trí autoFocus
+         * CreatedBy VMHieu 20/05/2023
+         */
         autoFocus: function() {
             if (this.autoFocus) {
                 let value = this.data[this.autoFocus - 1][this.propValue];
@@ -369,16 +360,16 @@ export default {
     },
     data() {
         return {
-            textInput: null,
+            textInput: null,    // Giá trị text của cbb
             dataFilter: [], // data đã được filter
             isShowListData: false, // Hiển thị list data hay không
             indexItemFocus: null, // Index của item focus hiện tại
             indexItemSelected: null, // Index của item được selected
-            tabindex: {
-            type: Number,
-            default: 0
+            tabindex: {             // tabindex
+                type: Number,
+                default: 0
             },
-            showError: false,
+            showError: false,       // Ẩn hiện lỗi
         };
     },
 };
