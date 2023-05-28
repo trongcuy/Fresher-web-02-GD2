@@ -1,8 +1,16 @@
 {
   "version": 2,
-  "dgSpecHash": "pT26UhyyN7jpgA6WBKtMYv2vj0d5za4iDGss2KKqAjI9Q3sQR7ZW6KY+To+fNwQSO5/bk1fiRjyHcXNxzarIdQ==",
+  "dgSpecHash": "32aYTcqEcTJZUg3eyOrfRlN81zKN3B/ppBx0xH01de6OlMAR2KW4nItDoKgCUoseiXy6jbzWusREmBgh1XOpJQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\Admin\\source\\repos\\Fresher-web-02-GD2\\Hieu\\BE\\WEB02.EMIS.API\\WEB02.EMIS.API.Common\\WEB02.EMIS.API.Common.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\Admin\\.nuget\\packages\\dapper\\2.0.123\\dapper.2.0.123.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\microsoft.extensions.apidescription.server\\6.0.5\\microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\swashbuckle.aspnetcore\\6.5.0\\swashbuckle.aspnetcore.6.5.0.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.5.0\\swashbuckle.aspnetcore.swagger.6.5.0.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.5.0\\swashbuckle.aspnetcore.swaggergen.6.5.0.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\6.5.0\\swashbuckle.aspnetcore.swaggerui.6.5.0.nupkg.sha512"
+  ],
   "logs": []
 }

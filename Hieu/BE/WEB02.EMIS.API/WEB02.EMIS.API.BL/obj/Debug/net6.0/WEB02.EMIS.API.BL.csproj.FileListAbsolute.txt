@@ -1,0 +1,17 @@
+C:\Users\Admin\source\repos\Fresher-web-02-GD2\Hieu\BE\WEB02.EMIS.API\WEB02.EMIS.API.BL\bin\Debug\net6.0\WEB02.EMIS.API.BL.deps.json
+C:\Users\Admin\source\repos\Fresher-web-02-GD2\Hieu\BE\WEB02.EMIS.API\WEB02.EMIS.API.BL\bin\Debug\net6.0\WEB02.EMIS.API.BL.dll
+C:\Users\Admin\source\repos\Fresher-web-02-GD2\Hieu\BE\WEB02.EMIS.API\WEB02.EMIS.API.BL\bin\Debug\net6.0\WEB02.EMIS.API.BL.pdb
+C:\Users\Admin\source\repos\Fresher-web-02-GD2\Hieu\BE\WEB02.EMIS.API\WEB02.EMIS.API.BL\bin\Debug\net6.0\WEB02.EMIS.API.Common.dll
+C:\Users\Admin\source\repos\Fresher-web-02-GD2\Hieu\BE\WEB02.EMIS.API\WEB02.EMIS.API.BL\bin\Debug\net6.0\WEB02.EMIS.API.DL.dll
+C:\Users\Admin\source\repos\Fresher-web-02-GD2\Hieu\BE\WEB02.EMIS.API\WEB02.EMIS.API.BL\bin\Debug\net6.0\WEB02.EMIS.API.Common.pdb
+C:\Users\Admin\source\repos\Fresher-web-02-GD2\Hieu\BE\WEB02.EMIS.API\WEB02.EMIS.API.BL\bin\Debug\net6.0\WEB02.EMIS.API.DL.pdb
+C:\Users\Admin\source\repos\Fresher-web-02-GD2\Hieu\BE\WEB02.EMIS.API\WEB02.EMIS.API.BL\obj\Debug\net6.0\WEB02.EMIS.API.BL.csproj.AssemblyReference.cache
+C:\Users\Admin\source\repos\Fresher-web-02-GD2\Hieu\BE\WEB02.EMIS.API\WEB02.EMIS.API.BL\obj\Debug\net6.0\WEB02.EMIS.API.BL.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Admin\source\repos\Fresher-web-02-GD2\Hieu\BE\WEB02.EMIS.API\WEB02.EMIS.API.BL\obj\Debug\net6.0\WEB02.EMIS.API.BL.AssemblyInfoInputs.cache
+C:\Users\Admin\source\repos\Fresher-web-02-GD2\Hieu\BE\WEB02.EMIS.API\WEB02.EMIS.API.BL\obj\Debug\net6.0\WEB02.EMIS.API.BL.AssemblyInfo.cs
+C:\Users\Admin\source\repos\Fresher-web-02-GD2\Hieu\BE\WEB02.EMIS.API\WEB02.EMIS.API.BL\obj\Debug\net6.0\WEB02.EMIS.API.BL.csproj.CoreCompileInputs.cache
+C:\Users\Admin\source\repos\Fresher-web-02-GD2\Hieu\BE\WEB02.EMIS.API\WEB02.EMIS.API.BL\obj\Debug\net6.0\WEB02.EMIS.API.BL.csproj.CopyComplete
+C:\Users\Admin\source\repos\Fresher-web-02-GD2\Hieu\BE\WEB02.EMIS.API\WEB02.EMIS.API.BL\obj\Debug\net6.0\WEB02.EMIS.API.BL.dll
+C:\Users\Admin\source\repos\Fresher-web-02-GD2\Hieu\BE\WEB02.EMIS.API\WEB02.EMIS.API.BL\obj\Debug\net6.0\refint\WEB02.EMIS.API.BL.dll
+C:\Users\Admin\source\repos\Fresher-web-02-GD2\Hieu\BE\WEB02.EMIS.API\WEB02.EMIS.API.BL\obj\Debug\net6.0\WEB02.EMIS.API.BL.pdb
+C:\Users\Admin\source\repos\Fresher-web-02-GD2\Hieu\BE\WEB02.EMIS.API\WEB02.EMIS.API.BL\obj\Debug\net6.0\ref\WEB02.EMIS.API.BL.dll

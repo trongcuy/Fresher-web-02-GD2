@@ -1,0 +1,14 @@
+C:\Users\Admin\source\repos\Fresher-web-02-GD2\Hieu\BE\WEB02.EMIS.API\WEB02.EMIS.API.Common\bin\Debug\net6.0\WEB02.EMIS.API.Common.deps.json
+C:\Users\Admin\source\repos\Fresher-web-02-GD2\Hieu\BE\WEB02.EMIS.API\WEB02.EMIS.API.Common\bin\Debug\net6.0\WEB02.EMIS.API.Common.dll
+C:\Users\Admin\source\repos\Fresher-web-02-GD2\Hieu\BE\WEB02.EMIS.API\WEB02.EMIS.API.Common\bin\Debug\net6.0\WEB02.EMIS.API.Common.pdb
+C:\Users\Admin\source\repos\Fresher-web-02-GD2\Hieu\BE\WEB02.EMIS.API\WEB02.EMIS.API.Common\obj\Debug\net6.0\WEB02.EMIS.API.Common.csproj.AssemblyReference.cache
+C:\Users\Admin\source\repos\Fresher-web-02-GD2\Hieu\BE\WEB02.EMIS.API\WEB02.EMIS.API.Common\obj\Debug\net6.0\WEB02.EMIS.API.Common.Resource.Resources.resources
+C:\Users\Admin\source\repos\Fresher-web-02-GD2\Hieu\BE\WEB02.EMIS.API\WEB02.EMIS.API.Common\obj\Debug\net6.0\WEB02.EMIS.API.Common.csproj.GenerateResource.cache
+C:\Users\Admin\source\repos\Fresher-web-02-GD2\Hieu\BE\WEB02.EMIS.API\WEB02.EMIS.API.Common\obj\Debug\net6.0\WEB02.EMIS.API.Common.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Admin\source\repos\Fresher-web-02-GD2\Hieu\BE\WEB02.EMIS.API\WEB02.EMIS.API.Common\obj\Debug\net6.0\WEB02.EMIS.API.Common.AssemblyInfoInputs.cache
+C:\Users\Admin\source\repos\Fresher-web-02-GD2\Hieu\BE\WEB02.EMIS.API\WEB02.EMIS.API.Common\obj\Debug\net6.0\WEB02.EMIS.API.Common.AssemblyInfo.cs
+C:\Users\Admin\source\repos\Fresher-web-02-GD2\Hieu\BE\WEB02.EMIS.API\WEB02.EMIS.API.Common\obj\Debug\net6.0\WEB02.EMIS.API.Common.csproj.CoreCompileInputs.cache
+C:\Users\Admin\source\repos\Fresher-web-02-GD2\Hieu\BE\WEB02.EMIS.API\WEB02.EMIS.API.Common\obj\Debug\net6.0\WEB02.EMIS.API.Common.dll
+C:\Users\Admin\source\repos\Fresher-web-02-GD2\Hieu\BE\WEB02.EMIS.API\WEB02.EMIS.API.Common\obj\Debug\net6.0\refint\WEB02.EMIS.API.Common.dll
+C:\Users\Admin\source\repos\Fresher-web-02-GD2\Hieu\BE\WEB02.EMIS.API\WEB02.EMIS.API.Common\obj\Debug\net6.0\WEB02.EMIS.API.Common.pdb
+C:\Users\Admin\source\repos\Fresher-web-02-GD2\Hieu\BE\WEB02.EMIS.API\WEB02.EMIS.API.Common\obj\Debug\net6.0\ref\WEB02.EMIS.API.Common.dll

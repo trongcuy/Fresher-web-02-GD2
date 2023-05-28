@@ -4,14 +4,85 @@
     "C:\\Users\\Admin\\source\\repos\\Fresher-web-02-GD2\\Hieu\\BE\\WEB02.EMIS.API\\WEB02.EMIS.API\\WEB02.EMIS.API.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Admin\\source\\repos\\Fresher-web-02-GD2\\Hieu\\BE\\WEB02.EMIS.API\\WEB02.EMIS.API\\WEB02.EMIS.API.csproj": {
+    "C:\\Users\\Admin\\source\\repos\\Fresher-web-02-GD2\\Hieu\\BE\\WEB02.EMIS.API\\WEB02.EMIS.API.BL\\WEB02.EMIS.API.BL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Admin\\source\\repos\\Fresher-web-02-GD2\\Hieu\\BE\\WEB02.EMIS.API\\WEB02.EMIS.API\\WEB02.EMIS.API.csproj",
-        "projectName": "WEB02.EMIS.API",
-        "projectPath": "C:\\Users\\Admin\\source\\repos\\Fresher-web-02-GD2\\Hieu\\BE\\WEB02.EMIS.API\\WEB02.EMIS.API\\WEB02.EMIS.API.csproj",
+        "projectUniqueName": "C:\\Users\\Admin\\source\\repos\\Fresher-web-02-GD2\\Hieu\\BE\\WEB02.EMIS.API\\WEB02.EMIS.API.BL\\WEB02.EMIS.API.BL.csproj",
+        "projectName": "WEB02.EMIS.API.BL",
+        "projectPath": "C:\\Users\\Admin\\source\\repos\\Fresher-web-02-GD2\\Hieu\\BE\\WEB02.EMIS.API\\WEB02.EMIS.API.BL\\WEB02.EMIS.API.BL.csproj",
         "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Admin\\source\\repos\\Fresher-web-02-GD2\\Hieu\\BE\\WEB02.EMIS.API\\WEB02.EMIS.API\\obj\\",
+        "outputPath": "C:\\Users\\Admin\\source\\repos\\Fresher-web-02-GD2\\Hieu\\BE\\WEB02.EMIS.API\\WEB02.EMIS.API.BL\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {
+              "C:\\Users\\Admin\\source\\repos\\Fresher-web-02-GD2\\Hieu\\BE\\WEB02.EMIS.API\\WEB02.EMIS.API.Common\\WEB02.EMIS.API.Common.csproj": {
+                "projectPath": "C:\\Users\\Admin\\source\\repos\\Fresher-web-02-GD2\\Hieu\\BE\\WEB02.EMIS.API\\WEB02.EMIS.API.Common\\WEB02.EMIS.API.Common.csproj"
+              },
+              "C:\\Users\\Admin\\source\\repos\\Fresher-web-02-GD2\\Hieu\\BE\\WEB02.EMIS.API\\WEB02.EMIS.API.DL\\WEB02.EMIS.API.DL.csproj": {
+                "projectPath": "C:\\Users\\Admin\\source\\repos\\Fresher-web-02-GD2\\Hieu\\BE\\WEB02.EMIS.API\\WEB02.EMIS.API.DL\\WEB02.EMIS.API.DL.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "Dapper": {
+              "target": "Package",
+              "version": "[2.0.123, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[6.5.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.301\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\Admin\\source\\repos\\Fresher-web-02-GD2\\Hieu\\BE\\WEB02.EMIS.API\\WEB02.EMIS.API.Common\\WEB02.EMIS.API.Common.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Admin\\source\\repos\\Fresher-web-02-GD2\\Hieu\\BE\\WEB02.EMIS.API\\WEB02.EMIS.API.Common\\WEB02.EMIS.API.Common.csproj",
+        "projectName": "WEB02.EMIS.API.Common",
+        "projectPath": "C:\\Users\\Admin\\source\\repos\\Fresher-web-02-GD2\\Hieu\\BE\\WEB02.EMIS.API\\WEB02.EMIS.API.Common\\WEB02.EMIS.API.Common.csproj",
+        "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Admin\\source\\repos\\Fresher-web-02-GD2\\Hieu\\BE\\WEB02.EMIS.API\\WEB02.EMIS.API.Common\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -40,9 +111,159 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
+            "Dapper": {
+              "target": "Package",
+              "version": "[2.0.123, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
-              "version": "[6.2.3, )"
+              "version": "[6.5.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.301\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\Admin\\source\\repos\\Fresher-web-02-GD2\\Hieu\\BE\\WEB02.EMIS.API\\WEB02.EMIS.API.DL\\WEB02.EMIS.API.DL.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Admin\\source\\repos\\Fresher-web-02-GD2\\Hieu\\BE\\WEB02.EMIS.API\\WEB02.EMIS.API.DL\\WEB02.EMIS.API.DL.csproj",
+        "projectName": "WEB02.EMIS.API.DL",
+        "projectPath": "C:\\Users\\Admin\\source\\repos\\Fresher-web-02-GD2\\Hieu\\BE\\WEB02.EMIS.API\\WEB02.EMIS.API.DL\\WEB02.EMIS.API.DL.csproj",
+        "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Admin\\source\\repos\\Fresher-web-02-GD2\\Hieu\\BE\\WEB02.EMIS.API\\WEB02.EMIS.API.DL\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {
+              "C:\\Users\\Admin\\source\\repos\\Fresher-web-02-GD2\\Hieu\\BE\\WEB02.EMIS.API\\WEB02.EMIS.API.Common\\WEB02.EMIS.API.Common.csproj": {
+                "projectPath": "C:\\Users\\Admin\\source\\repos\\Fresher-web-02-GD2\\Hieu\\BE\\WEB02.EMIS.API\\WEB02.EMIS.API.Common\\WEB02.EMIS.API.Common.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "Dapper": {
+              "target": "Package",
+              "version": "[2.0.123, )"
+            },
+            "MySqlConnector": {
+              "target": "Package",
+              "version": "[2.2.6, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[6.5.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.301\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\Admin\\source\\repos\\Fresher-web-02-GD2\\Hieu\\BE\\WEB02.EMIS.API\\WEB02.EMIS.API\\WEB02.EMIS.API.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Admin\\source\\repos\\Fresher-web-02-GD2\\Hieu\\BE\\WEB02.EMIS.API\\WEB02.EMIS.API\\WEB02.EMIS.API.csproj",
+        "projectName": "WEB02.EMIS.API",
+        "projectPath": "C:\\Users\\Admin\\source\\repos\\Fresher-web-02-GD2\\Hieu\\BE\\WEB02.EMIS.API\\WEB02.EMIS.API\\WEB02.EMIS.API.csproj",
+        "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Admin\\source\\repos\\Fresher-web-02-GD2\\Hieu\\BE\\WEB02.EMIS.API\\WEB02.EMIS.API\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {
+              "C:\\Users\\Admin\\source\\repos\\Fresher-web-02-GD2\\Hieu\\BE\\WEB02.EMIS.API\\WEB02.EMIS.API.BL\\WEB02.EMIS.API.BL.csproj": {
+                "projectPath": "C:\\Users\\Admin\\source\\repos\\Fresher-web-02-GD2\\Hieu\\BE\\WEB02.EMIS.API\\WEB02.EMIS.API.BL\\WEB02.EMIS.API.BL.csproj"
+              },
+              "C:\\Users\\Admin\\source\\repos\\Fresher-web-02-GD2\\Hieu\\BE\\WEB02.EMIS.API\\WEB02.EMIS.API.Common\\WEB02.EMIS.API.Common.csproj": {
+                "projectPath": "C:\\Users\\Admin\\source\\repos\\Fresher-web-02-GD2\\Hieu\\BE\\WEB02.EMIS.API\\WEB02.EMIS.API.Common\\WEB02.EMIS.API.Common.csproj"
+              },
+              "C:\\Users\\Admin\\source\\repos\\Fresher-web-02-GD2\\Hieu\\BE\\WEB02.EMIS.API\\WEB02.EMIS.API.DL\\WEB02.EMIS.API.DL.csproj": {
+                "projectPath": "C:\\Users\\Admin\\source\\repos\\Fresher-web-02-GD2\\Hieu\\BE\\WEB02.EMIS.API\\WEB02.EMIS.API.DL\\WEB02.EMIS.API.DL.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "Dapper": {
+              "target": "Package",
+              "version": "[2.0.123, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[6.5.0, )"
             }
           },
           "imports": [
