@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\MISA_BE_GD2_EMIS.props" />
+</Project>
