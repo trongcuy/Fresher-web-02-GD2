@@ -1,8 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "fVIfHKLvYJM5VMWEB/ZBQUvfcvTHu4dOua9AYmkSI2QUjMxwSjBAv86Om7Hdi41PWBdVVdWOJ3fpg+nKsN5b4w==",
+  "dgSpecHash": "gv91ifBoN55y50iAE/6wa/7DB7o/aSEiz1dR5dIjdl7izdwmLdbTpqla8JydTtqX92IZFRW901m7+uu3vrk3/A==",
   "success": true,
   "projectFilePath": "C:\\Users\\DELL\\OneDrive\\Tài liệu\\TaiLieuCodeVue\\Fresher-web-02-GD2\\Duc\\BE\\MISA_BE_GD2_EMIS\\EMIS.BL\\EMIS.BL.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\DELL\\.nuget\\packages\\dapper\\2.0.123\\dapper.2.0.123.nupkg.sha512",
+    "C:\\Users\\DELL\\.nuget\\packages\\mysqlconnector\\2.2.6\\mysqlconnector.2.2.6.nupkg.sha512"
+  ],
   "logs": []
 }

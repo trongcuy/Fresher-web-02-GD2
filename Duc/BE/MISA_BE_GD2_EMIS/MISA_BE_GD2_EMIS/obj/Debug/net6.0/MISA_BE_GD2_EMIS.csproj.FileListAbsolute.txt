@@ -30,3 +30,11 @@ C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MI
 C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\MISA_BE_GD2_EMIS\obj\Debug\net6.0\MISA_BE_GD2_EMIS.pdb
 C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\MISA_BE_GD2_EMIS\obj\Debug\net6.0\MISA_BE_GD2_EMIS.genruntimeconfig.cache
 C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\MISA_BE_GD2_EMIS\obj\Debug\net6.0\ref\MISA_BE_GD2_EMIS.dll
+C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\MISA_BE_GD2_EMIS\bin\Debug\net6.0\Dapper.dll
+C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\MISA_BE_GD2_EMIS\bin\Debug\net6.0\MySqlConnector.dll
+C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\MISA_BE_GD2_EMIS\bin\Debug\net6.0\EMIS.BL.dll
+C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\MISA_BE_GD2_EMIS\bin\Debug\net6.0\EMIS.Common.dll
+C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\MISA_BE_GD2_EMIS\bin\Debug\net6.0\EMIS.Common.pdb
+C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\MISA_BE_GD2_EMIS\bin\Debug\net6.0\EMIS.BL.pdb
+C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\MISA_BE_GD2_EMIS\bin\Debug\net6.0\EMIS.DL.dll
+C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\MISA_BE_GD2_EMIS\bin\Debug\net6.0\EMIS.DL.pdb
