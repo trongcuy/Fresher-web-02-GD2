@@ -15,10 +15,24 @@
             <div class="header-bottom flex">
                 <div class="header-bottom__left flex">
                     <div class="combobox-subject">
-                        <BaseCombobox></BaseCombobox>
+                        <BaseCombobox
+                            :data="subjects"
+                            propText="SubjectName"
+                            propValue="SubjectID"
+                            v-model="dataExercise.SubjectID"
+                            :valueCombobox="dataExercise.SubjectID"
+                            :openClear="false"
+                        ></BaseCombobox>
                     </div>
                     <div class="combobox-class">
-                        <BaseCombobox></BaseCombobox>
+                        <BaseCombobox
+                            :data="grades"
+                            propText="GradeName"
+                            propValue="GradeID"
+                            v-model="dataExercise.GradeID"
+                            :valueCombobox="dataExercise.GradeID"
+                            :openClear="false"
+                        ></BaseCombobox>
                     </div>
                     <div class="btn-addinfo">
                         <BaseButton class="ms-button btn-white btn-active" text="Bổ sung thông tin" @click="openFormExercise"></BaseButton>
@@ -38,7 +52,7 @@
                         <BaseButton class="ms-button btn-white btn-active" text="Làm thử"></BaseButton>
                     </div>
                     <div class="btn-submit">
-                        <BaseButton class="ms-button btn-blue btn-active" text="Hoàn thành"></BaseButton>
+                        <BaseButton class="ms-button btn-blue btn-active" text="Hoàn thành" @click="saveExercise"></BaseButton>
                     </div>
                 </div>
             </div>
@@ -118,13 +132,9 @@
             </div>
             <div class="create-main__list" v-show="showListQuestion">
                 <div class="question-list">
-                    <BaseQuestion></BaseQuestion>
-                    <BaseQuestion></BaseQuestion>
-                    <BaseQuestion></BaseQuestion>
-                    <BaseQuestion></BaseQuestion>
-                    <BaseQuestion></BaseQuestion>
-                    <BaseQuestion></BaseQuestion>
-                    <BaseQuestion></BaseQuestion>
+                    <div v-for="(question, index) in dataQuestion" :key="index">
+                        <BaseQuestion :data="question"></BaseQuestion>
+                    </div>
                 </div>
                 <div class="create-option option-list">
                     <div class="question-library">
@@ -162,7 +172,7 @@
         </div>
     </div>
     <FormQuestion ></FormQuestion>
-    <FormExercise ></FormExercise>
+    <FormExercise :data="dataExercise" v-model="dataExerciseAdd" @saveForm="saveForm"></FormExercise>
 </template>
 
 <script setup>
@@ -171,10 +181,11 @@ import BaseButton from '@/components/base/button/BaseButton.vue';
 import BaseQuestion from '@/components/base/question/BaseQuestion.vue';
 import FormQuestion from '@/components/view/FormQuestion.vue';
 import FormExercise from '../../FormExercise.vue';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { useStore } from 'vuex';
-import { computed, reactive } from 'vue'; 
+import { computed, reactive, onBeforeMount, watch, ref, defineProps, onMounted } from 'vue'; 
 import * as Enum from '@/common/enum/Enum.js';
+import * as Resource from '@/common/resource/Resource.js';
 
 // Các biến lưu đường dẫn
 const btnBackImg = require("@/assets/img/btn-back.svg");
@@ -191,12 +202,27 @@ const groupImg = require("@/assets/img/group.svg");
 
 const store = useStore();
 const router = useRouter();
+const route = useRoute();
 // Show danh sách câu hỏi
 const showListQuestion = computed(() => store.state.question.showListQuestion);
+const grades = computed(() => store.state.grade.grades);    // Bản ghi khối
+const subjects = computed(() => store.state.subject.subjects); // Bản ghi môn học
+const exercise = computed(() => store.state.exercise.exercise); // Thông tin bài tập và câu hỏi, đán án của bt
+const topicList = computed(() => store.state.exercisetopic.exerciseTopicUpload); // Thông tin bài tập và câu hỏi, đán án của bt
+const formModeExercise = computed(() => store.state.exercise.formModeExercise); // Thông tin bài tập và câu hỏi, đán án của bt
+const refresh = computed(() => store.state.exercise.refresh); // Refresh lại trang
 // Object data bài tập
-const dataExercise = reactive({
-    ExerciseName: "",   // Tên bài tập
-})
+const dataExercise = ref({
+    ExerciseName: ""
+});
+// Object data câu hỏi
+const dataQuestion = ref({});
+// Object data đáp án
+const dataAnswer = ref({});
+
+const dataExerciseAdd = ref({});
+
+
 /**
  * Qua lại router trước
  * CreatedBy VMHieu 21/05/2023
@@ -220,6 +246,82 @@ const openFormQuestion = (status) => {
 const openFormExercise = () => {
     store.dispatch("showFormExercise", true);
 }
+/**
+ * Validate dữ liệu bài tập
+ * VMHieu 01/06/2023
+ */
+const validateExercise = () => {
+    let isValid = true;
+    if (!dataExercise.value.ExerciseName || !dataExercise.value.GradeID || !dataExercise.value.SubjectID) {
+        isValid = false;
+    } 
+    return isValid;
+}
+/**
+ * Sự kiện lưu form bài tập
+ * VMHieu 06/01/2023
+ */
+const saveForm = (data) => {
+    dataExercise.value = data;
+}
+
+/**
+ * Thực hiện cập nhật bài tập
+ * VMHieu 01/06/2023
+ */
+const saveExercise = () => {
+    if (validateExercise()) {
+        if (formModeExercise.value == Enum.FormModeExercise.Edit) {
+            store.dispatch("putExercise", dataExercise.value);
+        } else if(formModeExercise.value == Enum.FormModeExercise.Add) {
+            store.dispatch("postExercise", dataExercise.value);
+        }
+    } else {
+        store.dispatch("showFormExercise", true);
+    }
+}
+
+
+/**
+ * Thực hiện công việc trước khi component được mount
+ * VMHieu 31/05/2023
+ */
+onBeforeMount(() => {
+    store.dispatch("getAllSubject");
+    store.dispatch("getAllGrade");
+    const id = route.query.id;
+    if (id) {
+        
+        store.dispatch("getAllByID", id);
+    }
+    
+})
+
+/**
+ * Theo dõi sự thay đổi của đối tượng bài tập
+ * VMHieu 31.05.2023
+ */
+watch((exercise), () => {
+    dataExercise.value = exercise.value;
+    dataQuestion.value = exercise.value.Question;
+    // Xét hiện câu hỏi nếu có
+    if (dataQuestion.value.length > 0) {
+        store.dispatch("showListQuestion", true);
+    } else {
+        store.dispatch("showListQuestion", false);
+    }
+})
+/**
+ * Bắt việc refresh lại trang và back về trang chủ
+ * VMHieu 06/01/2023 
+ */
+watch((refresh), () => {
+    store.dispatch("updateHideMainPage", false);
+    router.push("/storage/mine");
+})
+
+
+
 
 </script>
 

@@ -11,7 +11,7 @@ namespace WEB02.EMIS.API.Controllers
         private IAnswerBL _answerBL;
         public AnswerController(IAnswerBL answerBL) : base(answerBL)
         {
-
+            _answerBL = answerBL;
         }
 
         /// <summary>

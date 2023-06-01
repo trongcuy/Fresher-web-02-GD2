@@ -15,6 +15,7 @@ namespace WEB02.EMIS.API.BL.Services
         private IExerciseDL _exerciseDL;
         public ExerciseBL(IExerciseDL exerciseDL) : base(exerciseDL)
         {
+            _exerciseDL = exerciseDL;
         }
 
         /// <summary>
@@ -27,6 +28,21 @@ namespace WEB02.EMIS.API.BL.Services
         public ExerciseOverview GetAllByID(Guid ExerciseID)
         {
             return _exerciseDL.GetAllByID(ExerciseID);
+        }
+
+        /// <summary>
+        /// Phân trang và tìm kiếm
+        /// </summary>
+        /// <param name="keyword">Từ khóa</param>
+        /// <param name="grade">Khối lớp học</param>
+        /// <param name="subject">Môn học</param>
+        /// <param name="status">Trạng thái bài tập</param>
+        /// <param name="skip">Số bản ghi bỏ qua</param>
+        /// <param name="take">Số bản ghi lấy</param>
+        /// <returns></returns>
+        public PagingData<Exercise> GetPaging(string? keyword, Guid? grade, Guid? subject, int? status, int skip, int take)
+        {
+            return _exerciseDL.GetPaging(keyword, grade, subject, status, skip, take);
         }
     }
 }

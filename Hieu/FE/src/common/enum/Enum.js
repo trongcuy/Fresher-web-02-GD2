@@ -32,4 +32,28 @@ export const ToastStatus = {
     Fail: 2, // Thao tác thất bại
 }
 
+/**
+ * Các giá trị của trạng thái bài tập
+ * CreatedBy VMHieu 30/05/2023
+ */ 
+export const ExerciseStatus = {
+    All: "",
+    Composing: 1, // Đang soạn
+    Composed: 2, // Đã soạn
+}
+/**
+ * Số bản ghi cần lấy mỗi lần mở rộng
+ * VMHieu 30/05/2023
+ */
+export const TakeExercise = {
+    Take: 9
+}
+/**
+ * Mode của form bài tập
+ */
+export const FormModeExercise = {
+    Add: 1,
+    Edit: 2
+}
+
 export default Enum;

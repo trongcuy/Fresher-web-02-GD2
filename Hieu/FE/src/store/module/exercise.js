@@ -1,5 +1,50 @@
+import axios from "axios";
+import { constants } from "@/config/config";
+import * as Enum from "@/common/enum/Enum";
+import * as Resource from "@/common/resource/Resource";
+import { handleShowToast, getValueEnum } from "@/common/common";
+
 const state = {
-    showFormExercise: false,
+    showFormExercise: false, // Show form bài tập
+    exercises: [], // Mảng các bài tập,
+    exercise: {
+        ExerciseID: "",
+        ExerciseName: "",
+        ExerciseImage: "",
+        ExerciseStatus: "",
+        GradeID: "",
+        GradeName: "",
+        SubjectID: "",
+        SubjectName: "",
+        CountQuestion: "",
+        CreatedBy: "",
+        Question: [{
+            QuestionID: "",
+            QuestionContent: "",
+            QuestionImage: "",
+            QuestionNote: "",
+            QuestionSecondaryID: "",
+            ExerciseID: "",
+            SortOder: "",
+            TypeQuestion: "",
+            Answer: [{
+                AnswerID: "",
+                AnswerContent: "",
+                AnswerImage: "",
+                AnswerStatus: "",
+                SortOder: "",
+                QuestionID: "",
+            }]
+        }]
+    }, // Đối tượng bài tập lấy theo ID
+    filterDatas: [],    // Mảng chứa dữ liệu lọc
+    keyword: "", // Dữ liệu tìm kiếm
+    take: 9, // Số bản ghi cần lấy
+    totalRecord: 0, // Tổng số bản ghi lấy được
+    showExtend: true, // Ẩn hiện nút xem thêm bản ghi,
+    formModeExercise: 0, // Mode của page bài tập,
+    refresh: false,     // refresh lại trang
+    idDelete: "",   // ID của bản ghi cần xóa
 }
 
 const mutations = {
@@ -11,7 +56,134 @@ const mutations = {
      */
     showFormExercise(state, payload) {
         state.showFormExercise = payload;
+    },
+
+    /**
+     * Lấy dữ liệu theo phân trang và tìm kiếm
+     * @param {*} context 
+     * CreatedBy VMHieu 03/04/2023
+     */
+    getPaging(state, payload) {
+        state.exercises = payload.Data;
+        state.exercises.map((exercise) => {
+            exercise.ExerciseStatus = getValueEnum(exercise.ExerciseStatus, Resource.PropName.ExerciseStatus);
+        })
+
+        state.totalRecord = payload.TotalCount;
+        state.showExtend = state.totalRecord > state.take;
+    },
+
+    /**
+     * Lấy dữ liệu theo ID bài tập
+     * @param {*} context 
+     * CreatedBy VMHieu 30/05/2023
+     */
+    getAllByID(state, payload) {
+        state.exercise = payload.Exercise[0];
+        state.exercise.Question = payload.Question;
+        
+        for(let i = 0; i < state.exercise.Question.length; i++) {
+            state.exercise.Question[i].Answer = [];
+            for(let j = 0; j < payload.Answer.length; j++) {
+                if (state.exercise.Question[i].QuestionID == payload.Answer[j].QuestionID) {
+                    state.exercise.Question[i].Answer.push(payload.Answer[j]);
+                }
+            }
+        }
+    },
+
+    /**
+     * Thay đổi bản ghi được lấy
+     * @param {*} context 
+     * @param {*} data 
+     * VMHieu 30/05/2023
+     */
+    updateTake(state, payload) {
+        state.take = payload;
+        state.showExtend = state.totalRecord > state.take;
+    },
+    /**
+     * Thay đổi giá trị lọc và tìm kiếm
+     * @param {*} state 
+     * @param {*} payload 
+     * VMHieu 30/05/2023
+     */
+    updateFilter(state, payload) {
+        state.take = Enum.TakeExercise.Take;
+        state.filterDatas = payload;
+    }, 
+    /**
+     * Thay đổi giá trị tìm kiếm
+     * @param {*} state 
+     * @param {*} payload 
+     * VMHieu 30/05/2023
+     */
+    updateSearch(state, payload) {
+        state.keyword = payload || "";
+    },
+    /**
+     * Cập nhật bài tập ở Client
+     * @param {} context 
+     * @param {*} data 
+     * VMHieu 31/05/2023
+     */
+    updateExercise(state, payload) {
+        state.exercise = payload;
+    },
+
+    /**
+     * Update formmode
+     * @param {*} context 
+     * @param {*} data
+     * VMHieu 01/06/2023 
+     */
+    updateFormModeExercise(state, payload) {
+        state.formModeExercise = payload;
+    },
+
+    /**
+     * Thêm mới bài tập
+     * @param {*} context 
+     * @param {*} data 
+     * CreatedBy VMHieu 01/06/2023
+     */
+    postExercise(state) {
+        state.refresh = !state.refresh;
+    },
+
+    /**
+     * Sửa bài tập
+     * @param {*} context 
+     * @param {*} data 
+     * CreatedBy VMHieu 01/06/2023
+     */
+    putExercise(state) {
+        state.refresh = !state.refresh;
+    },
+
+    
+    /**
+     * Cập nhật id bản ghi cần xóa
+     * @param {} context 
+     * @param {*} data 
+     * VMHieu 06/01/2023
+     */
+    deleteExercise(state, payload) {
+        state.refresh = !state.refresh;
+        state.exercises = state.exercises.filter((ex) => ex.ExerciseID !== payload);
+        state.totalRecord--
+    },
+
+    /**
+     * Cập nhật id bản ghi cần xóa
+     * @param {} context 
+     * @param {*} data 
+     * VMHieu 06/01/2023
+     */
+    updateIdDelete(state, payload) {
+        state.idDelete = payload;
     }
+
 }
 
 const actions = {
@@ -23,6 +195,159 @@ const actions = {
      */
     showFormExercise(context, data) {
         context.commit("showFormExercise", data);
+    },
+
+    /**
+     * Lấy dữ liệu theo phân trang và tìm kiếm
+     * @param {*} context 
+     * CreatedBy VMHieu 30/05/2023
+     */
+    async getPaging(context) {       
+        try {
+            const res = await axios.get(`${constants.API_URL}/api/${constants.API_VERSION}/exercise/` + 
+                `paging?keyword=${state.keyword}&grade=${state.filterDatas.GradeID}&subject=${state.filterDatas.SubjectID}&` +
+                `status=${state.filterDatas.ExerciseStatus}&skip=${constants.Skip}&take=${state.take}`);
+            if (res.data) {
+                context.commit("getPaging", res.data);
+            }  else {
+                // Hiện toast thất bại
+                handleShowToast(context, Resource.ToastFail.InvalidDataResponse, Enum.ToastStatus.Fail);
+            }
+        } catch (error) {
+            // Hiện toast thất bại
+            handleShowToast(context, Resource.ToastFail.LoadFail, Enum.ToastStatus.Fail);
+        }
+    },
+
+    /**
+     * Lấy dữ liệu theo ID bài tập
+     * @param {*} context 
+     * CreatedBy VMHieu 30/05/2023
+     */
+    async getAllByID(context, data) {   
+        try {
+            const res = await axios.get(`${constants.API_URL}/api/${constants.API_VERSION}/exercise/overview?ExerciseID=${data}`);
+            if (res.data) {
+                context.commit("getAllByID", res.data);
+            }  else {
+                // Hiện toast thất bại
+                handleShowToast(context, Resource.ToastFail.InvalidDataResponse, Enum.ToastStatus.Fail);
+            }
+        } catch (error) {
+            // Hiện toast thất bại
+            handleShowToast(context, Resource.ToastFail.LoadFail, Enum.ToastStatus.Fail);
+        }
+    },
+
+    /**
+     * Thêm mới bài tập
+     * @param {*} context 
+     * @param {*} data 
+     * CreatedBy VMHieu 01/06/2023
+     */
+    async postExercise(context, data) {
+        try {
+            const res = await axios.post(`${constants.API_URL}/api/${constants.API_VERSION}/exercise`, data)
+            context.commit('postExercise', res.data);
+            // Hiện toast thành công
+            handleShowToast(context, Resource.ToastSuccess.AddSuccess, Enum.ToastStatus.Success);
+        } catch (error) {
+            // hiện toast thất bại
+            handleShowToast(context, Resource.ToastFail.AddFail, Enum.ToastStatus.Fail);
+        }
+
+    },
+
+    /**
+     * Sửa bài tập
+     * @param {*} context 
+     * @param {*} data 
+     * CreatedBy VMHieu 01/06/2023
+     */
+    async putExercise(context, data) {
+        try {
+            const res = await axios.put(`${constants.API_URL}/api/${constants.API_VERSION}/exercise/${data.ExerciseID}`, data)
+            context.commit('putExercise', res.data);
+            // Hiện toast thành công
+            handleShowToast(context, Resource.ToastSuccess.EditSuccess, Enum.ToastStatus.Success);
+        } catch (error) {
+            // hiện toast thất bại
+            handleShowToast(context, Resource.ToastFail.EditFail, Enum.ToastStatus.Fail);
+        }
+    },
+
+    /**
+     * Xóa bài tập
+     * @param {*} context 
+     * @param {*} data 
+     * CreatedBy VMHieu 05/04/2023
+     */
+    async deleteExercise(context, id) {
+        try {
+            const res = await axios.delete(`${constants.API_URL}/api/${constants.API_VERSION}/exercise/${id}`)
+
+            context.commit('deleteExercise', id);
+            // Hiện toast thành công
+            handleShowToast(context, Resource.ToastSuccess.DeleteSuccess, Enum.ToastStatus.Success);
+        } catch (error) {
+            // hiện toast thất bại
+            handleShowToast(context, Resource.ToastFail.DeleteFail, Enum.ToastStatus.Fail);
+        }
+    },
+    /**
+     * Thay đổi bản ghi được lấy
+     * @param {*} context 
+     * @param {*} data 
+     * VMHieu 30/05/2023
+     */
+    updateTake(context, data) {
+        context.commit("updateTake", data);
+    },
+
+    /**
+     * Thay đổi giá trị lọc 
+     * @param {*} state 
+     * @param {*} payload 
+     * VMHieu 30/05/2023
+     */
+    updateFilter(context, data) {
+        context.commit("updateFilter", data);
+    },
+    /**
+     * Thay đổi giá trị tìm kiếm
+     * @param {*} state 
+     * @param {*} payload 
+     * VMHieu 30/05/2023
+     */
+    updateSearch(context, data) {
+        context.commit("updateSearch", data);
+    },
+    /**
+     * Cập nhật bài tập ở Client
+     * @param {} context 
+     * @param {*} data 
+     * VMHieu 31/05/2023
+     */
+    updateExercise(context, data) {
+        context.commit("updateExercise", data);
+    },
+    /**
+     * Update formmode
+     * @param {*} context 
+     * @param {*} data
+     * VMHieu 01/06/2023 
+     */
+    updateFormModeExercise(context, data) {
+        context.commit("updateFormModeExercise", data);
+    },
+    /**
+     * Cập nhật id bản ghi cần xóa
+     * @param {} context 
+     * @param {*} data 
+     * VMHieu 06/01/2023
+     */
+    updateIdDelete(context, data) {
+        context.commit("updateIdDelete", data);
     }
 }
 

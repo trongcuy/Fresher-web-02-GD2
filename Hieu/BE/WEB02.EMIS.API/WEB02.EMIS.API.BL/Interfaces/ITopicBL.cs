@@ -9,5 +9,14 @@ namespace WEB02.EMIS.API.BL.Interfaces
 {
     public interface ITopicBL : IBaseBL<Topic>
     {
+        /// <summary>
+        /// Lấy chủ đề theo ID môn và khối
+        /// </summary>
+        /// <param name="gradeID"></param>
+        /// <param name="subjectID"></param>
+        /// <returns></returns>
+        /// <exception cref="ErrorException"></exception>
+        /// VMHieu 31/05/2023
+        public IEnumerable<Topic> GetByGradeSubject(Guid gradeID, Guid subjectID);
     }
 }

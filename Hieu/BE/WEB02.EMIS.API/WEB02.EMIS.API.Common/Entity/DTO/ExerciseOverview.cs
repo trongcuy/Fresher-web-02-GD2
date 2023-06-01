@@ -15,14 +15,14 @@ namespace WEB02.EMIS.API.Common.Entity.DTO
         /// <summary>
         /// Thông tin bài tập
         /// </summary>
-        public Exercise Exercise { get; set; }
+        public List<Exercise> Exercise { get; set; } = new List<Exercise>();
         /// <summary>
         /// List câu hỏi phụ thuộc
         /// </summary>
-        public List<Question> QuestionData { get; set; } = new List<Question>();
+        public List<Question> Question { get; set; } = new List<Question>();
         /// <summary>
         /// List đáp án phụ thuộc
         /// </summary>
-        public List<Answer> AnswerData { get; set; } = new List<Answer>();
+        public List<Answer> Answer { get; set; } = new List<Answer>();
     }
 }

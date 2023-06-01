@@ -1,5 +1,5 @@
 <template>
-    <div class="form-exercise" v-if="showFormExercise">
+    <div class="form-exercise" v-show="showFormExercise">
         <div class="exercise-container">
             <div class="exercise-header flex">
                 <div class="exercise-title">
@@ -27,7 +27,13 @@
                             <span class="asterik">*</span>
                         </label>
                         <div class="form-input name-input">
-                            <BaseInput inputClass="m-input no-icon"></BaseInput>
+                            <BaseInput 
+                                :tabindex="1" 
+                                v-model="dataExerciseClone.ExerciseName" 
+                                :valueInput="dataExerciseClone.ExerciseName" 
+                                ref="ipName"
+                                inputClass="m-input no-icon">
+                            </BaseInput>
                         </div>
                     </div>
                     <div class="form-info">
@@ -37,7 +43,17 @@
                                 <span class="asterik">*</span>
                             </label>
                             <div class="form-input subject-input">
-                                <BaseCombobox></BaseCombobox>
+                                <BaseCombobox
+                                :data="subjects"
+                                propText="SubjectName"
+                                propValue="SubjectID"
+                                v-model="dataExerciseClone.SubjectID"
+                                :valueCombobox="dataExerciseClone.SubjectID"
+                                :openClear="false"
+                                :tabindex="2"
+                                @changeValue="changeValue"
+                                :getValue="getValue"
+                                ></BaseCombobox>
                             </div>
                         </div>
                         <div class="info-class">
@@ -46,7 +62,17 @@
                                 <span class="asterik">*</span>
                             </label>
                             <div class="form-input class-input">
-                                <BaseCombobox></BaseCombobox>
+                                <BaseCombobox
+                                    :data="grades"
+                                    propText="GradeName"
+                                    propValue="GradeID"
+                                    v-model="dataExerciseClone.GradeID"
+                                    :valueCombobox="dataExerciseClone.GradeID"
+                                    :openClear="false"
+                                    :tabindex="3"
+                                    @changeValue="changeValue"
+                                    :getValue="getValue"
+                                ></BaseCombobox>
                             </div>
                         </div>
                     </div>
@@ -56,15 +82,25 @@
                                 Chủ đề
                             </label>
                             <div class="form-input topic-input">
-                                <BaseCombobox></BaseCombobox>
+                                <BaseComboboxTag
+                                    :placeholder=Resource.ComboboxDefault.Topic
+                                    :data="listTopic"
+                                    propText="TopicName"
+                                    propValue="TopicID"
+                                    v-model="topicList"
+                                    :valueCombobox="listExerciseTopic"
+                                    :openClear="true"
+                                    :tabindex="4"
+                                    :getValue="getValue"
+                                ></BaseComboboxTag>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="exercise-footer">
-                <BaseButton class="ms-button btn-active btn-white" text="Đóng" @click="closeFormExercise"></BaseButton>
-                <BaseButton class="ms-button btn-active btn-blue" text="Lưu"></BaseButton>
+                <BaseButton class="ms-button btn-active btn-white" tabindex="6" text="Đóng" @click="closeFormExercise"></BaseButton>
+                <BaseButton class="ms-button btn-active btn-blue" tabindex="5" text="Lưu" @click="saveDataExercise"></BaseButton>
             </div>
         </div>
     </div>
@@ -73,16 +109,44 @@
 <script setup>
 import BaseButton from "@/components/base/button/BaseButton.vue";
 import BaseCombobox from "../base/combobox/BaseCombobox.vue";
+import BaseComboboxTag from "../base/combobox/BaseComboboxTag.vue";
 import { useStore } from 'vuex';
-import { computed } from 'vue';
+import { useRoute } from 'vue-router';
+import { computed, watch, ref, isReactive, reactive, nextTick, onBeforeMount, defineProps, defineEmits } from 'vue';
 import BaseInput from "../base/input/BaseInput.vue";
-
+import * as Resource from "@/common/resource/Resource";
+import * as Enum from "@/common/enum/Enum";
+import _ from 'lodash'
+import { FormModeExercise } from "@/common/enum/Enum";
 // Các biến lưu đường dẫn
 const avatarImg = require("@/assets/subjects-avatar/toan.png");
 
+const emit = defineEmits(['update:modelValue', 'saveForm']);
+const props = defineProps({
+    data: null, // Data mà component cha gửi xuống
+})
+
 const store = useStore();
+const route = useRoute();
 // Biến giá trị trạng thái form bài tập
 const showFormExercise = computed(() => store.state.exercise.showFormExercise);
+const exercise = computed(() => store.state.exercise.exercise);
+const grades = computed(() => store.state.grade.grades);
+const subjects = computed(() => store.state.subject.subjects);
+const listTopic = computed(() => store.state.topic.listTopic);
+const listExerciseTopic = computed(() => store.state.exercisetopic.listExerciseTopic);
+const formModeExercise = computed(() => store.state.exercise.formModeExercise);
+// Thông tin bản ghi bài tập
+const dataExercise = ref({});
+let dataExerciseClone = reactive({
+    ExerciseName: "",
+    GradeID: "",
+    SubjectID: "",
+    ExerciseImage: "",
+});
+const topicList = ref(""); // List các ID topic
+const ipName = ref("ipName"); // Ô input name
+const getValue = ref(true); // Tín hiệu lấy giá trị của cbb tag
 
 /**
  * Đóng form bài tập
@@ -91,6 +155,85 @@ const showFormExercise = computed(() => store.state.exercise.showFormExercise);
 const closeFormExercise = () => {
     store.dispatch("showFormExercise", false);
 }
+/**
+ * Validate Form
+ * VMHieu 01/06/2023
+ */
+const validateFormExercise = () => {
+    let isValid = true;
+
+    if (!dataExerciseClone.ExerciseName || !dataExerciseClone.GradeID || !dataExerciseClone.SubjectID) {
+        isValid = false;
+    }
+
+    return isValid;
+}
+
+/**
+ * Lưu tạm thông tin bài tập
+ * VMHieu 31/05/2023
+ */
+const saveDataExercise = () => {
+    getValue.value = !getValue.value;
+    if (validateFormExercise()) {
+        emit("saveForm",dataExerciseClone);
+        store.dispatch("showFormExercise" , false);
+        nextTick(() => {
+            store.dispatch("updateExerciseTopic", topicList.value);
+        })
+    } 
+}
+/**
+ * Sự kiện khi thay đổi value combobox
+ * VMHieu 01/06/2023
+ */
+const changeValue = () => {
+    for (let prop in listExerciseTopic) {
+        delete listExerciseTopic[prop];
+    }
+
+    let dataGradeSubject = {
+        gradeID: dataExerciseClone.GradeID,
+        subjectID: dataExerciseClone.SubjectID
+    }
+    store.dispatch("getTopicByGradeSubject", dataGradeSubject);
+}
+
+onBeforeMount(() => {
+    const id = route.query.id;
+    if (id) {
+        store.dispatch("updateFormModeExercise", Enum.FormModeExercise.Edit);
+    } else {
+        store.dispatch("updateFormModeExercise", Enum.FormModeExercise.Add);
+    }
+})
+
+/**
+ * Theo dõi sự thay đổi của đối tượng bài tập
+ * VMHieu 31.05.2023
+ */
+watch((exercise), () => {
+    dataExercise.value = exercise.value;
+    let dataGradeSubject = {
+        gradeID: dataExercise.value.GradeID,
+        subjectID: dataExercise.value.SubjectID
+    }
+    store.dispatch("getTopicByGradeSubject", dataGradeSubject);
+})
+/**
+ * Mở form và biding dữ liệu vào data clone
+ * VMHieu 31/05/2023
+ */
+watch((showFormExercise), () => {
+    if (showFormExercise.value) {
+        dataExerciseClone = _.cloneDeep(props.data);
+        const id = route.query.id;
+        if (id) {
+            store.dispatch("getTopicByID", id);
+        } 
+    } 
+})
+
 </script>
 
 <style scoped>

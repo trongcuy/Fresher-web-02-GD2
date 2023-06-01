@@ -1,38 +1,51 @@
 <template>
-    <div class="exercise-container">
+    <div class="exercise-container"  @click="openExercise(props.data.ExerciseID)">
         <div class="exercise-img">
             <img :src="subjectImg" alt="">
-            <div class="img-content center">Khối 1 - Giáo dục công dân</div>
+            <div class="img-content center">{{ props.data.GradeName || "Khối 1" }} - {{ props.data.SubjectName || "Toán" }}</div>
         </div>
         <div class="exercise-content">
             <div class="content-title flex">
-                <div>Bài tập toán ngày 10/02</div>
-                <div class="btn-more" @click="toggleOption">
+                <div>{{ ExerciseName  }}</div>
+                <div class="btn-more" @click="toggleOption" @click.stop="">
                     <img :src="optionImg" alt="">
                 </div>
             </div>
             <div class="content-number flex">
-                <img :src="numberImg" alt="">
-                <div>10 câu</div>
+                <div class="flex" v-if="props.data.CountQuestion != 0">
+                    <img :src="numberImg" alt="">
+                    <div>{{ props.data.CountQuestion }} Câu</div>
+                </div>
+                <div class="exercise-status">{{ props.data.ExerciseStatus || "Đang soạn"}}</div>
             </div>
             <div class="content-creater flex">
                 <img :src="userImg" alt="" />
-                <div>Vũ Minh Hiếu</div>
+                <div>{{ props.data.CreatedBy || "Vũ Minh Hiếu" }}</div>
             </div>
-            <div class="more-option" v-show="showOption">
-                <div class="option" @click="handleOpenPopup(Enum.PopupStatus.Error)">Xem</div>
-                <div class="option" @click="handleOpenPopup(Enum.PopupStatus.Delete)">Xóa</div>
+            <div class="more-option" v-show="showOption" v-clickOutside="closeOption">
+                <div class="option" @click.stop="" @click="openExercise(props.data.ExerciseID)">Xem</div>
+                <div class="option" @click.stop="" @click="handleOpenPopup(ExerciseName, props.data.ExerciseID)">Xóa</div>
             </div>
         </div>
     </div>
 </template> 
 
 <script setup>
-import { ref } from 'vue';
+import { ref, defineProps, watch, toRef, onMounted, computed } from 'vue';
 import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
 import * as Enum from '@/common/enum/Enum';
+import * as Resource from '@/common/resource/Resource';
+import { changeBreakpoint } from '@/common/common';
+
+const props = defineProps({
+  data: [], // data của bài tập biding vào component
+})
+
+const dataRef = toRef(props, 'data');
 
 const store = useStore();
+const router = useRouter();
 // Show option xem hoặc xóa bài tập
 const showOption = ref(false);
 // Các đường dẫn hình ảnh
@@ -41,6 +54,13 @@ const optionImg = require("@/assets/img/icon_option.svg");
 const numberImg = require("@/assets/img/socau.svg");
 const userImg = require("@/assets/img/user.svg");
 
+const ExerciseName = computed(() => {
+    if (!props.data.ExerciseName) {
+        return "Bài nháp " + props.data.SubjectName + " " + props.data.GradeName;
+    }
+    return props.data.ExerciseName;
+})
+
 /**
  * Toggle toolbar
  * CreatedBy VMHieu 23/05/2023
@@ -48,18 +68,41 @@ const userImg = require("@/assets/img/user.svg");
 const toggleOption = () => {
     showOption.value = !showOption.value;
 }
+/**
+ * Đóng option
+ * VMHieu 06/01/2023
+ */
+const closeOption = () => {
+    showOption.value = false;
+}
+/**
+ * Mở form sửa bài tập
+ * @param {*} id 
+ * VMHieu 06/01/2023
+ */
+const openExercise = (id) => {
+    store.dispatch("showListQuestion", true);
+    store.dispatch("updateHideMainPage", true);
+    store.dispatch("updateFormModeExercise", Enum.FormModeExercise.Edit);
+    router.push({ path: "/storage/create", query: {id} });
+}
 
 /**
  * Mở popup xóa
  * CreatedBy VMHieu 23/05/2023
  */
-const handleOpenPopup = (status) => {
-    store.dispatch("updatePopupMsg", "Bài tập toán ngày 10/02");
-    store.dispatch("updatePopupStatus", status);
+const handleOpenPopup = (name, id) => {
+    store.dispatch("updatePopupMsg", changeBreakpoint(Resource.PopupMessage.Delete, name));
+    store.dispatch("updatePopupStatus", Enum.PopupStatus.Delete);
     store.dispatch("showPopup", true);
     showOption.value = false;
+
+    store.dispatch("updateIdDelete", id);
 }
 
+// onMounted(() => {
+   
+// })
 </script>
 
 <style scoped>
@@ -153,7 +196,7 @@ const handleOpenPopup = (status) => {
     border-radius: 50%;
     overflow: hidden;
     margin: 12px 0;
-    z-index: 2;
+    z-index: 9;
 }
 
 .more-option{
@@ -183,5 +226,17 @@ const handleOpenPopup = (status) => {
 .option:hover{
     color: #8a6bf6;
     font-weight: 700;
+}
+
+.exercise-status{
+    font-size: 12px;
+    padding: 5px;
+    border-radius: 6px;
+    text-align: center;
+    overflow: hidden;
+    color: #8a6bf6!important;
+    background: #e8e1fd;
+    margin-left: 0.625rem;
+    margin-top: .125rem;
 }
 </style>

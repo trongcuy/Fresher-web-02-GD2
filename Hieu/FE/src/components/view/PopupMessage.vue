@@ -1,6 +1,6 @@
 <template>
     <div>
-        <BasePopup v-if="popupStatus == 1 && showPopup">
+        <BasePopup v-if="popupStatus == Enum.PopupStatus.Delete && showPopup">
             <template v-slot:slotTitle>EMIS Ôn tập</template>
             <template v-slot:slotContent>
                 <div class="content">{{ popupMsg }}</div>
@@ -12,7 +12,7 @@
                 </div>
             </template>
         </BasePopup>
-        <BasePopup v-if="popupStatus == 2 && showPopup">
+        <BasePopup v-if="popupStatus == Enum.PopupStatus.Error && showPopup">
             <template v-slot:slotTitle>EMIS Ôn tập</template>
             <template v-slot:slotContent>
                 <div class="content"> {{ popupMsg }} </div>
@@ -23,7 +23,7 @@
                 </div>
             </template>
         </BasePopup>
-        <BasePopup v-if="popupStatus == 3 && showPopup">
+        <BasePopup v-if="popupStatus == Enum.PopupStatus.ErrorServer && showPopup">
             <template v-slot:slotTitle>EMIS Ôn tập</template>
             <template v-slot:slotContent>
                 <div v-for="msg in popupMsg" :key="msg">
@@ -54,6 +54,8 @@ const showPopup = computed(() => store.state.app.showPopup);
 const popupStatus = computed(() => store.state.app.popupStatus);
 // Biến dữ liệu trong popup
 const popupMsg = computed(() => store.state.app.popupMsg);
+// ID bản ghi bài tập cần xóa
+const idExercise = computed(() => store.state.exercise.idDelete);
 
 /**
  * Đóng popup
@@ -61,6 +63,15 @@ const popupMsg = computed(() => store.state.app.popupMsg);
  */
 const handleClose = () => {
     store.dispatch('showPopup', false);
+}
+/**
+ * Xác nhận xóa bản ghi
+ * VMHieu 06/01/2023
+ */
+const handleSaveDelete = async () => {
+   await store.dispatch("deleteExercise", idExercise.value);
+   await store.dispatch("getPaging");
+    store.dispatch("showPopup", false);
 }
 </script>
 

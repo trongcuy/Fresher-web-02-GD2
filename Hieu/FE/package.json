@@ -10,8 +10,10 @@
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^38.0.1",
     "@ckeditor/ckeditor5-vue": "^5.1.0",
+    "axios": "^1.4.0",
     "core-js": "^3.8.3",
     "vue": "^3.2.13",
+    "vue-axios": "^3.5.2",
     "vue-router": "^4.2.1",
     "vuex": "^4.1.0"
   },

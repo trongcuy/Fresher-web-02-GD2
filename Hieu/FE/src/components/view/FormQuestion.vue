@@ -12,6 +12,7 @@
                             propText="Data"
                             v-model="typeQuestion"
                             :autoFocus=showFormQuestion
+                            :openClear="false"
                         ></BaseCombobox>
                     </div>
                     <div class="toolbar-item">

@@ -6,7 +6,7 @@
                     <div class="menu-item__icon">
                         <img :src="tqImg" alt="" />
                     </div>
-                    <div class="menu-item__text">{{ Resource.TextWeb.Header.Overview }}</div>
+                    <div class="menu-item__text" tabindex="0">{{ Resource.TextWeb.Header.Overview }}</div>
                 </div>
             </router-link>
             <router-link to="/classroom" active-class="active">
@@ -14,7 +14,7 @@
                     <div class="menu-item__icon">
                         <img :src="lhImg" alt="" />
                     </div>
-                    <div class="menu-item__text">{{ Resource.TextWeb.Header.Class }}</div>
+                    <div class="menu-item__text" tabindex="0">{{ Resource.TextWeb.Header.Grade }}</div>
                 </div>
             </router-link>
             <router-link to="/storage" active-class="active">
@@ -22,7 +22,7 @@
                     <div class="menu-item__icon">
                         <img :src="hlImg" alt="" />
                     </div>
-                    <div class="menu-item__text">{{ Resource.TextWeb.Header.Courseware }}</div>
+                    <div class="menu-item__text" tabindex="0">{{ Resource.TextWeb.Header.Courseware }}</div>
                 </div>
             </router-link>
             <router-link to="/training" active-class="active">
@@ -30,7 +30,7 @@
                     <div class="menu-item__icon">
                         <img :src="hlImg" alt="" />
                     </div>
-                    <div class="menu-item__text">{{ Resource.TextWeb.Header.Traning }}</div>
+                    <div class="menu-item__text" tabindex="0">{{ Resource.TextWeb.Header.Traning }}</div>
                 </div>
             </router-link>  
         </div>

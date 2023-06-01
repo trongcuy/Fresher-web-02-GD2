@@ -27,9 +27,17 @@ namespace WEB02.EMIS.API.Common.Entity
         /// </summary>
         public Guid GradeID { get; set; }
         /// <summary>
+        /// Tên khối lớp
+        /// </summary>
+        public string? GradeName { get; set; }
+        /// <summary>
         /// ID môn học
         /// </summary>
         public Guid SubjectID { get; set; }
+        /// <summary>
+        /// Tên môn học
+        /// </summary>
+        public string? SubjectName { get; set; }
         /// <summary>
         /// Đường dẫn ảnh
         /// </summary>
@@ -38,6 +46,10 @@ namespace WEB02.EMIS.API.Common.Entity
         /// Trạng thái bài tập
         /// </summary>
         public ExerciseStatus ExerciseStatus { get; set; } 
+        /// <summary>
+        /// Tổng số câu hỏi trong bài tập
+        /// </summary>
+        public int? CountQuestion { get; set; }
 
         #endregion
     }

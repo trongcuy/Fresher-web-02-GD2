@@ -76,7 +76,7 @@ namespace WEB02.EMIS.API.DL.Services
                 parameters.Add($"{className}ID", id);
 
                 // Thực hiện gọi vào db để chạy câu lệnh 
-                var result = mySqlConnection.QueryFirstOrDefault<T>(getByIDCommand, commandType: System.Data.CommandType.StoredProcedure);
+                var result = mySqlConnection.QueryFirstOrDefault<T>(getByIDCommand, parameters, commandType: System.Data.CommandType.StoredProcedure);
                 // Xử lý kết quả trả về ở db
                 if (result == null)
                 {

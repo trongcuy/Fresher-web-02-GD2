@@ -12,6 +12,7 @@ namespace WEB02.EMIS.API.Controllers
         private IExerciseBL _exerciseBL;
         public ExerciseController(IExerciseBL exerciseBL) : base(exerciseBL)
         {
+            _exerciseBL = exerciseBL;
         }
 
         /// <summary>
@@ -27,6 +28,32 @@ namespace WEB02.EMIS.API.Controllers
             try
             {
                 var result = _exerciseBL.GetAllByID(ExerciseID);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return HandleException(ex);
+            }
+        }
+
+        /// <summary>
+        /// Phân trang và tìm kiếm
+        /// </summary>
+        /// <param name="keyword">Từ khóa</param>
+        /// <param name="grade">Khối lớp học</param>
+        /// <param name="subject">Môn học</param>
+        /// <param name="status">Trạng thái bài tập</param>
+        /// <param name="skip">Số bản ghi bỏ qua</param>
+        /// <param name="take">Số bản ghi lấy</param>
+        /// <returns></returns>
+        /// VMHieu 29/05/2023
+        [HttpGet("paging")]
+        public IActionResult GetPaging(string? keyword, Guid? grade, Guid? subject, int? status, int skip, int take)
+        {
+            try
+            {
+                var result = _exerciseBL.GetPaging(keyword, grade, subject, status, skip, take);
                 return Ok(result);
             }
             catch (Exception ex)

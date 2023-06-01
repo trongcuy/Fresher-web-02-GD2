@@ -15,6 +15,7 @@ namespace WEB02.EMIS.API.BL.Services
         private IAnswerDL _answerDL;
         public AnswerBL(IAnswerDL answerDL) : base(answerDL)
         {
+            _answerDL = answerDL;
         }
 
         /// <summary>

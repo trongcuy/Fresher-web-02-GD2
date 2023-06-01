@@ -23,6 +23,9 @@
         </div>
     </div>
     <ToastMessage></ToastMessage>
+    <div class="loader">
+        <div id="loading"></div>
+    </div>
 </template>
 
 <script setup>
@@ -41,6 +44,8 @@ const store = useStore();
  * CreatedBy VMHieu 23/05/2023
  */
 const createExercise = () => {
+    store.dispatch("updateFormModeExercise", Enum.FormModeExercise.Add);
+    store.dispatch("showListQuestion", false);
     store.dispatch("updateHideMainPage", true);
     router.push("/storage/create");
 }

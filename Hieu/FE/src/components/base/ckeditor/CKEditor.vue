@@ -33,6 +33,7 @@ export default {
         },
         /**
          * Reset lại input khi đóng form
+         * CreatedBy VMHieu 25/05/2023
          */
         showFormQuestion: function() {
           if (!this.showFormQuestion) {
