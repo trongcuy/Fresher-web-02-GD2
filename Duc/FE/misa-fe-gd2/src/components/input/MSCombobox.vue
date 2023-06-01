@@ -2,16 +2,20 @@
     <!-- phan tư combobox -->
     <div class="block">
         <p v-if="title">{{ title }}<span style="color: red;" v-if="require"> *</span></p>
-        <div style="position: relative;" :class="customClass">
-            <input type="text" class="input-select" v-model="optionValue" placeholder="defaultValue"/>
-            <div class="icon-select" @click="onClickShowOption"><img :src="src" /></div>
+        <div style="position: relative;" :class="customClass" @click="onClickShowOption">
+            <input type="text" class="input-select" v-model="optionValue" :placeholder="defaultValue?defaultValue:listSelect[0]"/>
+            <div class="icon-select" v-show="optionValue==this.default || !iconRemove"><img :src="src" /></div>
             <div class="div-option"
                 :class="{ 'div-option-reverse2': optionReverse && !title, 'div-option-reverse': optionReverse && title }"
                 v-if="isShowOption" v-click-outside="() => { isShowOption = false }">
                 <p v-for="(item, index) in listSelect" :key="index" class="option" @click="setOptionValue(item)">{{ item }}
                 </p>
             </div>
+            
         </div>
+        <!-- icon x -->
+        <div v-if="optionValue!=this.default && iconRemove" class="icon-x" @click="setOptionValue(this.default)"><img
+            src="../../assets/img/icons8-x-64.png" /></div>
     </div>
 </template>
 
@@ -29,7 +33,7 @@ export default {
         },
         src: {
             type: String,
-            default: 'https://sisapapp.misacdn.net/lms/img/ic_multi.7d8b269c.svg'
+            default: 'https://cegovapp.misacdn.net/cegov/img/ic_drop-down.fa70eead.svg'
         },
         listSelect: {
             type: Array,
@@ -46,12 +50,19 @@ export default {
         require: {
             type: Boolean,
             default: false
-        }
+        },
+        iconRemove: false
     },
     data() {
         return {
             isShowOption: false, //hiển thị option
-            optionValue: this.defaultValue//giá tị của option đã chọn
+            optionValue: this.defaultValue,//giá tị của option đã chọn
+            default: this.defaultValue,//giá trị default ban đầu dùng để so sánh ẩn nút x
+        }
+    },
+    watch: {
+        defaultValue(newValue) {
+            this.optionValue = newValue
         }
     },
     methods: {
@@ -70,7 +81,7 @@ export default {
             this.optionValue = item//set option
             //gửi giá trị này lên cha nó để thay đổi props default value
             this.$emit("setDefaultValue", this.optionValue)
-            this.isShowOption = false//đóng option
+            //this.isShowOption = false//đóng option
         }
     }
 }
@@ -81,6 +92,7 @@ export default {
     padding: 0px;
     width: auto;
     box-sizing: border-box;
+    position: relative;
 }
 
 .block>p {
@@ -103,7 +115,7 @@ input {
 .icon-select {
     position: absolute;
     top: 0px;
-    right: 0px;
+    right: 4px;
     width: 25px;
     height: 40px;
     display: flex;
@@ -119,10 +131,8 @@ input {
     width: 100%;
     height: 33px;
     margin: 0;
-    padding-left: 8px;
-    padding-top: 8px;
+    padding: 8px 16px;
     box-sizing: border-box;
-    border-radius: 4px;
     color: #606266;
 }
 
@@ -135,11 +145,11 @@ input:focus {
 }
 
 .div-option {
-    padding: 8px;
+    padding: 6px 0px;
     width: 100%;
     max-width: 245px;
-    border-radius: 4px;
-    box-shadow: 0 0 16px rgb(23 27 42 / 16%);
+    border-radius: 10px;
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
     position: absolute;
     top: 45px;
     right: 0px;
@@ -165,5 +175,23 @@ img {
 }
 p {
     font-size: 14px;
+}
+.icon-x {
+    position: absolute;
+    top: 0px;
+    right: 4px;
+    width: 25px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.icon-x:hover {
+    cursor: pointer;
+}
+.icon-x img {
+    width: 14px;
+    height: 14px;
 }
 </style>

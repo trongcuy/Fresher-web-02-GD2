@@ -24,6 +24,7 @@ export default {
     font-size: 14px;
     color: #606266;
     font-weight: 500;
+    cursor: pointer;
 }
 
 .button:hover {

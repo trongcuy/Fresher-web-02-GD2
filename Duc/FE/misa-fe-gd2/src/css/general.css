@@ -62,3 +62,96 @@ img {
 .zoom-div:hover {
 transform: scale(1.1); /* Áp dụng hiệu ứng phóng to 1.1 lần khi di chuột qua */
 }
+
+/* tùy chỉnh ckeditor của MSCardAnswer*/
+.body .ck.ck-toolbar>.ck-toolbar__items {
+    justify-content: end;
+    background-color: #fff;
+    border-radius: 10px;
+}
+.body .ck.ck-icon {
+    width: 16px !important;
+    height: 20px !important;
+}
+.body .ck.ck-editor__main>.ck-editor__editable:not(.ck-focused) {
+    border: none;
+    border-radius: 0px 0px 10px 10px;
+    background-color: #fff;
+}
+.body .ck.ck-toolbar {
+    background: #fff !important;
+    border: none;
+    border-radius: 10px 10px 0px 0px !important;
+    box-sizing: border-box;
+}
+.body .ck.ck-reset {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+}
+.body .ck.ck-editor__main>.ck-editor__editable:focus {
+    outline: none;
+    border-radius: 0px 0px 10px 10px;
+    box-shadow: 0 0px 0px rgba(90, 125, 141, .16);
+}
+.body .ck.ck-editor__main>.ck-editor__editable.ck-focused{  
+    outline: none;
+    border: none;
+}
+.body .ck.ck-editor__main>.ck-editor__editable{
+    height: 81px;
+    width: 100%;
+    border-radius: 0px 0px 10px 10px;
+}
+.hidden-editor {
+    background-color: aqua;
+    display: none !important;
+}
+.body .ck.ck-editor__main>.ck-editor__editable:not(.ck-focused){
+    text-align: center;
+}
+.body .ck.ck-editor__main>.ck-editor__editable.ck-focused {
+    text-align: center;
+}
+/* xóa decor editor khi nhập liệu xong */
+.remove-decor .ck.ck-toolbar>.ck-toolbar__items {
+    display: none;
+}
+.remove-decor .ck.ck-editor__main>.ck-editor__editable:not(.ck-focused) {
+    background-color: rgb(255, 214, 240);
+    margin-top: 30px;
+}
+
+/* tooltip */
+.tooltip {
+    position: absolute;
+    background-color: #fff;
+    padding: 5px;
+    border-radius: 8px;
+    top: 40px;
+    left: -15px;
+    border: 1px solid #4E5B6A;
+    white-space: nowrap;
+  }
+/* tooltip button */
+.div-button .tooltip {
+    position: absolute;
+    background-color: #fff;
+    padding: 5px;
+    border-radius: 8px;
+    top: -40px;
+    left: -30px;
+    border: 1px solid #4E5B6A;
+    white-space: nowrap;
+}
+/* tooltip cho list loại câu hỏi */
+.list-btn .tooltip {
+    position: absolute;
+    background-color: #fff;
+    padding: 5px;
+    border-radius: 8px;
+    top: 4px;
+    left: -150px;
+    border: 1px solid #4E5B6A;
+    white-space: nowrap;
+}

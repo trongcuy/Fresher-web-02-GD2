@@ -5,21 +5,65 @@
             <div class="div-title">
                 <p><b>{{ num }}.</b> {{ title }}</p>
             </div>
-            <div class="div-answer div-flex-row">
-                <div class="div-answer-item div-flex-row">
-                    <div class="div-center div-answer-true">A</div>
-                    <div> Đúng</div>
+            <div class="div-body">
+                <!-- câu trả lời đúng sai -->
+                <div v-if="type == 'truefalse'" class="answer-grid">
+                    <div class="div-answer-item div-flex-row">
+                        <div class="div-center div-answer-true">A</div>
+                        <div> Đúng</div>
+                    </div>
+                    <div class="div-answer-item div-flex-row">
+                        <div class="div-center div-answer-false">B</div>
+                        <div> Sai</div>
+                    </div>
                 </div>
-                <div class="div-answer-item div-flex-row">
-                    <div class="div-center div-answer-false">B</div>
-                    <div> Sai</div>
+                <!-- câu trả lời tự luận -->
+                <div v-if="type == 'essay'" class="answer-essay">
+                </div>
+                <!-- Câu trả lời chọn -->
+                <div v-if="type=='select'" class="answer-grid">
+                    <div class="div-answer-item div-flex-row">
+                        <div class="div-center div-answer-true">A</div>
+                        <div> Đúng</div>
+                    </div>
+                    <div class="div-answer-item div-flex-row">
+                        <div class="div-center div-answer-false">B</div>
+                        <div> Sai</div>
+                    </div>
+                    <div class="div-answer-item div-flex-row">
+                        <div class="div-center div-answer-false">C</div>
+                        <div> Sai</div>
+                    </div>
+                    <div class="div-answer-item div-flex-row">
+                        <div class="div-center div-answer-false">D</div>
+                        <div> Sai</div>
+                    </div>
+                    <div class="div-answer-item div-flex-row">
+                        <div class="div-center div-answer-false">E</div>
+                        <div> Sai</div>
+                    </div>
+                    <div class="div-answer-item div-flex-row">
+                        <div class="div-center div-answer-false">F</div>
+                        <div> Sai</div>
+                    </div>          
+                </div>
+                <!-- câu trả lời điền đáp án -->
+                <div v-if="type == 'fill'" class="answer-grid">
+                    <div class="div-answer-item div-flex-row">
+                        <div class="div-center div-answer-true">1</div>
+                        <div> mèo</div>
+                    </div>
+                    <div class="div-answer-item div-flex-row">
+                        <div class="div-center div-answer-false">2</div>
+                        <div> chó</div>
+                    </div>
                 </div>
             </div>
             <!-- Thanh button -->
-            <div class="div-button">
+            <div class="div-button-question">
                 <MSButton title="Chỉnh sửa" />
-                <div class="div-button-img"><img src="../../assets/img/ic_dublicate.svg" /></div>
-                <div class="div-button-img"><img src="../../assets/img/icon_delete.9097d258.svg" /></div>
+                <div class="div-button-img" v-tooltip="'Sao chép câu hỏi'"><img src="../../assets/img/ic_dublicate.svg" /></div>
+                <div class="div-button-img" v-tooltip="'Xóa câu hỏi'"><img src="../../assets/img/icon_delete.9097d258.svg" /></div>
             </div>
         </div>
     </div>
@@ -74,16 +118,13 @@ p {
 }
 
 .div-title {
-    height: 20px;
+    height: auto;
     margin-bottom: 20px;
 }
 
-.div-answer {
-    height: 24px;
-    padding-bottom: 20px;
-    margin-bottom: 20px;
-    justify-content: space-around;
+.div-body {
     border-bottom: 1px solid #E6E6e6;
+    margin-bottom: 20px;
 }
 
 .div-answer-item {
@@ -97,19 +138,23 @@ p {
     border-radius: 50px;
     color: white;
 }
+
 .div-answer-true {
     background-color: #00C542;
 }
+
 .div-answer-false {
     background-color: #B6B9CE;
 }
-.div-button {
+
+.div-button-question {
     display: flex;
     align-items: center;
     gap: 12px;
     padding-right: 6px;
     justify-content: end;
 }
+
 .div-button-img {
     background-color: #f1f2f7;
     border: 1px solid #b6b9ce;
@@ -120,5 +165,23 @@ p {
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
+}
+.div-button-img img {
+    width: 24px;
+    height: 24px;
+}
+.answer-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    padding-bottom: 20px;
+    gap: 20px;
+}
+.answer-essay {
+    height: 20px;
+    width: 480px;
+    margin-bottom: 20px;
+    border-bottom: 1px dashed #4E5B6A;
+    border-top: 1px dashed #4E5B6A;
 }
 </style>

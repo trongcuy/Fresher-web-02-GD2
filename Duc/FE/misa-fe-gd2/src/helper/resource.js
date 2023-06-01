@@ -1,7 +1,7 @@
 const Resource = {
     VI: {     
         //loại câu hỏi
-        TypeQuestion: {
+        TitleQuestion: {
             select: "Chọn đáp án",
             rightwrong: "Đúng sai",
             fill: "Điền vào chỗ trống",
@@ -9,6 +9,17 @@ const Resource = {
             group: "Câu hỏi nhóm",
             essay: "Tự luận"
         },
+        //trạng thái
+        StateExercise: {
+            1: "Đang soạn",
+            2: "Đã soạn"
+        },
+        TypeQuestion: {
+            1: "select",
+            2: "truefalse",
+            3: "fill",
+            4: "essay"
+        }
     },
     EN: {
     }

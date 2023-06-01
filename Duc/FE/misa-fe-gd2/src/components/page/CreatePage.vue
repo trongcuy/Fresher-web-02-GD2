@@ -7,15 +7,15 @@
                 <div class="div-name">
                     <img class="icon-back" src="../../assets/img/icon_back.svg" @click="onClickBack" />
                     <img class="image" src="../../assets/img/default.png" />
-                    <input type="text" placeholder="Nhập tên bài tập..." />
+                    <input type="text" placeholder="Nhập tên bài tập..." v-model="exercise.exerciseName" />
                 </div>
                 <!-- Thanh chứa các menu -->
                 <div class="div-menu">
                     <div class="menu-left">
-                        <MSCombobox class="cb-subject" defaultValue="Toán"
-                            :listSelect="['Toán', 'Tiếng Việt', 'Tiếng Anh', 'Tự nhiên xã hội', 'Lịch sử', 'Địa lý']" />
-                        <MSCombobox class="cb-grade" defaultValue="Khối 1"
-                            :listSelect="['Khối 1', 'Khối 2', 'Khối 3', 'Khối 4', 'Khối 5']" />
+                        <MSCombobox class="cb-subject" :defaultValue="exercise.subjectName" :listSelect="subjectOptions"
+                            @setDefaultValue="setValueSubject" />
+                        <MSCombobox class="cb-grade" :defaultValue="exercise.gradeName" :listSelect="gradeOptions"
+                            @setDefaultValue="setValueGrade" />
                         <MSButton title="Bổ sung thông tin" @click="onClickAddInfor" />
                         <MSButton title="Đổi kiểu soạn" />
                     </div>
@@ -23,14 +23,14 @@
                     <div class="menu-right">
                         <div class="div-help"><img src="../../assets/img/ic_help.svg" /></div>
                         <MSButton title="Làm thử" />
-                        <MSButton title="Hoàn thành" class="btn-complete" />
+                        <MSButton title="Hoàn thành" class="btn-complete" @click="onClickSaveExercise" />
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- phần body khi chưa có câu hỏi-->
-        <div class="div-body" v-if="numQuestion==0">
+        <div class="div-body" v-if="questionList.length == 0">
             <div class="div-import">
                 <p class="title">Tách câu hỏi tự động sử dụng công nghệ AI</p>
                 <div class="import">
@@ -67,36 +67,41 @@
         </div>
 
         <!-- phần body khi số câu hỏi > 0-->
-        <div class="div-body div-list-question" v-if="numQuestion>0">
+        <div class="div-body div-list-question" v-if="questionList.length > 0">
             <div class="list-question div-flex-column">
-                <MSQuestion num="1" title="Câu hỏi 1" type="essay"/>
-                <MSQuestion num="2" title="Câu hỏi 2" type="select"/>
-                <MSQuestion num="3" title="Câu hỏi 3" type=""/>
+                <MSQuestion v-for="(item, index) in questionList" :num="item.questionNumber" :title="item.questionContent"
+                    :type="resource.TypeQuestion[item.questionType]" />
+                <!-- <MSQuestion num="2" title="Câu hỏi 2" type="select"/>
+                <MSQuestion num="3" title="Con...kêu meo meo" type="fill"/>
+                <MSQuestion num="3" title="Câu hỏi 3: Viết một đoạn văn 5 đến 10 câu miêu tả con vật trong nhà mà em yêu quý nhất." type="essay"/> -->
             </div>
             <div class="list-btn list-btn-column">
-                <MSButtonQuestion @click="onClickNewQuesion('select')" dimention="small"
+                <MSButtonQuestion @click="onClickNewQuesion('select')" dimention="small" v-tooltip="'Thêm câu chọn đáp án'"
                     src="https://sisapapp.misacdn.net/lms/img/select.c15dfe74.svg" />
-                <MSButtonQuestion @click="onClickNewQuesion('rightwrong')" dimention="small"
+                <MSButtonQuestion @click="onClickNewQuesion('rightwrong')" dimention="small" v-tooltip="'Thêm câu đúng sai'"
                     src="https://sisapapp.misacdn.net/lms/img/yesorno.7f4f0b5a.svg" />
                 <MSButtonQuestion @click="onClickNewQuesion('fill')" dimention="small"
+                    v-tooltip="'Thêm câu điền vào chỗ trống'"
                     src="https://sisapapp.misacdn.net/lms/img/fill.af676902.svg" />
-                <MSButtonQuestion @click="onClickNewQuesion('match')" dimention="small"
+                <MSButtonQuestion @click="onClickNewQuesion('match')" dimention="small" v-tooltip="'Thêm câu ghép nối'"
                     src="https://sisapapp.misacdn.net/lms/img/pairing.4e1fb31f.svg" />
-                <MSButtonQuestion @click="onClickNewQuesion('group')" dimention="small"
+                <MSButtonQuestion @click="onClickNewQuesion('group')" dimention="small" v-tooltip="'Thêm câu hỏi nhóm'"
                     src="	https://sisapapp.misacdn.net/lms/img/group.ca2a19ef.svg" />
-                <MSButtonQuestion @click="onClickNewQuesion('essay')" dimention="small"
+                <MSButtonQuestion @click="onClickNewQuesion('essay')" dimention="small" v-tooltip="'Thêm câu tự luận'"
                     src="https://sisapapp.misacdn.net/lms/img/essay.e07e1e68.svg" />
                 <div class="line"></div>
-                <MSButtonQuestion @click="onClickNewQuesion('essay')" dimention="small"
+                <MSButtonQuestion @click="onClickNewQuesion('essay')" dimention="small" v-tooltip="'Sắp xếp thứ tự câu hỏi'"
                     src="https://sisapapp.misacdn.net/lms/img/sort.220d1765.svg" />
             </div>
         </div>
 
         <!-- popup thêm câu hỏi -->
-        <MSPopupAdd v-if="showPopupAdd" @onClosePopup="onClosePopup" @onClickSaveQuestion="onSaveQuestion"/>
+        <MSPopupAdd v-if="showPopupAdd" @onClosePopup="onClosePopup" @onClickSaveQuestion="onSaveQuestion" />
         <!-- popup bổ sung thông tin -->
-        <MSPopupAddInfor v-if="showPopupAddInfor" name="Test bt" subject="Toán" grade="Khối 1"
-            @onClosePopup="onCloseAddInfor" />
+        <MSPopupAddInfor v-if="showPopupAddInfor" 
+            @onClosePopup="onCloseAddInfor" 
+            :exercise={...exercise} 
+            @onSaveInfor="onSaveInfor"/>
     </div>
 </template>
 
@@ -109,6 +114,7 @@ import MSPopupAddInfor from '../../components/popup/MSPopupAddInfor.vue'
 import MSQuestion from '../card/MSQuestion.vue'
 import { mapGetters } from 'vuex'
 import { mapMutations } from 'vuex'
+import { mapActions } from 'vuex'
 export default {
     name: "CreatePage",
     props: [],
@@ -121,17 +127,47 @@ export default {
         MSQuestion
     },
     data() {
+        const resource = window.Resource
         return {
+            resource,
+            exercise: [],//biến lưu thông tin của bài tập đang chỉnh sửa
             showPopupAdd: false,//biến show popup thêm câu hỏi
             showPopupAddInfor: false,//biến show popup thêm thông tin cho bài tập
-            numQuestion: 1,//số câu hoir của bài tập
+            modePage: '',//chế độ trang sửa hay thêm mới bài tập
         }
     },
     computed: {
-        ...mapGetters(['typePopupAdd'])
+        ...mapGetters([
+            'subjectList',
+            'gradeList',
+            'typePopupAdd',
+            'subjectOptions',
+            'gradeOptions',
+            'questionList',
+            'exerciseIDSelected',
+            'exerciseSelected'
+        ])
     },
     methods: {
-        ...mapMutations(['setShowOverlay', 'setTypePopupAdd']),
+        ...mapMutations([
+            'setShowOverlay',
+            'setTypePopupAdd',
+            'setExerciseIDSelected',
+            'setExerciseSelected',
+            'setQuestionList',
+            'setExerciseSubject',
+            'setExerciseGrade',
+            'setTopicExercise'
+        ]),
+        ...mapActions([
+            'getListSubject',
+            'getListGrade',
+            'getListQuestion',
+            'getExerciseById',
+            'addExercise',
+            'editExercise',
+            'addTopic'
+        ]),
         /**
          * click back về trang chủ
          * CreatedBy: Trịnh Huỳnh Đức (20-5-2023)
@@ -162,6 +198,25 @@ export default {
          * CreatedBy: Trịnh Huỳnh Đức (22-5-2023)
          */
         onClickAddInfor() {
+            //nếu chưa chọn môn và khối thì gán nó gtri mặc định
+            if (!this.exercise.subjectName)
+                this.exercise.subjectName = this.subjectOptions[0]
+            if (!this.exercise.gradeName)
+                this.exercise.gradeName = this.gradeOptions[0]
+            //lấy id môn và khối cho việc tìm kiếm chủ đề
+            //lấy id môn học
+            for (const key in this.subjectList) {
+                if (this.subjectList[key].subjectName == this.exercise.subjectName) {
+                    this.exercise.subjectID = this.subjectList[key].subjectID
+                }
+            }
+            //lấy id khối
+            for (const key in this.gradeList) {
+                if (this.gradeList[key].gradeName == this.exercise.gradeName) {
+                    this.exercise.gradeID = this.gradeList[key].gradeID
+                }
+            }
+            //mở popup add infor
             this.showPopupAddInfor = true
             this.setShowOverlay(true)
         },
@@ -178,10 +233,98 @@ export default {
          * CreatedBy: Trịnh Huỳnh Đức (21-5-2023)
          */
         onSaveQuestion() {
-            this.numQuestion++
+            // this.numQuestion++
             this.showPopupAdd = false
             this.setShowOverlay(false)
+        },
+        /**
+         * sự kiên set giá trị môn học của combobox
+         * CreatedBy: Trịnh Huỳnh Đức (31-5-2023)
+         */
+        setValueSubject(value) {
+            this.exercise.subjectName = value
+        },
+        /**
+         * sự kiên set giá trị khối của combobox
+         * CreatedBy: Trịnh Huỳnh Đức (31-5-2023)
+         */
+        setValueGrade(value) {
+            this.exercise.gradeName = value
+        },
+        /**
+         * bắt sự kiện lưu bài tập
+         * CreatedBy: Trịnh Huỳnh Đức (31-5-2023)
+         */
+        onClickSaveExercise() {
+            //lấy các thông tin bài tập để lưu
+            //nếu chưa chọn môn và khối thì gán nó gtri mặc định
+            if (!this.exercise.subjectName)
+                this.exercise.subjectName = this.subjectOptions[0]
+            if (!this.exercise.gradeName)
+                this.exercise.gradeName = this.gradeOptions[0]
+            //lấy trạng thái
+            this.exercise.exerciseState = 2
+            //lấy id môn học
+            for (const key in this.subjectList) {
+                if (this.subjectList[key].subjectName == this.exercise.subjectName) {
+                    this.exercise.subjectID = this.subjectList[key].subjectID
+                }
+            }
+            //lấy id khối
+            for (const key in this.gradeList) {
+                if (this.gradeList[key].gradeName == this.exercise.gradeName) {
+                    this.exercise.gradeID = this.gradeList[key].gradeID
+                }
+            }
+            if(this.modePage == "add"){
+                //gọi api thêm
+                this.addExercise(this.exercise)
+            }
+            else {
+                //gọi api sửa bài tập
+                this.editExercise(this.exercise)
+                //gọi api thêm chủ đề
+                this.addTopic()
+            }
+            
+            //back về trang chủ
+            this.onClickBack()
+        },
+        /**
+         * bắt sự kiện ấn lưu popup thêm thông tin
+         * CreatedBy: Trịnh Huỳnh Đức (1-6-2023)
+         * @param {*} value 
+         */
+        onSaveInfor(value) {
+            //gán lại các giá trị của exercise
+            this.exercise.exerciseName = value.exerciseName
+            this.exercise.subjectName = value.subjectName
+            this.exercise.gradeName = value.gradeName
         }
+    },
+    created() {
+        //lấy danh sách môn
+        this.getListSubject()
+        //lấy danh sách khối
+        this.getListGrade()
+        //lấy ds câu hỏi và bài tập
+        const exerciseID = this.$route.query.exerciseID
+        if (exerciseID) {//nếu là sửa bài tập
+            this.modePage="edit"
+            this.getExerciseById(exerciseID).then(data => {
+                this.exercise = data
+            })
+            this.getListQuestion(exerciseID)
+        }
+        else {
+            this.modePage="add"
+        }
+    },
+    unmounted() {
+        //reset lại bài tập đang chọn, câu hỏi, chủ đề
+        this.setExerciseSelected([])
+        this.setQuestionList([])
+        this.setTopicExercise([])
     }
 }
 </script>
@@ -363,6 +506,7 @@ export default {
     align-items: center;
     gap: 56px;
 }
+
 .list-btn-column {
     flex-direction: column;
     gap: 12px;
@@ -370,10 +514,12 @@ export default {
     top: 164px;
     right: 88px;
 }
+
 .list-btn>img {
     width: 2px;
     height: 98px;
 }
+
 .line {
     width: 40px;
     height: 2px;
@@ -381,12 +527,14 @@ export default {
     border-radius: 4px;
     margin: 0;
 }
+
 .list-question {
     margin-top: 36px;
     width: 100%;
     gap: 20px;
     padding: 0px 32px 0px 32px;
 }
+
 .div-list-question {
     margin: 0px 140px 0px 140px;
     overflow: scroll;

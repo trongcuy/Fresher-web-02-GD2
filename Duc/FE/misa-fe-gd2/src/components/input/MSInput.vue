@@ -3,7 +3,8 @@
     <div class="div-input">
         <p v-if="title">{{ title }}<span style="color: red;" v-if="require"> *</span></p>
         <input class="input" type="text" :placeholder="defaultValue" v-model="inputValue"
-            @input="() => this.$emit('setValueProps', this.inputValue)" />
+            :class="{'icon-left':type=='icon-left'}"
+            @input="() => this.$emit('setValueInput', this.inputValue)" />
     </div>
 </template>
 
@@ -22,11 +23,26 @@ export default {
         require: {
             type: Boolean,
             default: false
+        },
+        type: {
+            type: String,
+            default: ''
+        },
+        value: {
+            type: String,
+            default: ''
         }
     },
     data() {
         return {
-            inputValue: "",
+            inputValue: this.value,
+        }
+    },
+    watch: {
+        //khi prop cha truyền lại valueInput thì cập nhật lại value input con
+        //->binding chiều cha sang con
+        value(newValue) {
+            this.inputValue = newValue
         }
     },
     methods: {
@@ -54,5 +70,8 @@ p {
 .div-input {
     display: flex;
     flex-direction: column;
+}
+.icon-left {
+    padding-left: 34px;
 }
 </style>

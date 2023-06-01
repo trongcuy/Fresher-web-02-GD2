@@ -1,5 +1,21 @@
 export default {
     username: state => state.username,
     showOverlay: state => state.showOverlay,
-    typePopupAdd: state => state.typePopupAdd
+    typePopupAdd: state => state.typePopupAdd,
+    showDialog: state => state.showDialog,
+    showNotify: state => state.showNotify,
+    showLoading: state => state.showLoading,
+    pageSize: state => state.pageSize,
+    pageIndex: state => state.pageIndex,
+    exerciseList: state => state.exerciseList,
+    dataFilter: state => state.dataFilter,
+    subjectList: state => state.subjectList,
+    gradeList: state => state.gradeList,
+    topicList: state => state.topicList,
+    subjectOptions: state => state.subjectOptions,
+    gradeOptions: state => state.gradeOptions,
+    exerciseIDSelected: state => state.exerciseIDSelected,
+    exerciseSelected: state => state.exerciseSelected,
+    questionList: state => state.questionList,
+    topicExercise: state => state.topicExercise
 }
