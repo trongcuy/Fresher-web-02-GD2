@@ -10,6 +10,7 @@
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import * as Resource from '@/common/resource/Resource';
 import { mapState } from 'vuex';
+import { nextTick } from 'vue';
 
 export default {
     data() {
@@ -27,12 +28,19 @@ export default {
       showFormQuestion: (state) => state.question.showFormQuestion
     }),
     mounted() {
-
+      nextTick(() => {
+        if (this.dataEditor) {
+          this.editorData = this.dataEditor;
+        }
+      })
     },
     watch: {
         // Xem sự thay đổi của v-model để đẩy lên component cha
         editorData: function() {
             this.$emit("update:modelValue", this.editorData);
+        },
+        dataEditor: function() {
+          this.editorData = this.dataEditor;
         },
         /**
          * Reset lại input khi đóng form
@@ -43,6 +51,9 @@ export default {
             this.editorData = "";
           }
         }
+    },
+    props: {
+      dataEditor: null
     }
   };
 

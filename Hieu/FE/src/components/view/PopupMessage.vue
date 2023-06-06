@@ -46,6 +46,9 @@ import { computed } from "vue";
 import { useStore } from "vuex";
 import * as Resource from '@/common/resource/Resource';
 import * as Enum from '@/common/enum/Enum';
+import { useRoute } from "vue-router";
+
+const route = useRoute();
 
 const store = useStore();
 // Biến trạng thái popup
@@ -56,6 +59,10 @@ const popupStatus = computed(() => store.state.app.popupStatus);
 const popupMsg = computed(() => store.state.app.popupMsg);
 // ID bản ghi bài tập cần xóa
 const idExercise = computed(() => store.state.exercise.idDelete);
+// ID bản ghi câu hỏi cần xóa
+const idQuestion = computed(() => store.state.question.idDelete);
+// Trạng thái xóa của popup
+const statusDelete = computed(() => store.state.app.statusDelete);
 
 /**
  * Đóng popup
@@ -69,8 +76,18 @@ const handleClose = () => {
  * VMHieu 06/01/2023
  */
 const handleSaveDelete = async () => {
-   await store.dispatch("deleteExercise", idExercise.value);
-   await store.dispatch("getPaging");
+    if (statusDelete.value == Enum.StatusDelete.Exercise) {
+        await store.dispatch("deleteExercise", idExercise.value);
+        await store.dispatch("getPaging");
+    } else if (statusDelete.value == Enum.StatusDelete.Question){
+        await store.dispatch("deleteQuestion", idQuestion.value);
+        const id = route.query.id;
+        if (id) {
+            store.dispatch("getAllByID", id);
+        } 
+        
+    }
+
     store.dispatch("showPopup", false);
 }
 </script>

@@ -22,7 +22,7 @@ namespace WEB02.EMIS.API.Controllers
         /// <returns></returns>
         /// <exception cref="ErrorException"></exception>
         /// VMHieu 28/05/2023
-        [HttpGet("overview")]
+        [HttpGet("{ExerciseID}/overview")]
         public IActionResult GetAllByID(Guid ExerciseID)
         {
             try
@@ -54,6 +54,56 @@ namespace WEB02.EMIS.API.Controllers
             try
             {
                 var result = _exerciseBL.GetPaging(keyword, grade, subject, status, skip, take);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return HandleException(ex);
+            }
+        }
+
+        /// <summary>
+        /// Thực hiện thêm bài tập, câu hỏi, đáp án và chủ đề liên quan
+        /// </summary>
+        /// <param name="exercise"></param>
+        /// <param name="question"></param>
+        /// <param name="answers"></param>
+        /// <param name="topicIDs"></param>
+        /// <returns></returns>
+        /// <exception cref="ErrorException"></exception>
+        /// VMHieu 06/06/2023
+        [HttpPost("multiple")]
+        public IActionResult InsertMultiple(DataInsertAll dataInsertAll)
+        {
+            try
+            {
+                var result = _exerciseBL.InsertMultiple(dataInsertAll);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return HandleException(ex);
+            }
+        }
+
+        /// <summary>
+        /// Thực hiện thêm câu hỏi, đáp án và chủ đề liên quan trong 1 bài tập đã có
+        /// </summary>
+        /// <param name="exercise"></param>
+        /// <param name="question"></param>
+        /// <param name="answers"></param>
+        /// <param name="topicIDs"></param>
+        /// <returns></returns>
+        /// <exception cref="ErrorException"></exception>
+        /// VMHieu 06/06/2023
+        [HttpPut("multiple")]
+        public IActionResult UpdateMultiple(DataInsertAll dataInsertAll)
+        {
+            try
+            {
+                var result = _exerciseBL.UpdateMultiple(dataInsertAll);
                 return Ok(result);
             }
             catch (Exception ex)

@@ -89,9 +89,9 @@ namespace WEB02.EMIS.API.DL.Services
         /// Thêm 1 bản ghi 
         /// </summary>
         /// <param name="entity">bản ghi cần thêm</param>
-        /// <returns>Số lượng bản ghi được thêm vào</returns>
+        /// <returns>ID bản ghi được thêm vào</returns>
         /// CreatedBy VMHieu 27/05/2023
-        public virtual int Insert(T entity)
+        public virtual string Insert(T entity)
         {
             using (mySqlConnection = new MySqlConnection(ConnectionString))
             {
@@ -102,9 +102,9 @@ namespace WEB02.EMIS.API.DL.Services
                 var parameters = new DynamicParameters(entity);
 
                 // Thực hiện gọi vào db để chạy câu lệnh 
-                var result = mySqlConnection.Execute(insertCommand, param: parameters, commandType: System.Data.CommandType.StoredProcedure);
+                var result = mySqlConnection.QueryFirstOrDefault<string>(insertCommand, param: parameters, commandType: System.Data.CommandType.StoredProcedure);
                 // Xử lý kết quả trả về ở db
-                if (result == 0)
+                if (result == null)
                 {
                     throw new ErrorException(devmsg: Resources.ResourceManager.GetString(name: "ExceptionInsert"));
                 }

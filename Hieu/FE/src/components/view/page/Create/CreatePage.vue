@@ -1,8 +1,12 @@
 <template>
     <div class="create-container">
         <div class="create-header">
-            <div class="header-top flex">
-                <div class="btn-back" @click="backMainPage">
+            <div class="header-top flex" v-tooltip="{
+                        theme: {
+                            placement: 'right',
+                        },
+                    }">
+                <div class="btn-back" @click="backMainPage" v-tooltip="'Trở về trang trước'">
                     <img :src="btnBackImg" alt="">
                 </div>
                 <div class="header-top__avatar">
@@ -22,6 +26,7 @@
                             v-model="dataExercise.SubjectID"
                             :valueCombobox="dataExercise.SubjectID"
                             :openClear="false"
+                            @changeValue="changeValue"
                         ></BaseCombobox>
                     </div>
                     <div class="combobox-class">
@@ -32,6 +37,7 @@
                             v-model="dataExercise.GradeID"
                             :valueCombobox="dataExercise.GradeID"
                             :openClear="false"
+                            @changeValue="changeValue"
                         ></BaseCombobox>
                     </div>
                     <div class="btn-addinfo">
@@ -40,7 +46,7 @@
                 </div>
                 <div class="header-bottom__right flex">
                     <div class="btn-question">
-                        <BaseButton class="ms-button btn-white btn-active btn-onlyicon  btn-40">
+                        <BaseButton class="ms-button btn-white btn-active btn-onlyicon  btn-40" v-tooltip="'Trợ giúp'">
                             <template v-slot:icon>
                                 <div class="center">
                                     <img :src="questionImg" alt="">
@@ -133,36 +139,40 @@
             <div class="create-main__list" v-show="showListQuestion">
                 <div class="question-list">
                     <div v-for="(question, index) in dataQuestion" :key="index">
-                        <BaseQuestion :data="question"></BaseQuestion>
+                        <BaseQuestion :data="question" :index="index"></BaseQuestion>
                     </div>
                 </div>
-                <div class="create-option option-list">
-                    <div class="question-library">
+                <div class="create-option option-list" v-tooltip="{
+                        theme: {
+                            placement: 'left',
+                        },
+                    }">
+                    <div class="question-library" v-tooltip="'Thư viện'">
                         <div class="question-avatar question-hover">
                             <img :src="libraryImg" alt="">
                         </div>
                     </div>
-                    <div class="question-select" @click="openFormQuestion(Enum.FormQuestion.Select)">
+                    <div class="question-select" @click="openFormQuestion(Enum.FormQuestion.Select)" v-tooltip="'Thêm câu chọn đáp án'">
                         <div class="question-avatar question-hover">
                             <img :src="selectImg" alt="">
                         </div>
                     </div>
-                    <div class="question-yesno" @click="openFormQuestion(Enum.FormQuestion.YesOrNo)">
+                    <div class="question-yesno" @click="openFormQuestion(Enum.FormQuestion.YesOrNo)" v-tooltip="'Thêm câu chọn đúng sai'">
                         <div class="question-avatar question-hover">
                             <img :src="yesnoImg" alt="">
                         </div>
                     </div>
-                    <div class="question-fill" @click="openFormQuestion(Enum.FormQuestion.Fill)">
+                    <div class="question-fill" @click="openFormQuestion(Enum.FormQuestion.Fill)" v-tooltip="'Thêm câu điền vào chỗ trống'">
                         <div class="question-avatar question-hover">
                             <img :src="fillImg" alt="">
                         </div>
                     </div>
-                    <div class="question-essay" @click="openFormQuestion(Enum.FormQuestion.Essay)">
+                    <div class="question-essay" @click="openFormQuestion(Enum.FormQuestion.Essay)" v-tooltip="'Thêm câu tự luận'">
                         <div class="question-avatar question-hover">
                             <img :src="essayImg" alt="">
                         </div>
                     </div>
-                    <div class="question-group" @click="openFormQuestion(Enum.FormQuestion.Group)">
+                    <div class="question-group" @click="openFormQuestion(Enum.FormQuestion.Group)" v-tooltip="'Thêm câu hỏi nhóm'">
                         <div class="question-avatar question-hover">
                             <img :src="groupImg" alt="">
                         </div>
@@ -170,8 +180,9 @@
                 </div>
             </div>
         </div>
+        <ToastMessage></ToastMessage>
     </div>
-    <FormQuestion ></FormQuestion>
+    <FormQuestion :data="dataQuestion" :dataExercise="dataExercise"></FormQuestion>
     <FormExercise :data="dataExercise" v-model="dataExerciseAdd" @saveForm="saveForm"></FormExercise>
 </template>
 
@@ -180,7 +191,8 @@ import BaseCombobox from '@/components/base/combobox/BaseCombobox.vue';
 import BaseButton from '@/components/base/button/BaseButton.vue';
 import BaseQuestion from '@/components/base/question/BaseQuestion.vue';
 import FormQuestion from '@/components/view/FormQuestion.vue';
-import FormExercise from '../../FormExercise.vue';
+import FormExercise from '@/components/view/FormExercise.vue';
+import ToastMessage from '@/components/view/ToastMessage.vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import { computed, reactive, onBeforeMount, watch, ref, defineProps, onMounted } from 'vue'; 
@@ -208,7 +220,7 @@ const showListQuestion = computed(() => store.state.question.showListQuestion);
 const grades = computed(() => store.state.grade.grades);    // Bản ghi khối
 const subjects = computed(() => store.state.subject.subjects); // Bản ghi môn học
 const exercise = computed(() => store.state.exercise.exercise); // Thông tin bài tập và câu hỏi, đán án của bt
-const topicList = computed(() => store.state.exercisetopic.exerciseTopicUpload); // Thông tin bài tập và câu hỏi, đán án của bt
+const exerciseID = computed(() => store.state.exercise.exerciseID); // ID bản ghi mới thêm
 const formModeExercise = computed(() => store.state.exercise.formModeExercise); // Thông tin bài tập và câu hỏi, đán án của bt
 const refresh = computed(() => store.state.exercise.refresh); // Refresh lại trang
 // Object data bài tập
@@ -229,7 +241,7 @@ const dataExerciseAdd = ref({});
  */
 const backMainPage = () => {
     store.dispatch("updateHideMainPage", false);
-    router.go(-1);
+    router.push("/storage/mine");
 }
 /**
  * Mở form question theo status truyền vào
@@ -238,6 +250,7 @@ const backMainPage = () => {
  */
 const openFormQuestion = (status) => {
     store.dispatch("showFormQuestion", status);
+    store.dispatch("updateFormModeQuestion", Enum.FormModeQuestion.Add);
 }
 /**
  * Mở form thông tin bài tập
@@ -266,21 +279,43 @@ const saveForm = (data) => {
 }
 
 /**
+ * Sự kiện khi thay đổi value combobox
+ * VMHieu 01/06/2023
+ */
+ const changeValue = () => {
+    let dataGradeSubject = {
+        gradeID: dataExercise.value.GradeID,
+        subjectID: dataExercise.value.SubjectID
+    }
+    store.dispatch("getTopicByGradeSubject", dataGradeSubject);
+}
+
+
+/**
  * Thực hiện cập nhật bài tập
  * VMHieu 01/06/2023
  */
-const saveExercise = () => {
+const saveExercise = async () => {
+    const id = route.query.id;
     if (validateExercise()) {
-        if (formModeExercise.value == Enum.FormModeExercise.Edit) {
-            store.dispatch("putExercise", dataExercise.value);
-        } else if(formModeExercise.value == Enum.FormModeExercise.Add) {
-            store.dispatch("postExercise", dataExercise.value);
+        if (id) {
+            await store.dispatch("putExercise", dataExercise.value);
+        } else {
+            await store.dispatch("postExercise", dataExercise.value);
+        }
+
+        if (dataExercise.value.Topics) {
+            let dataTopic = {
+                ExerciseID: dataExercise.value.ExerciseID || exerciseID.value,
+                Topics: Object.values(dataExercise.value.Topics)
+            }
+            // Thêm chủ đề
+            await store.dispatch("postTopicMultiple", dataTopic);
         }
     } else {
         store.dispatch("showFormExercise", true);
     }
 }
-
 
 /**
  * Thực hiện công việc trước khi component được mount
@@ -290,11 +325,9 @@ onBeforeMount(() => {
     store.dispatch("getAllSubject");
     store.dispatch("getAllGrade");
     const id = route.query.id;
-    if (id) {
-        
+    if (id) { 
         store.dispatch("getAllByID", id);
     }
-    
 })
 
 /**
@@ -315,10 +348,10 @@ watch((exercise), () => {
  * Bắt việc refresh lại trang và back về trang chủ
  * VMHieu 06/01/2023 
  */
-watch((refresh), () => {
-    store.dispatch("updateHideMainPage", false);
-    router.push("/storage/mine");
-})
+// watch((refresh), () => {
+//     store.dispatch("updateHideMainPage", false);
+//     router.push("/storage/mine");
+// })
 
 
 

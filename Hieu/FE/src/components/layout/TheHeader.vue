@@ -71,7 +71,7 @@ const tbImg = require("@/assets/img/thongbao.svg");
 const avatarImg = require("@/assets/img/getavatar.png");
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .header-container {
     height: 64px;
     min-height: 64px;
@@ -81,16 +81,16 @@ const avatarImg = require("@/assets/img/getavatar.png");
     top: 0;
     justify-content: space-between;
     background: #fff;
-}
 
-.header-left, .header-right {
+  .header-left,
+  .header-right {
     height: 100%;
     width: auto;
     display: flex;
     align-items: center;
-}
+  }
 
-.menu-item {
+  .menu-item {
     font-size: 16px;
     color: var(--color-text);
     height: 100%;
@@ -98,33 +98,33 @@ const avatarImg = require("@/assets/img/getavatar.png");
     margin: 0 12px;
     cursor: pointer;
     text-decoration: none;
-}
 
-.menu-item img{
-    margin-right: 8px;
-    filter: invert(32%) sepia(26%) saturate(344%) hue-rotate(171deg) brightness(100%) contrast(91%);
-}
+    img {
+      margin-right: 8px;
+      filter: invert(32%) sepia(26%) saturate(344%) hue-rotate(171deg) brightness(100%) contrast(91%);
+    }
+  }
 
-.combobox-year{
+  .combobox-year {
     width: 185px;
     margin-right: 0.75rem;
-}
+  }
 
-.menu-icon{
+  .menu-icon {
     height: 40px;
     padding: 0 8px;
     display: flex;
     align-items: center;
     cursor: pointer;
-}
+  }
 
-.avatar-context{
+  .avatar-context {
     color: var(--color-text);
     font-size: 16px;
     margin: auto 16px auto 8px;
-}
+  }
 
-.avatar-img img{
+  .avatar-img img {
     height: 47px;
     width: 47px;
     background-size: 100%;
@@ -134,21 +134,22 @@ const avatarImg = require("@/assets/img/getavatar.png");
     border-radius: 50%;
     cursor: pointer;
     overflow: hidden;
-}
+  }
 
-.active{
+  .active {
     border-bottom: 2px solid #8a6bf6;
     font-weight: 700;
     color: #8a6bf6;
     height: 100%;
-}
 
-.active img{
-    filter: invert(69%) sepia(72%) saturate(6261%) hue-rotate(227deg) brightness(99%) contrast(94%);
-}
+    img {
+      filter: invert(69%) sepia(72%) saturate(6261%) hue-rotate(227deg) brightness(99%) contrast(94%);
+    }
 
-.active .menu-item__text{
-    font-weight: 700;
-    color: #8a6bf6;
+    .menu-item__text {
+      font-weight: 700;
+      color: #8a6bf6;
+    }
+  }
 }
 </style>

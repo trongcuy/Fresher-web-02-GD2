@@ -2,23 +2,14 @@
     <div class="answer-fill__container">
         <div class="answer-fill__item flex">
             <div class="fill-number">
-                Ô trống 1
+                Ô trống {{ props.index + 1 }}
             </div>
-            <BaseInputTag></BaseInputTag>
-            <div class="fill-remove">
-                <div class="remove-icon">
+            <div class="ip-tag" v-for="(data, index) in dataAnswer" :key="index">
+                <BaseInputTag :data="data.AnswerContent" v-model="dataAnswer[index].AnswerContent"></BaseInputTag>
+            </div>
+            <div class="fill-remove" @click="removeAnswer">
+                <div class="remove-icon" >
                     <img :src="removeImg" alt="">
-                </div>
-            </div>
-        </div>
-        <div class="answer-fill__add flex">
-            <div class="fill-number"></div>
-            <div class="fill-add__button flex">
-                <div class="fill-add__img">
-                    <img :src="addImg" alt="">
-                </div>
-                <div class="fill-add__text">
-                    Thêm đáp án
                 </div>
             </div>
         </div>
@@ -27,10 +18,45 @@
 
 <script setup>
 import BaseInputTag from "../input/BaseInputTag.vue";
+import { defineProps, defineEmits, reactive, watch, onMounted } from 'vue';
+
+const props = defineProps({
+    data: null, // Data nhận được từ cha
+    index: null,    // Index của đáp án
+})
+
+const emit = defineEmits(['removeAnswer']);
 
 // Các biến lưu đường dẫn
 const removeImg = require("@/assets/img/icon-remove.svg");
-const addImg = require("@/assets/img/icon-add.svg");
+
+let dataAnswer = reactive([{
+    AnswerContent: "",
+    SortOder: props.index.toString()
+}])
+
+/**
+ * Xóa đáp án
+ * VMHieu 05/06/2023
+ */
+const removeAnswer = () => {
+    emit('removeAnswer');
+}
+
+/**
+ * Xem sự thay đổi của dữ liệu đáp án để đẩy lên component cha
+ * VMHieu 05/06/2023 
+ */
+watch((dataAnswer) , () => {
+    emit('update:modelValue', dataAnswer);
+})
+
+onMounted(() =>{
+    if (props.data.length > 0) {
+        dataAnswer = {...props.data};
+    }
+})
+
 </script>
 
 <style scoped>
@@ -61,28 +87,10 @@ const addImg = require("@/assets/img/icon-add.svg");
     align-items: center;
     justify-content: center;
     border-left: 1px solid rgb(182, 185, 206);
+    z-index: 99;
 }
 
-.fill-add__button{
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 1px dashed rgb(182, 185, 206);
-    border-radius: 10px;
-    background-color: rgb(241, 242, 247);
-    cursor: pointer;
-    color: rgba(78, 91, 106, 0.7);
+.ip-tag{
     width: 100%;
-    font-size: 16px;
-    line-height: 24px;
-    font-weight: 700;
 }
-
-.fill-add__img{
-    margin-right: 12px;
-}
-
-
-
 </style>

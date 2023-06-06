@@ -86,6 +86,14 @@ export const ToastSuccess = {
     DeleteSuccess: "Xóa thành công",
     LoadSuccess: "Tải dữ liệu thành công",
 }
+
+/**
+ * Nội dung thông báo toast message
+ * CreatedBy VMHieu 30/05/2023
+ */
+export const ToastWarning = {
+    LeastAnswer: "Câu hỏi phải có ít nhất một đáp án",
+}
 /**
  * Nội dung thông báo toast message
  * CreatedBy VMHieu 30/05/2023
@@ -117,13 +125,41 @@ export const ExerciseStatus = {
  * CreatedBy VMHieu 01/06/2023
  */
 export const PopupMessage = {
-    Delete: "Bạn có chắc chắn muốn xóa bài tập * này không?",
+    DeleteExercise: "Bạn có chắc chắn muốn xóa bài tập * này không?",
+    DeleteQuestion: "Bạn có chắc chắn muốn xóa câu hỏi không?",
     DeleteMultiple: "Xóa * danh hiệu đã chọn?",
     DuplicateCode: "Mã danh hiệu * đã tồn tại trong hệ thống. Xin vui lòng kiểm tra lại.",
     ErrorFilter: "Dữ liệu lọc không hợp lệ. Vui lòng chọn dữ liệu lọc trong danh sách.",
     NotValidFileSuccess: "Không có bản ghi nào hợp lệ để nhập khẩu.",
     NotValidFileFali: "Không có bản ghi lỗi nào để tải về.",
+    NotQuestion: "Bạn vui lòng nhập nội dung câu hỏi",
+    NotAnswerCheck: "Bạn vui lòng nhập nội dung đáp án, chọn đáp án đúng",
+    NotAnswerFill: "Bạn vui lòng nhập nội dung đáp án",
     Breakpoint: "*", // Kí tự ngắt dòng để thay thế 
+}
+/**
+ * Nội dung thông báo input
+ */
+export const InputMessage = {
+    InvalidError: "Không được bỏ trống"
+}
+/**
+ * Đáp án "Đúng" trong câu Yes No
+ */
+export const AnswerYes = {
+    AnswerContent: "Đúng",
+    AnswerImage: "",
+    AnswerStatus: "",
+    SortOder: 0,
+}
+/**
+ * Đáp án "Sai" trong câu Yes No
+ */
+export const AnswerNo = {
+    AnswerContent: "Sai",
+    AnswerImage: "",
+    AnswerStatus: "",
+    SortOder: 1,
 }
 
 

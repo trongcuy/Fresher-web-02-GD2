@@ -1,6 +1,6 @@
 <template>
     <div>
-      <ckeditor :editor="editor" v-model="editorData" :config="editorConfig"></ckeditor>
+      <ckeditor :editor="editor" v-model="editorData" :config="editorConfig" ref="editor"></ckeditor>
     </div>
 </template>
   
@@ -8,6 +8,7 @@
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import * as Resource from '@/common/resource/Resource';
 import { mapState } from 'vuex';
+import { nextTick } from 'vue';
   
 export default {
     data() {
@@ -23,12 +24,16 @@ export default {
     computed: mapState({
       showFormQuestion: (state) => state.question.showFormQuestion
     }),
+    mounted() {
+      nextTick(() => {
+        if (this.dataEditor) {
+          this.editorData = this.dataEditor;
+        }
+      })
+    },
     watch: {
         // Xem sự thay đổi của v-model để đẩy lên component cha
         editorData: function() {
-          // const parser = new DOMParser();
-          // const htmlDoc = parser.parseFromString(this.editorData, 'text/html');
-          // let result =  htmlDoc.body.textContent || '';
             this.$emit("update:modelValue", this.editorData);
         },
         /**
@@ -39,7 +44,13 @@ export default {
           if (!this.showFormQuestion) {
             this.editorData = "";
           }
+        },
+        dataEditor: function() {
+          this.editorData = this.dataEditor;
         }
+    },
+    props: {
+      dataEditor: null
     }
   };
 

@@ -1,6 +1,7 @@
 @import url(./element/button.css);
 @import url(./element/icon.css);
 @import url(./element/input.css);
+@import url(./element/tooltip.css);
 
 body {
     height: 100vh;

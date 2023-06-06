@@ -22,10 +22,6 @@
             <router-view name="mineview"></router-view>
         </div>
     </div>
-    <ToastMessage></ToastMessage>
-    <div class="loader">
-        <div id="loading"></div>
-    </div>
 </template>
 
 <script setup>

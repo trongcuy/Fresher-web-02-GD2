@@ -4,6 +4,7 @@ using MISA.Web02.CeGov.Common;
 using MySqlConnector;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -145,6 +146,268 @@ namespace WEB02.EMIS.API.DL.Services
                     TotalCount = multipleResults.Read<int>().Single(),
                 };
                 return pagingData;
+            }
+        }
+        /// <summary>
+        /// Thực hiện thêm bài tập, câu hỏi, đáp án và chủ đề liên quan
+        /// </summary>
+        /// <param name="exercise"></param>
+        /// <param name="question"></param>
+        /// <param name="answers"></param>
+        /// <param name="topicIDs"></param>
+        /// <returns></returns>
+        /// <exception cref="ErrorException"></exception>
+        /// VMHieu 06/06/2023
+        public Guid InsertMultiple(DataInsertAll dataInsertAll)
+        {
+            using (mySqlConnection = new MySqlConnection(ConnectionString))
+            {
+                if (mySqlConnection.State != ConnectionState.Open)
+                {
+                    mySqlConnection.Open();
+                }
+                using (var transaction = mySqlConnection.BeginTransaction())
+                {
+                    try
+                    {
+                        // Gán các đối tượng
+                        Exercise exercise = dataInsertAll.exercise;
+                        Question question = dataInsertAll.question;
+                        List<Answer> answers = dataInsertAll.answers;
+                        List<Guid> topicIDs = dataInsertAll.topicIDs;
+                        // Thêm một bản ghi bài tập
+                        // Chuẩn bị câu lệnh 
+                        var insertCommand = $"Proc_Exercise_Insert";
+
+                        // Chuẩn bị các tham số đầu vào
+                        var parameters = new DynamicParameters(exercise);
+
+                        // Thực hiện gọi vào db để chạy câu lệnh 
+                        var idExercise = mySqlConnection.QueryFirstOrDefault<string>(insertCommand, param: parameters,
+                            transaction: transaction, commandType: System.Data.CommandType.StoredProcedure);
+                        if (idExercise == null)
+                        {
+                            transaction.Rollback();
+                            return Guid.Empty;
+                        }
+
+                        // Thêm một bản ghi câu hỏi
+                        question.ExerciseID = Guid.Parse(idExercise);
+
+                        // Chuẩn bị câu lệnh 
+                        var insertQuestion = $"Proc_Question_Insert";
+
+                        // Chuẩn bị các tham số đầu vào
+                        parameters = new DynamicParameters(question);
+
+                        // Thực hiện gọi vào db để chạy câu lệnh 
+                        string idQuestion = mySqlConnection.QueryFirstOrDefault<string>(insertQuestion, param: parameters,
+                           transaction: transaction, commandType: System.Data.CommandType.StoredProcedure);
+
+                        if (idQuestion == null)
+                        {
+                            transaction.Rollback();
+                            return Guid.Empty;
+                        }
+                        if (answers.Count > 0)
+                        {
+                            // Thêm id câu hỏi vào các đáp án
+                            foreach (var answer in answers)
+                            {
+                                answer.QuestionID = Guid.Parse(idQuestion);
+                            }
+                            // Thực hiện thêm các câu hỏi
+                            var insertAnswerRow = 0;
+                            var answerCommand = $"Proc_Answer_Insert";
+                            foreach (var answer in answers)
+                            {
+                                insertAnswerRow += mySqlConnection.Execute(answerCommand, param: answer, transaction: transaction, commandType: System.Data.CommandType.StoredProcedure);
+                            }
+                            if (insertAnswerRow != answers.Count)
+                            {
+                                transaction.Rollback();
+                                return Guid.Empty;
+                            }
+                        }
+                        
+                        if (topicIDs.Count > 0)
+                        {
+                            //Thực hiện thêm chủ đề
+
+                            // Chuẩn bị câu lệnh Proc
+                            var sqlCommand = "Proc_ExerciseTopic_InsertMultiple";
+
+                            // Biến đổi tham số đầu vào
+                            string topicStr = "";
+                            foreach (var topicID in topicIDs)
+                            {
+                                if (topicID.Equals(topicIDs.Last()))
+                                {
+                                    topicStr += $"{topicID}";
+                                }
+                                else
+                                {
+                                    topicStr += $"{topicID},";
+                                }
+                            }
+
+                            // Chuẩn bị tham số đầu vào cho câu lệnh sql
+                            parameters = new DynamicParameters();
+                            parameters.Add($"$ExerciseID", idExercise);
+                            parameters.Add($"topicIDs", topicStr);
+
+                            // Thực hiện gọi vào db để chạy câu lệnh với tham số đầu vào ở trên
+                            var resultTopics = mySqlConnection.Execute(sqlCommand, parameters, transaction: transaction,
+                                commandType: System.Data.CommandType.StoredProcedure);
+
+                            if (resultTopics == 0)
+                            {
+                                transaction.Rollback();
+                                return Guid.Empty;
+                            }
+                        }
+
+                        transaction.Commit();
+
+                        Guid result = Guid.Parse(idExercise);
+                        return result;
+
+                    } catch (Exception e)
+                    {
+                        transaction.Rollback();
+                        throw new ErrorException(devmsg: e.Message);
+                    } finally
+                    {
+                        if (mySqlConnection.State != ConnectionState.Closed)
+                        {
+                            mySqlConnection.Close();
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Thực hiện thêm câu hỏi, đáp án và chủ đề liên quan trong 1 bài tập đã có
+        /// </summary>
+        /// <param name="exercise"></param>
+        /// <param name="question"></param>
+        /// <param name="answers"></param>
+        /// <param name="topicIDs"></param>
+        /// <returns></returns>
+        /// <exception cref="ErrorException"></exception>
+        /// VMHieu 06/06/2023
+        public Boolean UpdateMultiple(DataInsertAll dataInsertAll)
+        {
+            using (mySqlConnection = new MySqlConnection(ConnectionString))
+            {
+                if (mySqlConnection.State != ConnectionState.Open)
+                {
+                    mySqlConnection.Open();
+                }
+                using (var transaction = mySqlConnection.BeginTransaction())
+                {
+                    try
+                    {
+                        // Gán các đối tượng
+                        Exercise exercise = dataInsertAll.exercise;
+                        Question question = dataInsertAll.question;
+                        List<Answer> answers = dataInsertAll.answers;
+                        List<Guid> topicIDs = dataInsertAll.topicIDs;
+
+                        // Thêm một bản ghi câu hỏi
+                        question.ExerciseID = exercise.ExerciseID;
+
+                        // Chuẩn bị câu lệnh 
+                        var insertQuestion = $"Proc_Question_Insert";
+
+                        // Chuẩn bị các tham số đầu vào
+                        var parameters = new DynamicParameters(question);
+
+                        // Thực hiện gọi vào db để chạy câu lệnh 
+                        string idQuestion = mySqlConnection.QueryFirstOrDefault<string>(insertQuestion, param: parameters,
+                           transaction: transaction, commandType: System.Data.CommandType.StoredProcedure);
+
+                        if (idQuestion == null)
+                        {
+                            transaction.Rollback();
+                            return false;
+                        }
+                        if (answers.Count > 0)
+                        {
+                            // Thêm id câu hỏi vào các đáp án
+                            foreach (var answer in answers)
+                            {
+                                answer.QuestionID = Guid.Parse(idQuestion);
+                            }
+                            // Thực hiện thêm các câu hỏi
+                            var insertAnswerRow = 0;
+                            var answerCommand = $"Proc_Answer_Insert";
+                            foreach (var answer in answers)
+                            {
+                                insertAnswerRow += mySqlConnection.Execute(answerCommand, param: answer, transaction: transaction, commandType: System.Data.CommandType.StoredProcedure);
+                            }
+                            if (insertAnswerRow != answers.Count)
+                            {
+                                transaction.Rollback();
+                                return false;
+                            }
+                        }
+
+                        //if (topicIDs.Count > 0)
+                        //{
+                        //    //Thực hiện thêm chủ đề
+
+                        //    // Chuẩn bị câu lệnh Proc
+                        //    var sqlCommand = "Proc_ExerciseTopic_InsertMultiple";
+
+                        //    // Biến đổi tham số đầu vào
+                        //    string topicStr = "";
+                        //    foreach (var topicID in topicIDs)
+                        //    {
+                        //        if (topicID.Equals(topicIDs.Last()))
+                        //        {
+                        //            topicStr += $"{topicID}";
+                        //        }
+                        //        else
+                        //        {
+                        //            topicStr += $"{topicID},";
+                        //        }
+                        //    }
+
+                        //    // Chuẩn bị tham số đầu vào cho câu lệnh sql
+                        //    parameters = new DynamicParameters();
+                        //    parameters.Add($"$ExerciseID", exercise.ExerciseID);
+                        //    parameters.Add($"topicIDs", topicStr);
+
+                        //    // Thực hiện gọi vào db để chạy câu lệnh với tham số đầu vào ở trên
+                        //    var resultTopics = mySqlConnection.Execute(sqlCommand, parameters, transaction: transaction,
+                        //        commandType: System.Data.CommandType.StoredProcedure);
+
+                        //    if (resultTopics == 0)
+                        //    {
+                        //        transaction.Rollback();
+                        //        return false;
+                        //    }
+                        //}
+
+                        transaction.Commit();
+                        return true;
+
+                    }
+                    catch (Exception e)
+                    {
+                        transaction.Rollback();
+                        throw new ErrorException(devmsg: e.Message);
+                    }
+                    finally
+                    {
+                        if (mySqlConnection.State != ConnectionState.Closed)
+                        {
+                            mySqlConnection.Close();
+                        }
+                    }
+                }
             }
         }
     }

@@ -24,6 +24,7 @@ export function handleShowToast(context, msg, status) {
     setTimeout(() => {
         context.commit('showToast', false);
     }, 2000);
+    context.commit("showLoading", false);
 }
 
 /**
@@ -60,4 +61,19 @@ export function changeBreakpoint(msg, point) {
         }
     }
     return arr.join(" ");
+}
+/**
+ * Biến đổi html về text
+ * @param {*} html 
+ * @returns 
+ */
+export function convertToText (html) {
+    // Tạo một thẻ div tạm thời để chứa dữ liệu HTML
+    let tempDiv = document.createElement("div");
+    tempDiv.innerHTML = html;
+
+    // Sử dụng thuộc tính textContent để lấy nội dung văn bản thuần túy từ thẻ div
+    let plainText = tempDiv.textContent;
+
+    return plainText;
 }

@@ -29,7 +29,8 @@ export const PopupStatus = {
  */ 
 export const ToastStatus = {
     Success: 1,     // Thao tác thành công
-    Fail: 2, // Thao tác thất bại
+    Fail: 2, // Thao tác thất bại,
+    Warning: 3 // Cảnh báo
 }
 
 /**
@@ -40,6 +41,13 @@ export const ExerciseStatus = {
     All: "",
     Composing: 1, // Đang soạn
     Composed: 2, // Đã soạn
+}
+/**
+ * Trạng thái đáp án
+ */
+export const AnswerStatus = {
+    True: 1,
+    False: 0,
 }
 /**
  * Số bản ghi cần lấy mỗi lần mở rộng
@@ -54,6 +62,22 @@ export const TakeExercise = {
 export const FormModeExercise = {
     Add: 1,
     Edit: 2
+}
+
+/**
+ * Mode của form câu hỏi
+ */
+export const FormModeQuestion = {
+    Add: 1,
+    Edit: 2
+}
+
+/**
+ * Trạng thái xóa đối tượng
+ */
+export const StatusDelete = {
+    Exercise: 1,
+    Question: 2
 }
 
 export default Enum;

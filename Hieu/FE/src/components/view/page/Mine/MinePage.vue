@@ -66,9 +66,6 @@
         </template>
     </BaseMinePage>
     <PopupMessage></PopupMessage>
-    <!-- <div class="loader">
-        <div id="loading"></div>
-    </div> -->
 </template>
 
 <script setup>

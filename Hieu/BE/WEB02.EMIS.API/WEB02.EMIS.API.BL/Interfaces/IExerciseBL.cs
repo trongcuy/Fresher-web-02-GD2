@@ -30,5 +30,29 @@ namespace WEB02.EMIS.API.BL.Interfaces
         /// <param name="take">Số bản ghi lấy</param>
         /// <returns></returns>
         public PagingData<Exercise> GetPaging(string? keyword, Guid? grade, Guid? subject, int? status, int skip, int take);
+
+        /// <summary>
+        /// Thực hiện thêm bài tập, câu hỏi, đáp án và chủ đề liên quan
+        /// </summary>
+        /// <param name="exercise"></param>
+        /// <param name="question"></param>
+        /// <param name="answers"></param>
+        /// <param name="topicIDs"></param>
+        /// <returns></returns>
+        /// <exception cref="ErrorException"></exception>
+        /// VMHieu 06/06/2023
+        public Guid InsertMultiple(DataInsertAll dataInsertAll);
+
+        /// <summary>
+        /// Thực hiện thêm câu hỏi, đáp án và chủ đề liên quan trong 1 bài tập đã có
+        /// </summary>
+        /// <param name="exercise"></param>
+        /// <param name="question"></param>
+        /// <param name="answers"></param>
+        /// <param name="topicIDs"></param>
+        /// <returns></returns>
+        /// <exception cref="ErrorException"></exception>
+        /// VMHieu 06/06/2023
+        public Boolean UpdateMultiple(DataInsertAll dataInsertAll);
     }
 }

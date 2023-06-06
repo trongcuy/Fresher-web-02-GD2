@@ -44,5 +44,35 @@ namespace WEB02.EMIS.API.BL.Services
         {
             return _exerciseDL.GetPaging(keyword, grade, subject, status, skip, take);
         }
+
+        /// <summary>
+        /// Thực hiện thêm bài tập, câu hỏi, đáp án và chủ đề liên quan
+        /// </summary>
+        /// <param name="exercise"></param>
+        /// <param name="question"></param>
+        /// <param name="answers"></param>
+        /// <param name="topicIDs"></param>
+        /// <returns></returns>
+        /// <exception cref="ErrorException"></exception>
+        /// VMHieu 06/06/2023
+        public Guid InsertMultiple(DataInsertAll dataInsertAll)
+        {
+            return _exerciseDL.InsertMultiple(dataInsertAll);
+        }
+
+        /// <summary>
+        /// Thực hiện thêm câu hỏi, đáp án và chủ đề liên quan trong 1 bài tập đã có
+        /// </summary>
+        /// <param name="exercise"></param>
+        /// <param name="question"></param>
+        /// <param name="answers"></param>
+        /// <param name="topicIDs"></param>
+        /// <returns></returns>
+        /// <exception cref="ErrorException"></exception>
+        /// VMHieu 06/06/2023
+        public Boolean UpdateMultiple(DataInsertAll dataInsertAll)
+        {
+            return _exerciseDL.UpdateMultiple(dataInsertAll);
+        }
     }
 }

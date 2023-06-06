@@ -1,5 +1,5 @@
 <template>
-    <div class="toast-container flex">
+    <div class="toast-box flex">
         <div class="border-wrap">
             <div class="border-inline" :class="lineClass"></div>
         </div>
@@ -40,14 +40,10 @@ const handleCloseToast = () => {
 </script>
 
 <style scoped>
-.toast-container{
+.toast-box{
     min-width: 500px;
     width: 500px;
     background: #fff;
-    position: absolute;
-    top: -48px;
-    left: 50%;
-    transform: translateX(-50%);
     padding: 20px;
     border-radius: 20px;
     z-index: 1000;
@@ -74,6 +70,10 @@ const handleCloseToast = () => {
 
 .border-inline.success{
     background-color: #5ec576;
+}
+
+.border-inline.warning{
+    background-color: #ffd200;
 }
 
 .toast-message{

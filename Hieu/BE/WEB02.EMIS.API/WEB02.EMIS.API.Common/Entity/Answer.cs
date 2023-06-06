@@ -21,7 +21,7 @@ namespace WEB02.EMIS.API.Common.Entity
         /// <summary>
         /// Nội dung đáp án
         /// </summary>
-        public string AnswerContent { get; set; }
+        public string? AnswerContent { get; set; }
         /// <summary>
         /// Đường dẫn ảnh
         /// </summary>

@@ -2,13 +2,13 @@
     <div class="answer-container">
         <div class="answer-header flex">
             <div class="answer-char">
-                A
+                {{ String.fromCharCode(65 + props.index) }}
             </div>
             <div class="answer-toolbar flex">
-                <div class="icon-trash" v-show="showFormQuestion == 1">
+                <div class="icon-trash" v-show="showFormQuestion == Enum.FormQuestion.Select" @click="removeAnswer">
                     <img :src="trashImg" alt="" />
                 </div>
-                <div class="icon-img" v-show="showFormQuestion == 1">
+                <div class="icon-img" v-show="showFormQuestion == Enum.FormQuestion.Select">
                     <img :src="imgImg" alt="" />
                 </div>
                 <div class="icon-tick" @click="answerTrue" tick="false" ref="btnTrue">
@@ -20,15 +20,39 @@
             <div class="default-content" v-if="!showCKEditor" >
                 <div>Nhập đáp án...</div>
             </div>
-            <CKEditorAnswer v-model="editorData" ref="ckedit"></CKEditorAnswer>
+            <CKEditorAnswer 
+                v-model="dataAnswer.AnswerContent" 
+                :dataEditor="dataAnswer.AnswerContent" 
+                ref="ckedit"
+            ></CKEditorAnswer>
         </div>
     </div>
 </template>
 
 <script setup>
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch, defineProps, defineEmits, toRef, reactive, onMounted } from 'vue';
 import { useStore } from 'vuex';
 import CKEditorAnswer from '@/components/base/ckeditor/CKEditorAnswer.vue';
+import * as Enum from '@/common/enum/Enum';
+
+const props = defineProps({
+    // Data truyền từ cha
+    data: {},
+    // index của đáp án
+    index: {
+        type: Number,
+        default: null
+    },
+    // index của đáp án remove tick
+    indexRemove: {
+        type: Number,
+        default: null
+    }
+})
+const removeTick = toRef(props, 'indexRemove');
+const propData = toRef(props, 'data');
+
+const emit = defineEmits(['removeAnswer', 'saveAnswer', 'removeTick']);
 
 const store = useStore();
 // Biến xét đóng mở form question
@@ -39,8 +63,13 @@ const ckedit = ref("ckedit");    // show ô input ckeditor
 const iconTrue = ref("icontrue"); // icon tick giá trị đúng
 const btnTrue = ref("btnTrue"); // button tick giá trị đúng
 const answerMain = ref("answerMain"); // ô input nhập đáp án
-
-const editorData = ref();       // Giá trị của ô ckeditor
+// Data đáp án
+const dataAnswer = reactive({
+    AnswerContent: "",
+    AnswerImage: "",
+    AnswerStatus: "",
+    SortOder: ""
+})
 
 
 // Các biến lưu đường dẫn 
@@ -55,7 +84,7 @@ const icontrueImg = require("@/assets/img/icon-true.svg");
  */
 const closeCKEditor = () => {
     answerMain.value.classList.add("not-focus");
-    if (!editorData.value){
+    if (!dataAnswer.AnswerContent){
         showCKEditor.value = false;
     }
 }; 
@@ -70,19 +99,42 @@ const closeCKEditor = () => {
 };
 
 /**
+ * Xóa thùng rác ở vị trí index
+ * VMHieu 02/06/2023
+ */
+const removeAnswer = () => {
+    emit('removeAnswer');
+}
+
+/**
  * Ấn dấu tick đổi màu button
  * CreatedBy VMHieu 24/05/2023
  */
 const answerTrue = (event) => {
-    if (!btnTrue.value.tick){
+    if (showFormQuestion.value == Enum.FormQuestion.Select) {
+        if (!btnTrue.value.tick){
+            btnTrue.value.tick = true;
+            iconTrue.value.src = icontrueImg;
+            btnTrue.value.classList.add("btn-true");
+
+            dataAnswer.AnswerStatus = Enum.AnswerStatus.True;
+        } else {
+            btnTrue.value.tick = false;
+            iconTrue.value.src = tickImg;
+            btnTrue.value.classList.remove("btn-true");
+
+            dataAnswer.AnswerStatus = Enum.AnswerStatus.False;
+        }
+    } else if ( showFormQuestion.value == Enum.FormQuestion.YesOrNo ) {
         btnTrue.value.tick = true;
         iconTrue.value.src = icontrueImg;
         btnTrue.value.classList.add("btn-true");
-    } else {
-        btnTrue.value.tick = false;
-        iconTrue.value.src = tickImg;
-        btnTrue.value.classList.remove("btn-true");
+
+        dataAnswer.AnswerStatus = Enum.AnswerStatus.True;
+
+        emit('removeTick');
     }
+
 }
 /**
  * Bắt sự kiện đóng form câu hỏi để reset đáp án
@@ -94,8 +146,53 @@ watch((showFormQuestion), () => {
         btnTrue.value.classList.remove("btn-true");
         btnTrue.value.tick = false;
         iconTrue.value.src = tickImg;
+    } else {
+        if (props.data) {
+            for (let i in props.data) {
+                dataAnswer[i] = props.data[i];
+            }
+            dataAnswer.AnswerStatus = Enum.AnswerStatus.False;
+            showCKEditor.value = true;
+        }
     }
 })
+/**
+ * Xem sự thay đổi của dataAnswer để đẩy lên cha
+ * VMHieu 05/06/2023
+ */
+watch((dataAnswer), () => {
+    dataAnswer.SortOder = dataAnswer.SortOder.toString();
+    emit("update:modelValue", dataAnswer);
+})
+
+/**
+ * Xem sự thay đổi của index Remove để thay đổi tick
+ * VMHieu 05/06/2023
+ */
+ watch((removeTick), () => {
+    if (props.index != props.indexRemove) {
+        btnTrue.value.classList.remove("btn-true");
+        btnTrue.value.tick = false;
+        iconTrue.value.src = tickImg;
+
+        dataAnswer.AnswerStatus = Enum.AnswerStatus.False;
+    }
+})
+
+/**
+ * Xem sự thay đổi của prop data để render lại đáp án
+ * VMHieu 05/06/2023
+ */
+watch((propData), () => {
+    if (props.data) {
+        for (let i in props.data) {
+            dataAnswer[i] = props.data[i];
+        }
+        dataAnswer.AnswerStatus = Enum.AnswerStatus.False;
+        showCKEditor.value = true;
+    }
+})
+
 </script>
 
 <style scoped>

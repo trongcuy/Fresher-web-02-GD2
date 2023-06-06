@@ -7,7 +7,7 @@
         <div class="exercise-content">
             <div class="content-title flex">
                 <div>{{ ExerciseName  }}</div>
-                <div class="btn-more" @click="toggleOption" @click.stop="">
+                <div class="btn-more" @click="toggleOption" @click.stop=""  v-tooltip="'Tùy chọn'">
                     <img :src="optionImg" alt="">
                 </div>
             </div>
@@ -92,12 +92,13 @@ const openExercise = (id) => {
  * CreatedBy VMHieu 23/05/2023
  */
 const handleOpenPopup = (name, id) => {
-    store.dispatch("updatePopupMsg", changeBreakpoint(Resource.PopupMessage.Delete, name));
+    store.dispatch("updatePopupMsg", changeBreakpoint(Resource.PopupMessage.DeleteExercise, name));
     store.dispatch("updatePopupStatus", Enum.PopupStatus.Delete);
     store.dispatch("showPopup", true);
+    store.dispatch("updateStatusDelete", Enum.StatusDelete.Exercise);
     showOption.value = false;
 
-    store.dispatch("updateIdDelete", id);
+    store.dispatch("updateIdExerciseDelete", id);
 }
 
 // onMounted(() => {

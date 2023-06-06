@@ -7,6 +7,7 @@
         <div class="clear-input" v-show="clearInput && validInput" @click="clearInput">
             <img :src="clearImg" alt="" />
         </div>
+        <div class="msg-error" ref="error">{{ props.msgError }}</div>
     </div>
 </template> 
 
@@ -52,20 +53,29 @@ const props = defineProps({
     tabindex: {
         type: Number,
         default: 0
+    },
+    // Msg lỗi
+    msgError: {
+        type: String,
+        default: null
     }
 })
 // Đại diện cho prop valueInput
 const valueRef = toRef(props, 'valueInput');
 
 const input = ref("input"); // Đại diện cho thẻ input
+const error = ref("error"); // Đại diện cho error input
 /**
  * Lấy giá trị thẻ input
  * VMHieu 30/05/2023
  */
-const changeInput = () => {
-    emit("update:modelValue", input.value.value);
-    if (input.value.value) {
+const changeInput = (e) => {
+    let value = e.target.value;
+    emit("update:modelValue", value);
+    if (value) {
         validInput.value = true;
+        input.value.classList.remove("input-error");
+        error.value.style.display = "none";
     } else {
         validInput.value = false;
     }
@@ -91,7 +101,7 @@ watch((valueRef), () => {
     emit("update:modelValue", props.valueInput);
 })
 
-defineExpose({props, input})
+defineExpose({props, input, error})
 </script>
 
 <style scoped>
@@ -142,5 +152,20 @@ defineExpose({props, input})
 
 .no-icon{
     padding: 0 12px;
+}
+
+.msg-error{
+    font-size: 14px;
+    color: #ff6161;
+    margin-top: 2px;
+    display: none;
+}
+
+.input-error{
+    border: 1px solid #FF6161;
+}
+
+.input-error:focus{
+    border: 1px solid #FF6161;
 }
 </style>

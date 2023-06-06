@@ -4,6 +4,7 @@ using MISA.Web02.CeGov.Common;
 using MySqlConnector;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -76,6 +77,11 @@ namespace WEB02.EMIS.API.DL.Services
         {
             using (mySqlConnection = new MySqlConnection(ConnectionString))
             {
+                if (mySqlConnection.State != ConnectionState.Open)
+                {
+                    mySqlConnection.Open();
+                }
+
                 var insertedRow = 0;
                 using (var transaction = mySqlConnection.BeginTransaction())
                 {

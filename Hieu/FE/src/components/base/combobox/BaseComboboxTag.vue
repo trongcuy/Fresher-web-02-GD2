@@ -68,6 +68,7 @@
 </template>
 <script>
 /* eslint-disable */
+import { mapState } from 'vuex';
 
 function removeVietnameseTones(str) {
     if(str && typeof(str) == "string") {
@@ -160,6 +161,8 @@ export default {
          * VMHieu 31/05/2023
          */
         data: function() {
+            this.dataInputSpan = [];
+            this.dataValue = [];
             // Biding các dữ liệu có sẵn
             if (Object.getOwnPropertyNames(this.valueCombobox).length != 0) {
                 for (let i = 0; i < this.data.length; i++) {
@@ -183,6 +186,7 @@ export default {
                 }
             } else {
                 this.dataInputSpan = [];
+                this.dataValue = [];
                 this.$refs.input.placeholder = this.placeholder;
                 this.clearIp = false;
                 this.indexItemFocus = null;
@@ -190,7 +194,45 @@ export default {
                 this.$emit("update:modelValue", "");
             }
         },
+        valueCombobox() {
+            this.dataInputSpan = [];
+            this.dataValue = [];
+            // Biding các dữ liệu có sẵn
+            if (Object.getOwnPropertyNames(this.valueCombobox).length != 0) {
+                for (let i = 0; i < this.data.length; i++) {
+                    for (let j = 0; j < this.valueCombobox.length; j++) {
+                        if (this.data[i][this.propValue] == this.valueCombobox[j]) {
+                            if (!this.dataInputSpan.includes(this.data[i][this.propText])) {
+                                this.dataInputSpan.push(this.data[i][this.propText]);
+                            }
+                            if (!this.dataValue.includes(this.data[i][this.propValue])) {
+                                this.dataValue.push(this.data[i][this.propValue]);
+                            }
+                        }
+                    }
+                } 
+                if (this.dataInputSpan.length > 0)
+                {
+                    this.$refs.input.placeholder = "";
+                    if (this.openClear) {
+                        this.clearIp = true;
+                    }
+                }
+            } else {
+                this.dataInputSpan = [];
+                this.dataValue = [];
+                this.$refs.input.placeholder = this.placeholder;
+                this.clearIp = false;
+                this.indexItemFocus = null;
+                this.indexItemSelected = null;
+                this.$emit("update:modelValue", "");
+            }
+        }
     },
+    computed: 
+        mapState({
+            showFormExercise : (state) => state.exercise.showFormExercise,
+        }),
     methods: {
     /**
      * Lưu lại index của item đã focus
@@ -338,6 +380,7 @@ export default {
     removeTag (removeItem) {
         const itemIndex = this.dataInputSpan.findIndex(item => item == removeItem);
         this.dataInputSpan.splice(itemIndex, 1);
+        this.dataValue.splice(itemIndex, 1);
         if (this.dataInputSpan.length == 0) {
             this.showInput = true;
             this.$refs.input.placeholder = this.placeholder;

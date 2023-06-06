@@ -5,7 +5,7 @@
                 <div class="exercise-title">
                     Bổ sung thông tin
                 </div>
-                <div class="exercise-close" @click="closeFormExercise">
+                <div class="exercise-close" @click="closeFormExercise" v-tooltip="'Thoát'">
                     <icon class="icon icon-exit"></icon>
                 </div>
             </div>
@@ -16,7 +16,13 @@
                             Ảnh đại diện
                         </label>
                         <div class="img-avatar">
-                            <img :src="avatarImg" alt="">
+                            <img :src="imageUrl || avatarImg" alt="">
+                            <div class="upload-file">
+                                <label class="label-input" @click="openUploadFile">
+                                    <img :src="uploadImg" alt="">
+                                </label>
+                                <input type="file" id="upload-file" ref="file" @change="handleFileUpload">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -32,6 +38,7 @@
                                 v-model="dataExerciseClone.ExerciseName" 
                                 :valueInput="dataExerciseClone.ExerciseName" 
                                 ref="ipName"
+                                :msgError="Resource.InputMessage.InvalidError"
                                 inputClass="m-input no-icon">
                             </BaseInput>
                         </div>
@@ -87,7 +94,7 @@
                                     :data="listTopic"
                                     propText="TopicName"
                                     propValue="TopicID"
-                                    v-model="topicList"
+                                    v-model="dataExerciseClone.Topics"
                                     :valueCombobox="listExerciseTopic"
                                     :openClear="true"
                                     :tabindex="4"
@@ -120,6 +127,7 @@ import _ from 'lodash'
 import { FormModeExercise } from "@/common/enum/Enum";
 // Các biến lưu đường dẫn
 const avatarImg = require("@/assets/subjects-avatar/toan.png");
+const uploadImg = require("@/assets/img/upload-image.svg");
 
 const emit = defineEmits(['update:modelValue', 'saveForm']);
 const props = defineProps({
@@ -143,10 +151,13 @@ let dataExerciseClone = reactive({
     GradeID: "",
     SubjectID: "",
     ExerciseImage: "",
+    Topics: [],
 });
 const topicList = ref(""); // List các ID topic
 const ipName = ref("ipName"); // Ô input name
 const getValue = ref(true); // Tín hiệu lấy giá trị của cbb tag
+const file = ref('file'); // Input file
+const imageUrl = ref(""); // Đường dẫn ảnh
 
 /**
  * Đóng form bài tập
@@ -166,6 +177,13 @@ const validateFormExercise = () => {
         isValid = false;
     }
 
+    if (!dataExerciseClone.ExerciseName) {
+        let input = ipName.value.input;
+        let error = ipName.value.error;
+        input.classList.add("input-error");
+        error.style.display = "block";
+    }
+
     return isValid;
 }
 
@@ -178,9 +196,6 @@ const saveDataExercise = () => {
     if (validateFormExercise()) {
         emit("saveForm",dataExerciseClone);
         store.dispatch("showFormExercise" , false);
-        nextTick(() => {
-            store.dispatch("updateExerciseTopic", topicList.value);
-        })
     } 
 }
 /**
@@ -198,6 +213,28 @@ const changeValue = () => {
     }
     store.dispatch("getTopicByGradeSubject", dataGradeSubject);
 }
+/**
+ * Mở form chọn file
+ * VMHieu 05/06/2023
+ */
+const openUploadFile = () => {
+    file.value.click();
+}
+
+/**
+ * Ấn tải file lên
+ * @param {*} event 
+ */
+const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+        imageUrl.value = e.target.result;
+    };
+
+    reader.readAsDataURL(file);
+};
 
 onBeforeMount(() => {
     const id = route.query.id;
@@ -236,111 +273,138 @@ watch((showFormExercise), () => {
 
 </script>
 
-<style scoped>
-.form-exercise{
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 2000;
-    height: 100%;
-    background-color: rgba(0,0,0,.5);
-    overflow: auto;
-    scrollbar-width: thin;
-}
+<style lang="scss" scoped>
 
-.exercise-container{
+.form-exercise {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 2000;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  overflow: auto;
+  scrollbar-width: thin;
+
+  .exercise-container {
     position: absolute;
     transform: translate(-50%, -50%);
     top: 50%;
     left: 50%;
     width: 800px;
     border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0,0,0,.16);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.16);
     margin: 0 auto 50px;
     background: #fff;
     box-sizing: border-box;
-}
 
-.exercise-header{
-    padding: 24px;
-    justify-content: space-between;
-}
+    .exercise-header {
+      padding: 24px;
+      justify-content: space-between;
 
-.exercise-title{
-    font-weight: 700;
-    font-size: 28px;
-    line-height: 36px;
-    color: #4e5b6a;
-}
+      .exercise-title {
+        font-weight: 700;
+        font-size: 28px;
+        line-height: 36px;
+        color: #4e5b6a;
+      }
 
-.exercise-main{
-    padding: 0 24px 24px;
-    word-break: break-word;
-    color: #606266;
-    font-size: 14px;
-    display: flex;
-}
+      .exercise-close {
+        cursor: pointer;
+      }
+    }
 
-.main-left{
-    width: 260px;
-    display: flex;
-    flex-direction: column;
-}
+    .exercise-main {
+      padding: 0 24px 24px;
+      word-break: break-word;
+      color: #606266;
+      font-size: 14px;
+      display: flex;
 
-.avatar-text{
-    color: #4e5b6a;
-    font-weight: 500;
-    margin-bottom: 4px;
-    font-size: 14px;
-    line-height: 20px;
-    display: block;
-}
+      .main-left {
+        width: 260px;
+        display: flex;
+        flex-direction: column;
 
-.img-avatar{
-    border-radius: 10px;
-    background-color: #f1f2f7;
-    width: 100%;
-    height: 156px;
-    overflow: hidden;
-    margin-bottom: 8px;
-    position: relative;
-}
+        .exercise-avatar {
+          .avatar-text {
+            color: #4e5b6a;
+            font-weight: 500;
+            margin-bottom: 4px;
+            font-size: 14px;
+            line-height: 20px;
+            display: block;
+          }
 
-.img-avatar img{
-    width: 100%;
-    height: 100%;
-    -o-object-fit: cover;
-    object-fit: cover;
-}
+          .img-avatar {
+            border-radius: 10px;
+            background-color: #f1f2f7;
+            width: 100%;
+            height: 156px;
+            overflow: hidden;
+            margin-bottom: 8px;
+            position: relative;
 
-.main-right{
-    width: calc(100% - 260px);
-    padding-left: 40px;
-    display: grid;
-    grid-template-columns: 100%;
-    grid-row-gap: 16px;
-}
+            img {
+              width: 100%;
+              height: 100%;
+              -o-object-fit: cover;
+              object-fit: cover;
+            }
 
-.main-right label{
-    color: #4e5b6a;
-    font-weight: 500;
-    margin-bottom: 4px;
-    font-size: 14px;
-    line-height: 20px;
-    display: block;
-}
+            .upload-file{
+                position: absolute;
+                bottom: 0.75rem;
+                right: 0.75rem;
 
-.form-info{
-    display: grid;
-    grid-template-columns: 5fr 3fr;
-    grid-column-gap: 12px;
-}
+                img{
+                    width: 40px;
+                    height: 40px;
+                    cursor: pointer;
+                }
 
-.exercise-footer{
-    padding: 0 24px 24px;
-    text-align: right;
-    box-sizing: border-box;
+                #upload-file{
+                    display: none;
+                    bottom: 0.75rem;
+                    right: 0.75rem;
+                    position: absolute;
+                    z-index: 10;
+                }
+            }
+          }
+        }
+      }
+
+      .main-right {
+        width: calc(100% - 260px);
+        padding-left: 40px;
+        display: grid;
+        grid-template-columns: 100%;
+        grid-row-gap: 16px;
+
+        label {
+          color: #4e5b6a;
+          font-weight: 500;
+          margin-bottom: 4px;
+          font-size: 14px;
+          line-height: 20px;
+          display: block;
+        }
+
+        .form-info{
+            display: grid;
+            grid-template-columns: 5fr 3fr;
+            grid-column-gap: 12px;
+        }
+      }
+    }
+
+    .exercise-footer {
+      padding: 0 24px 24px;
+      text-align: right;
+      box-sizing: border-box;
+    }
+  }
 }
 </style>

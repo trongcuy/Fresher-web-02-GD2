@@ -68,11 +68,11 @@ namespace WEB02.EMIS.API.DL.Services
                 {
                     if (topicID.Equals(topicIDs.Last()))
                     {
-                        topicStr += $"'{topicID}'";
+                        topicStr += $"{topicID}";
                     }
                     else
                     {
-                        topicStr += $"'{topicID}',";
+                        topicStr += $"{topicID},";
                     }
                 }
 

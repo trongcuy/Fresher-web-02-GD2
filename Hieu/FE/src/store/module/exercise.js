@@ -37,6 +37,7 @@ const state = {
             }]
         }]
     }, // Đối tượng bài tập lấy theo ID
+    exerciseID: null, // ID bản ghi được thêm vào mới nhất
     filterDatas: [],    // Mảng chứa dữ liệu lọc
     keyword: "", // Dữ liệu tìm kiếm
     take: 9, // Số bản ghi cần lấy
@@ -147,7 +148,8 @@ const mutations = {
      * @param {*} data 
      * CreatedBy VMHieu 01/06/2023
      */
-    postExercise(state) {
+    postExercise(state, payload) {
+        state.exerciseID = payload;
         state.refresh = !state.refresh;
     },
 
@@ -159,6 +161,14 @@ const mutations = {
      */
     putExercise(state) {
         state.refresh = !state.refresh;
+    },
+
+    /**
+     * Thêm nhiều đối tượng bài tập, câu hỏi, đáp án, chủ đề 
+     * VMHieu 06/06/2023
+     */
+    postMultipleData(state, payload) {
+        state.exerciseID = payload
     },
 
     
@@ -180,7 +190,7 @@ const mutations = {
      * @param {*} data 
      * VMHieu 06/01/2023
      */
-    updateIdDelete(state, payload) {
+    updateIdExerciseDelete(state, payload) {
         state.idDelete = payload;
     }
 
@@ -204,11 +214,13 @@ const actions = {
      */
     async getPaging(context) {       
         try {
+            context.commit("showLoading", true);
             const res = await axios.get(`${constants.API_URL}/api/${constants.API_VERSION}/exercise/` + 
                 `paging?keyword=${state.keyword}&grade=${state.filterDatas.GradeID}&subject=${state.filterDatas.SubjectID}&` +
                 `status=${state.filterDatas.ExerciseStatus}&skip=${constants.Skip}&take=${state.take}`);
             if (res.data) {
                 context.commit("getPaging", res.data);
+                context.commit("showLoading", false);
             }  else {
                 // Hiện toast thất bại
                 handleShowToast(context, Resource.ToastFail.InvalidDataResponse, Enum.ToastStatus.Fail);
@@ -226,9 +238,11 @@ const actions = {
      */
     async getAllByID(context, data) {   
         try {
-            const res = await axios.get(`${constants.API_URL}/api/${constants.API_VERSION}/exercise/overview?ExerciseID=${data}`);
+            context.commit("showLoading", true);
+            const res = await axios.get(`${constants.API_URL}/api/${constants.API_VERSION}/exercise/${data}/overview`);
             if (res.data) {
                 context.commit("getAllByID", res.data);
+                context.commit("showLoading", false);
             }  else {
                 // Hiện toast thất bại
                 handleShowToast(context, Resource.ToastFail.InvalidDataResponse, Enum.ToastStatus.Fail);
@@ -255,7 +269,38 @@ const actions = {
             // hiện toast thất bại
             handleShowToast(context, Resource.ToastFail.AddFail, Enum.ToastStatus.Fail);
         }
+    },
 
+    /**
+     * Thêm nhiều đối tượng bài tập, câu hỏi, đáp án, chủ đề 
+     * VMHieu 06/06/2023
+     */
+    async postMultipleData(context, data) {
+        try {
+            const res = await axios.post(`${constants.API_URL}/api/${constants.API_VERSION}/exercise/multiple`, data)
+            context.commit('postMultipleData', res.data);
+            // Hiện toast thành công
+            handleShowToast(context, Resource.ToastSuccess.AddSuccess, Enum.ToastStatus.Success);
+        } catch (error) {
+            // hiện toast thất bại
+            handleShowToast(context, Resource.ToastFail.AddFail, Enum.ToastStatus.Fail);
+        }
+    },
+
+    /**
+     * Thêm nhiều đối tượng bài tập, câu hỏi, đáp án, chủ đề 
+     * VMHieu 06/06/2023
+     */
+    async putMultipleData(context, data) {
+        try {
+            const res = await axios.put(`${constants.API_URL}/api/${constants.API_VERSION}/exercise/multiple`, data)
+            //context.commit('postMultipleData', res.data);
+            // Hiện toast thành công
+            handleShowToast(context, Resource.ToastSuccess.AddSuccess, Enum.ToastStatus.Success);
+        } catch (error) {
+            // hiện toast thất bại
+            handleShowToast(context, Resource.ToastFail.AddFail, Enum.ToastStatus.Fail);
+        }
     },
 
     /**
@@ -346,8 +391,8 @@ const actions = {
      * @param {*} data 
      * VMHieu 06/01/2023
      */
-    updateIdDelete(context, data) {
-        context.commit("updateIdDelete", data);
+    updateIdExerciseDelete(context, data) {
+        context.commit("updateIdExerciseDelete", data);
     }
 }
 

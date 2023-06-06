@@ -1,12 +1,13 @@
 const state = {
-    showPopup: false,
-    showToast: false,
-    toastMsg: "",
+    showPopup: false,   // Show popup
+    showToast: false,   // Show toast
+    toastMsg: "",       
     popupMsg: "",
     popupStatus: 0,
     toastStatus: 0,
-    hideMainPage: false,
-    showOver: false,
+    hideMainPage: false, // Show page chính
+    statusDelete: 0,    // Trạng thái xóa
+    showLoading: false, // Hiển thị loading 
 }
 
 const mutations = {
@@ -82,6 +83,26 @@ const mutations = {
      */
     showOver(state, payload) {
         state.showOver = payload;
+    },
+
+    /**
+     * Update trạng thái xóa của popup
+     * @param {*} context 
+     * @param {*} data 
+     * VMHieu 04/06/2023
+     */
+    updateStatusDelete(state, payload) {
+        state.statusDelete = payload;
+    },
+
+    /**
+     * Ẩn hiện loading
+     * @param {*} context 
+     * @param {*} data
+     * VMHieu 05/06/2023 
+     */
+    showLoading(state, payload) {
+        state.showLoading = payload;
     }
 }
 
@@ -151,6 +172,26 @@ const actions = {
     updateHideMainPage(context, data) {
         context.commit('updateHideMainPage', data);
     },
+
+    /**
+     * Update trạng thái xóa của popup
+     * @param {*} context 
+     * @param {*} data 
+     * VMHieu 04/06/2023
+     */
+    updateStatusDelete(context, data) {
+        context.commit('updateStatusDelete', data);
+    },
+
+    /**
+     * Ẩn hiện loading
+     * @param {*} context 
+     * @param {*} data
+     * VMHieu 05/06/2023 
+     */
+    showLoading(context, data) {
+        context.commit('showLoading', data);
+    }
 }
 
 export default {

@@ -27,7 +27,7 @@ namespace WEB02.EMIS.API.DL.Interfaces
         /// <param name="entity">bản ghi cần thêm</param>
         /// <returns>Số lượng bản ghi được thêm vào</returns>
         /// CreatedBy VMHieu 27/05/2023
-        public int Insert(T entity);
+        public string Insert(T entity);
         /// <summary>
         /// Sửa 1 bản ghi
         /// </summary>

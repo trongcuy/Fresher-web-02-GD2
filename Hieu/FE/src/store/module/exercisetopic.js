@@ -27,6 +27,16 @@ const mutations = {
      */
     updateExerciseTopic(state, payload) {
         state.exerciseTopicUpload = payload;
+    },
+
+    /**
+     * Lấy danh sách id topic theo id bài tập
+     * @param {} state 
+     * @param {*} payload 
+     * VMHieu 31/05/2023
+     */
+    postTopicMultiple(state, payload) {
+        const a = 0;
     }
 }
 
@@ -52,13 +62,25 @@ const actions = {
         }
     },
     /**
-     * Cập nhật danh sách topic gửi lên
-     * @param {*} context 
-     * @param {*} data 
+     * Lấy danh sách id topic theo id bài tập
+     * @param {} state 
+     * @param {*} payload 
+     * VMHieu 31/05/2023
      */
-    updateExerciseTopic(context, data) {
-        context.commit("updateExerciseTopic", data);
-    }
+    async postTopicMultiple(context, data) {
+        try {
+            const res = await axios.post(`${constants.API_URL}/api/${constants.API_VERSION}/exercisetopic/multiple?ExerciseID=${data.ExerciseID}`, data.Topics)
+            if (res.data) {
+                context.commit('postTopicMultiple', res.data);
+            }  else {
+                // Hiện toast thất bại
+                handleShowToast(context, Resource.ToastFail.InvalidDataResponse, Enum.ToastStatus.Fail);
+            }
+        } catch (error) {
+            // Hiện toast thất bại
+            handleShowToast(context, Resource.ToastFail.LoadFail, Enum.ToastStatus.Fail);
+        }
+    },
 }
 
 export default {
