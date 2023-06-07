@@ -76,33 +76,15 @@ const removeTag = (removeItem) => {
     dataInputSpan.splice(itemIndex, 1);
 }
 
-onMounted(() => {
-    // Biding dữ liệu vào ô input span
-    dataInputSpan.splice(0);
-    let arr = [];
-    if (props.data.length > 0) {
-        arr = props.data.split(";");
-    }
-    if (arr.length > 0) {
-        for(let i = 0; i < arr.length; i++)
-        {
-            dataInputSpan.push(arr[i]);
-        }
-        showSpan.value = false;
-    }
-})
-
 /**
  * Bắt sự kiện đóng form để remove tag
  * CreatedBy VMHieu 25/05/2023
  */
 watch((showFormQuestion), () => {
     if (!showFormQuestion.value) {
-        dataInputSpan.splice(0);
+        dataInputSpan.length = 0;
         showSpan.value = true;
-    } else {
-        console.log(props.data)
-    }
+    } 
 })
 /**
  * Bắt sự thay đổi của dữ liệu input để đẩy lên component cha
@@ -118,7 +100,7 @@ watch((dataInputSpan), () => {
  * VMHieu 05/06/2023
  */
 watch((props), () => {
-    dataInputSpan.splice(0);
+    dataInputSpan.length = 0;
     let arr = [];
     if (props.data.length > 0) {
         arr = props.data.split(";");

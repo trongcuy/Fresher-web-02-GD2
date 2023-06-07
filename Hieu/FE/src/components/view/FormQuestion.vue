@@ -4,7 +4,7 @@
             <div class="form-body">
                 <div class="form-body__header flex">
                     <div class="choose-question-type flex">
-                        <div class="form-question__number"> Câu {{ numberQuestion }} - </div>
+                        <div class="form-question__number"> Câu {{ dataQuestion.SortOder || numberQuestion }} - </div>
                         <BaseCombobox 
                             cbbClass="combobox-question"
                             :data=Resource.FormQuestionType
@@ -32,7 +32,6 @@
                                 @removeAnswer="removeAnswer(index)"
                                 v-model="dataAnswerSelect[index]"
                                 :saveData="saveData"
-                                @saveAnswer="saveAnswer"
                             ></BaseAnswer>
                         </div>
                     </div>
@@ -41,16 +40,16 @@
                     <div class="list-answer">
                         <div></div>
                         <BaseAnswer 
-                            :data="Resource.AnswerYes" 
+                            :data="dataAnswerYesNo[0]" 
                             :index="Resource.AnswerYes.SortOder"
-                            v-model="dataAnswerYesNo[Resource.AnswerYes.SortOder]"
+                            v-model="dataAnswerYesNo[0]"
                             @removeTick="removeTick(Resource.AnswerYes.SortOder)"
                             :indexRemove="indexRemove"
                         ></BaseAnswer>
                         <BaseAnswer 
-                            :data="Resource.AnswerNo"
+                            :data="dataAnswerYesNo[1]"
                             :index="Resource.AnswerNo.SortOder"
-                            v-model="dataAnswerYesNo[Resource.AnswerNo.SortOder]"
+                            v-model="dataAnswerYesNo[1]"
                             @removeTick="removeTick(Resource.AnswerNo.SortOder)"
                             :indexRemove="indexRemove"
                         ></BaseAnswer>
@@ -83,12 +82,12 @@
             </div>
             <div class="form-footer flex">
                 <div class="footer-left">
-                    <BaseButton class="ms-button btn-active btn-white" text="Thêm đáp án" @click="addAnswer"></BaseButton>
+                    <BaseButton class="ms-button btn-active btn-white" v-if="showFormQuestion == Enum.FormQuestion.Select" text="Thêm đáp án" @click="addAnswer"></BaseButton>
                 </div>
                 <div class="footer-right">
                     <BaseButton class="ms-button btn-active btn-white" text="Hủy" @click="closeForm"></BaseButton>
                     <BaseButton class="ms-button btn-active btn-white" text="Lưu và đóng" @click="saveClose"></BaseButton>
-                    <BaseButton class="ms-button btn-active btn-blue" text="Lưu và thêm câu"></BaseButton>
+                    <BaseButton class="ms-button btn-active btn-blue" text="Lưu và thêm câu" @click="saveAdd"></BaseButton>
                 </div>
             </div>
         </div>
@@ -144,10 +143,11 @@ import BaseAnswerFill from '../base/answer/BaseAnswerFill.vue';
 import CKEditor from '@/components/base/ckeditor/CKEditor.vue';
 import { useStore } from 'vuex';
 import { useRoute, useRouter } from 'vue-router';
-import { computed, ref, watch, reactive, defineProps, defineEmits, nextTick, onMounted } from 'vue'; 
+import { computed, ref, watch, reactive, defineProps, defineEmits, nextTick, onMounted, isReactive } from 'vue'; 
 import * as Resource from '@/common/resource/Resource';
 import * as Enum from '@/common/enum/Enum';
 import { handleShowToast } from '@/common/common';
+import _ from 'lodash'
 
 // Các biến lưu đường dẫn
 const noteaddImg = require("@/assets/img/icon-noteadd.svg");
@@ -193,7 +193,7 @@ let dataQuestion = reactive({
     TypeQuestion: ""
 });
 // Dữ liệu đáp án chọn
-const dataAnswerSelect = reactive([
+let dataAnswerSelect = reactive([
    {
         AnswerContent: "",
         AnswerImage: "",
@@ -221,7 +221,7 @@ const dataAnswerSelect = reactive([
 ])
 
 // Dữ liệu đáp án chọn
-const dataAnswerYesNo = reactive([
+let dataAnswerYesNo = reactive([
    {
         AnswerContent: "Đúng",
         AnswerImage: "",
@@ -237,7 +237,7 @@ const dataAnswerYesNo = reactive([
 ])
 
 // Dữ liệu đáp án điền vào ô trống
-const dataAnswerFill = reactive([
+let dataAnswerFill = reactive([
     {
         AnswerContent: "",
         SortOder: "1"
@@ -387,12 +387,12 @@ const saveClose = async () => {
     const id = route.query.id;
     if (validateQuestion()) {
         // Thêm các trường còn thiếu cho câu hỏi
-        dataQuestion.TypeQuestion = Number(typeQuestion.value);
-        dataQuestion.SortOder = numberQuestion.value;
+        dataQuestion = {...dataQuestion, TypeQuestion: Number(typeQuestion.value)};
+        dataQuestion = {...dataQuestion, SortOder: numberQuestion.value};
 
         // Thêm bài tập nếu ở form thêm
         if (!id) {
-            dataQuestion.ExerciseID = exerciseID.value;
+            dataQuestion = {...dataQuestion, ExerciseID: exerciseID.value};
             for (let prop in dataQuestion) {
                 if (!dataQuestion[prop]) {
                     delete dataQuestion[prop];
@@ -413,7 +413,7 @@ const saveClose = async () => {
                 case Enum.FormQuestion.Select:
                     for (let prop in dataAnswerSelect) {
                         for (let i in dataAnswerSelect[prop]) {
-                            if (dataAnswerSelect[prop][i].length == 0) {
+                            if (!dataAnswerSelect[prop][i]) {
                                 delete dataAnswerSelect[prop][i];
                             }
                         }
@@ -424,7 +424,7 @@ const saveClose = async () => {
                     // Câu hỏi đúng sai
                     for (let prop in dataAnswerYesNo) {
                         for (let i in dataAnswerYesNo[prop]) {
-                            if (dataAnswerYesNo[prop][i].length == 0) {
+                            if (!dataAnswerYesNo[prop][i]) {
                                 delete dataAnswerYesNo[prop][i];
                             }
                         }
@@ -450,10 +450,10 @@ const saveClose = async () => {
         if (props.dataExercise.Topics) {
             dataAll.TopicIDs = Object.values(props.dataExercise.Topics);
         }
-        if (id) {
+        if (formModeQuestion.value == Enum.FormModeQuestion.Edit) {
             await store.dispatch("putMultipleData", dataAll);
             store.dispatch("getAllByID", id);
-        } else {
+        } else if (formModeQuestion.value == Enum.FormModeQuestion.Add) {
             await store.dispatch("postMultipleData", dataAll);
             store.dispatch("getAllByID", exerciseID.value);
             let id = exerciseID.value;
@@ -463,6 +463,10 @@ const saveClose = async () => {
         // Đóng form
         store.dispatch("showFormQuestion", false);
     }
+}
+
+const resetForm = () => {
+
 }
 
 /**
@@ -499,7 +503,7 @@ watch((typeQuestion), () => {
         main.value.classList.remove("fullscreen");
     }
     store.dispatch("showFormQuestion", typeQuestion.value);
-    dataQuestion.QuestionNote = "";
+    dataQuestion = {...dataQuestion, QuestionNote: ""};
 })
 /** 
  * Xem sự thay đổi đóng mở form
@@ -512,16 +516,39 @@ watch((showFormQuestion), () => {
         } else if (showFormQuestion.value != 0){
             main.value.classList.remove("fullscreen");
         }
-
-        // Gán giá trị cho data câu hỏi và đáp án nếu ở form sửa
-        if (showFormQuestion.value && formModeQuestion.value == Enum.FormModeQuestion.Edit) {
-            for (let prop in question.value) {
-                if (!question.value[prop]) {
-                    dataQuestion[prop] = question.value[prop];
-                }
-            }
-        }
     })
+
+    // Gán giá trị cho data câu hỏi và đáp án nếu ở form sửa
+    if (showFormQuestion.value && formModeQuestion.value == Enum.FormModeQuestion.Edit) {
+        Object.assign(dataQuestion, question.value);
+
+        switch (question.value.TypeQuestion) {
+            case Enum.FormQuestion.Select:
+                dataAnswerSelect.length = 0;
+                for (let i = 0; i < question.value.Answer.length; i++) {
+                    dataAnswerSelect.push(question.value.Answer[i]);
+                }
+                break;
+            case Enum.FormQuestion.YesOrNo:
+                dataAnswerYesNo.length = 0;
+                for (let i = 0; i < question.value.Answer.length; i++) {
+                    dataAnswerYesNo.push(question.value.Answer[i]);
+                }
+                break;
+            case Enum.FormQuestion.Fill:
+                dataAnswerFill.length = 0;
+                for (let i = 0; i < question.value.Answer.length; i++) {
+                    dataAnswerFill.push(question.value.Answer[i]);
+                }
+                break;
+            default:
+                break;
+        }
+    } 
+
+    if (!showFormQuestion.value) {
+        resetForm();
+    }
 })
 
 </script>

@@ -11,14 +11,6 @@ namespace WEB02.EMIS.API.BL.Interfaces
     {
 
         /// <summary>
-        /// Xóa nhiều bản ghi cùng lúc
-        /// </summary>
-        /// <param name="ids">Chuỗi chứa các id của đáp án cần xóa</param>
-        /// <returns></returns>
-        /// CreatedBy VMHieu 28/05/2023
-        public int DeleteMultiple(string ids);
-
-        /// <summary>
         /// Thêm nhiều bản ghi cùng lúc
         /// </summary>
         /// <returns></returns>

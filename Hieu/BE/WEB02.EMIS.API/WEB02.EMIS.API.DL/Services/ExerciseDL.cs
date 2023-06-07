@@ -170,29 +170,58 @@ namespace WEB02.EMIS.API.DL.Services
                 {
                     try
                     {
+                        Guid idExercise = Guid.NewGuid();
+                        // Khởi tạo đối tượng param
+                        var parameters = new DynamicParameters();
                         // Gán các đối tượng
                         Exercise exercise = dataInsertAll.exercise;
                         Question question = dataInsertAll.question;
                         List<Answer> answers = dataInsertAll.answers;
                         List<Guid> topicIDs = dataInsertAll.topicIDs;
-                        // Thêm một bản ghi bài tập
-                        // Chuẩn bị câu lệnh 
-                        var insertCommand = $"Proc_Exercise_Insert";
-
-                        // Chuẩn bị các tham số đầu vào
-                        var parameters = new DynamicParameters(exercise);
-
-                        // Thực hiện gọi vào db để chạy câu lệnh 
-                        var idExercise = mySqlConnection.QueryFirstOrDefault<string>(insertCommand, param: parameters,
-                            transaction: transaction, commandType: System.Data.CommandType.StoredProcedure);
-                        if (idExercise == null)
+                        if (exercise.ExerciseID != null)
                         {
-                            transaction.Rollback();
-                            return Guid.Empty;
+                            idExercise = exercise.ExerciseID;
+                            // Cập nhật bản ghi bài tập
+                            var updateCommand = $"Proc_Exercise_Update";
+
+                            // Chuẩn bị các tham số đầu vào
+                            parameters = new DynamicParameters(exercise);
+                            parameters.Add($"ExerciseID", exercise.ExerciseID);
+
+                            // Thực hiện gọi vào db để chạy câu lệnh 
+                            var resultExercise = mySqlConnection.Execute(updateCommand, param: parameters,
+                                transaction: transaction, commandType: System.Data.CommandType.StoredProcedure);
+                            if (resultExercise == null)
+                            {
+                                transaction.Rollback();
+                                return Guid.Empty;
+                            }
+                        } else
+                        {
+                            // Thêm một bản ghi bài tập
+                            // Chuẩn bị câu lệnh 
+                            var insertCommand = $"Proc_Exercise_Insert";
+
+                            // Chuẩn bị các tham số đầu vào
+                            parameters = new DynamicParameters(exercise);
+
+                            // Thực hiện gọi vào db để chạy câu lệnh 
+                            string resultExercise = mySqlConnection.QueryFirstOrDefault<string>(insertCommand, param: parameters,
+                                transaction: transaction, commandType: System.Data.CommandType.StoredProcedure);
+
+                            if (idExercise == null)
+                            {
+                                transaction.Rollback();
+                                return Guid.Empty;
+                            } else
+                            {
+                                idExercise = Guid.Parse(resultExercise);
+                            }
                         }
+                        
 
                         // Thêm một bản ghi câu hỏi
-                        question.ExerciseID = Guid.Parse(idExercise);
+                        question.ExerciseID = idExercise;
 
                         // Chuẩn bị câu lệnh 
                         var insertQuestion = $"Proc_Question_Insert";
@@ -268,9 +297,7 @@ namespace WEB02.EMIS.API.DL.Services
                         }
 
                         transaction.Commit();
-
-                        Guid result = Guid.Parse(idExercise);
-                        return result;
+                        return idExercise;
 
                     } catch (Exception e)
                     {
@@ -315,31 +342,58 @@ namespace WEB02.EMIS.API.DL.Services
                         List<Answer> answers = dataInsertAll.answers;
                         List<Guid> topicIDs = dataInsertAll.topicIDs;
 
-                        // Thêm một bản ghi câu hỏi
-                        question.ExerciseID = exercise.ExerciseID;
-
+                        // Sửa một bản ghi bài tập
                         // Chuẩn bị câu lệnh 
-                        var insertQuestion = $"Proc_Question_Insert";
+                        var updateExercise = $"Proc_Exercise_Update";
 
                         // Chuẩn bị các tham số đầu vào
-                        var parameters = new DynamicParameters(question);
+                        var parameters = new DynamicParameters(exercise);
+                        parameters.Add($"ExerciseID", exercise.ExerciseID);
 
                         // Thực hiện gọi vào db để chạy câu lệnh 
-                        string idQuestion = mySqlConnection.QueryFirstOrDefault<string>(insertQuestion, param: parameters,
-                           transaction: transaction, commandType: System.Data.CommandType.StoredProcedure);
-
-                        if (idQuestion == null)
+                        var rowExercise = mySqlConnection.Execute(updateExercise, param: parameters,
+                            transaction: transaction, commandType: System.Data.CommandType.StoredProcedure);
+                        if (rowExercise == null)
                         {
                             transaction.Rollback();
                             return false;
                         }
+
+                        // Thêm một bản ghi câu hỏi
+                        question.ExerciseID = exercise.ExerciseID;
+
+                        // Chuẩn bị câu lệnh 
+                        var updateQuestion = $"Proc_Question_Update";
+
+                        // Chuẩn bị các tham số đầu vào
+                        parameters = new DynamicParameters(question);
+                        parameters.Add($"QuestionID", question.QuestionID);
+
+                        // Thực hiện gọi vào db để chạy câu lệnh 
+                        var rowQuestion = mySqlConnection.Execute(updateQuestion, param: parameters,
+                           transaction: transaction, commandType: System.Data.CommandType.StoredProcedure);
+
+                        if (rowQuestion == null)
+                        {
+                            transaction.Rollback();
+                            return false;
+                        }
+
                         if (answers.Count > 0)
                         {
                             // Thêm id câu hỏi vào các đáp án
                             foreach (var answer in answers)
                             {
-                                answer.QuestionID = Guid.Parse(idQuestion);
+                                answer.QuestionID = question.QuestionID;
                             }
+                            // Thực hiện xóa các đáp án trước đó của câu hỏi 
+
+                            var deleteAnswer = $"Proc_Answer_DeleteByQuestionID";
+                            parameters = new DynamicParameters();
+                            parameters.Add($"$QuestionID", question.QuestionID);
+
+                            var deleteAnswerRow = mySqlConnection.Execute(deleteAnswer, param: parameters, transaction: transaction, commandType: System.Data.CommandType.StoredProcedure);
+                            
                             // Thực hiện thêm các câu hỏi
                             var insertAnswerRow = 0;
                             var answerCommand = $"Proc_Answer_Insert";
@@ -354,42 +408,42 @@ namespace WEB02.EMIS.API.DL.Services
                             }
                         }
 
-                        //if (topicIDs.Count > 0)
-                        //{
-                        //    //Thực hiện thêm chủ đề
+                        if (topicIDs.Count > 0)
+                        {
+                            //Thực hiện thêm chủ đề
 
-                        //    // Chuẩn bị câu lệnh Proc
-                        //    var sqlCommand = "Proc_ExerciseTopic_InsertMultiple";
+                            // Chuẩn bị câu lệnh Proc
+                            var sqlCommand = "Proc_ExerciseTopic_InsertMultiple";
 
-                        //    // Biến đổi tham số đầu vào
-                        //    string topicStr = "";
-                        //    foreach (var topicID in topicIDs)
-                        //    {
-                        //        if (topicID.Equals(topicIDs.Last()))
-                        //        {
-                        //            topicStr += $"{topicID}";
-                        //        }
-                        //        else
-                        //        {
-                        //            topicStr += $"{topicID},";
-                        //        }
-                        //    }
+                            // Biến đổi tham số đầu vào
+                            string topicStr = "";
+                            foreach (var topicID in topicIDs)
+                            {
+                                if (topicID.Equals(topicIDs.Last()))
+                                {
+                                    topicStr += $"{topicID}";
+                                }
+                                else
+                                {
+                                    topicStr += $"{topicID},";
+                                }
+                            }
 
-                        //    // Chuẩn bị tham số đầu vào cho câu lệnh sql
-                        //    parameters = new DynamicParameters();
-                        //    parameters.Add($"$ExerciseID", exercise.ExerciseID);
-                        //    parameters.Add($"topicIDs", topicStr);
+                            // Chuẩn bị tham số đầu vào cho câu lệnh sql
+                            parameters = new DynamicParameters();
+                            parameters.Add($"$ExerciseID", exercise.ExerciseID);
+                            parameters.Add($"topicIDs", topicStr);
 
-                        //    // Thực hiện gọi vào db để chạy câu lệnh với tham số đầu vào ở trên
-                        //    var resultTopics = mySqlConnection.Execute(sqlCommand, parameters, transaction: transaction,
-                        //        commandType: System.Data.CommandType.StoredProcedure);
+                            // Thực hiện gọi vào db để chạy câu lệnh với tham số đầu vào ở trên
+                            var resultTopics = mySqlConnection.Execute(sqlCommand, parameters, transaction: transaction,
+                                commandType: System.Data.CommandType.StoredProcedure);
 
-                        //    if (resultTopics == 0)
-                        //    {
-                        //        transaction.Rollback();
-                        //        return false;
-                        //    }
-                        //}
+                            if (resultTopics == 0)
+                            {
+                                transaction.Rollback();
+                                return false;
+                            }
+                        }
 
                         transaction.Commit();
                         return true;

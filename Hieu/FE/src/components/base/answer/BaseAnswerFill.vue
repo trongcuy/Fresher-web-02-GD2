@@ -4,9 +4,7 @@
             <div class="fill-number">
                 Ô trống {{ props.index + 1 }}
             </div>
-            <div class="ip-tag" v-for="(data, index) in dataAnswer" :key="index">
-                <BaseInputTag :data="data.AnswerContent" v-model="dataAnswer[index].AnswerContent"></BaseInputTag>
-            </div>
+            <BaseInputTag :data="dataAnswer.AnswerContent" v-model="dataAnswer.AnswerContent"></BaseInputTag>
             <div class="fill-remove" @click="removeAnswer">
                 <div class="remove-icon" >
                     <img :src="removeImg" alt="">
@@ -18,22 +16,29 @@
 
 <script setup>
 import BaseInputTag from "../input/BaseInputTag.vue";
-import { defineProps, defineEmits, reactive, watch, onMounted } from 'vue';
+import { defineProps, defineEmits, reactive, watch, computed, toRef, onMounted } from 'vue';
+import { useStore } from "vuex";
 
 const props = defineProps({
-    data: null, // Data nhận được từ cha
+    data: {}, // Data nhận được từ cha
     index: null,    // Index của đáp án
 })
 
+const propData = toRef(props, "data");
+
 const emit = defineEmits(['removeAnswer']);
+
+const store = useStore();
+// Biến xét đóng mở form question
+const showFormQuestion = computed(() => store.state.question.showFormQuestion);
 
 // Các biến lưu đường dẫn
 const removeImg = require("@/assets/img/icon-remove.svg");
 
-let dataAnswer = reactive([{
+let dataAnswer = reactive({
     AnswerContent: "",
     SortOder: props.index.toString()
-}])
+})
 
 /**
  * Xóa đáp án
@@ -51,10 +56,13 @@ watch((dataAnswer) , () => {
     emit('update:modelValue', dataAnswer);
 })
 
-onMounted(() =>{
-    if (props.data.length > 0) {
-        dataAnswer = {...props.data};
-    }
+watch((showFormQuestion) , () => {
+    console.log(props.data);
+})
+
+onMounted(() => {
+    dataAnswer.AnswerContent = props.data.AnswerContent;
+    dataAnswer.SortOder = props.data.SortOder;
 })
 
 </script>

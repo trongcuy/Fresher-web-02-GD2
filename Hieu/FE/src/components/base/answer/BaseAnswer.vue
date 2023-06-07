@@ -22,7 +22,7 @@
             </div>
             <CKEditorAnswer 
                 v-model="dataAnswer.AnswerContent" 
-                :dataEditor="dataAnswer.AnswerContent" 
+                :dataEditor="props.data.AnswerContent" 
                 ref="ckedit"
             ></CKEditorAnswer>
         </div>
@@ -30,7 +30,7 @@
 </template>
 
 <script setup>
-import { computed, ref, watch, defineProps, defineEmits, toRef, reactive, onMounted } from 'vue';
+import { computed, ref, watch, defineProps, defineEmits, toRef, reactive, isReactive, nextTick, onMounted } from 'vue';
 import { useStore } from 'vuex';
 import CKEditorAnswer from '@/components/base/ckeditor/CKEditorAnswer.vue';
 import * as Enum from '@/common/enum/Enum';
@@ -151,7 +151,7 @@ watch((showFormQuestion), () => {
             for (let i in props.data) {
                 dataAnswer[i] = props.data[i];
             }
-            dataAnswer.AnswerStatus = Enum.AnswerStatus.False;
+            //dataAnswer.AnswerStatus = Enum.AnswerStatus.False;
             showCKEditor.value = true;
         }
     }
@@ -161,7 +161,10 @@ watch((showFormQuestion), () => {
  * VMHieu 05/06/2023
  */
 watch((dataAnswer), () => {
-    dataAnswer.SortOder = dataAnswer.SortOder.toString();
+    dataAnswer.SortOder = props.index;
+    if (typeof dataAnswer.SortOder !== 'string') {
+        dataAnswer.SortOder = dataAnswer.SortOder.toString();
+    }
     emit("update:modelValue", dataAnswer);
 })
 
@@ -169,7 +172,7 @@ watch((dataAnswer), () => {
  * Xem sự thay đổi của index Remove để thay đổi tick
  * VMHieu 05/06/2023
  */
- watch((removeTick), () => {
+watch((removeTick), () => {
     if (props.index != props.indexRemove) {
         btnTrue.value.classList.remove("btn-true");
         btnTrue.value.tick = false;
@@ -183,13 +186,31 @@ watch((dataAnswer), () => {
  * Xem sự thay đổi của prop data để render lại đáp án
  * VMHieu 05/06/2023
  */
-watch((propData), () => {
+// watch((propData), () => {
+//     if (props.data) {
+//         for (let i in props.data) {
+//             dataAnswer[i] = props.data[i];
+//         }
+//         //dataAnswer.AnswerStatus = Enum.AnswerStatus.False;
+//         showCKEditor.value = true;
+        
+//         if (props.data.AnswerStatus == Enum.AnswerStatus.True) {
+//             answerTrue();
+//         }
+//     }
+// })
+
+onMounted(() => {
+    // Thực hiện biding dữ liệu
     if (props.data) {
         for (let i in props.data) {
             dataAnswer[i] = props.data[i];
         }
-        dataAnswer.AnswerStatus = Enum.AnswerStatus.False;
         showCKEditor.value = true;
+        
+        if (props.data.AnswerStatus == Enum.AnswerStatus.True) {
+            answerTrue();
+        }
     }
 })
 

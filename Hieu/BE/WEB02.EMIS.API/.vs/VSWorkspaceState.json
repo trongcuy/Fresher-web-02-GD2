@@ -8,10 +8,11 @@
     "\\WEB02.EMIS.API.Common\\Entity",
     "\\WEB02.EMIS.API.Common\\Entity\\DTO",
     "\\WEB02.EMIS.API.DL",
+    "\\WEB02.EMIS.API.DL\\Interfaces",
     "\\WEB02.EMIS.API.DL\\Services",
     "\\WEB02.EMIS.API\\Controllers",
     "\\WEB02.EMIS.API\\Properties"
   ],
-  "SelectedNode": "\\WEB02.EMIS.API.BL\\Services\\ExerciseBL.cs",
+  "SelectedNode": "\\WEB02.EMIS.API.DL\\Services\\ExerciseDL.cs",
   "PreviewInSolutionExplorer": false
 }
