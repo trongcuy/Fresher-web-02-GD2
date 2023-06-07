@@ -106,7 +106,6 @@ export default {
             const modelIndex = this.selectItems.findIndex(item => item[this.valueField] == model[this.valueField])
             this.selectItems.splice(modelIndex, 1)
             this.$emit("update:modelValue", this.selectItems)
-            debugger
         },
          /**
          * bắt sự kiện blur ra khỏi input span
@@ -202,7 +201,7 @@ img {
 }
 .list-fill {
     width: 100%;
-    padding: 4px 12px 4px 12px;
+    padding: 4px 34px 4px 6px;
     min-height: 40px;
     border-radius: 8px;
     border: 1px solid #b6b9ce;
@@ -232,7 +231,8 @@ img {
 }
 .list-fill span:last-child {
     border: none;
-    padding-left: 0px;
+    padding: 7px;
+    padding-left: 6px;
     min-width: 100px;
     z-index: 2;
 }

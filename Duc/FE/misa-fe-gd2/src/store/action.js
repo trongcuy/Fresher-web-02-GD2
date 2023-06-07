@@ -90,6 +90,7 @@ export default {
         axios.get(`/Exercises/${exerciseID}/Question`)
             .then(response => {
                 commit('setQuestionList', response.data);//gọi đến mutation để set list câu hỏi
+                commit('setNumQuestion', response.data.length)
                 commit('setShowLoading', false)//ẩn màn hình loading
             })
             .catch(error => {
@@ -131,27 +132,29 @@ export default {
      * @param {*} param0 
      * @param {*} data 
      */
-    addExercise({ commit, dispatch }, data) {
-        commit('setShowLoading', true)
-        var jsondata = {
-            "exerciseName": data.exerciseName,
-            "exerciseState": data.exerciseState,
-            "subjectID": data.subjectID,
-            "gradeID": data.gradeID
-        }
-        //gọi api thêm bài tập
-        axios.post('/Exercises', JSON.stringify(jsondata), {
-            headers: {
-                'Content-Type': 'application/json'
+    async addExercise({ commit, dispatch }, data) {
+        try {
+            commit('setShowLoading', true)
+            var jsondata = {
+                "exerciseName": data.exerciseName,
+                "exerciseState": data.exerciseState,
+                "subjectID": data.subjectID,
+                "gradeID": data.gradeID
             }
-        })
-            .then(response => {
-                dispatch('getListExercise')
-                commit('setShowLoading', false)
+            //gọi api thêm bài tập
+            const response = await axios.post('/Exercises', JSON.stringify(jsondata), {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             })
-            .catch(error => {
-                console.log(error)
-            })
+            commit('setExerciseIDSelected', response.data)
+            dispatch('getListExercise')
+            commit('setShowLoading', false)
+            return response.data
+        }
+        catch (error) {
+            console.log(error)
+        }
     },
     /**
      * sửa một bài tập theo id
@@ -186,6 +189,7 @@ export default {
             .then(response => {
                 commit('setShowLoading', false)
                 dispatch('getListExercise')
+                commit('setShowNotify', "success") 
             })
             .catch(error => {
                 console.log(error)
@@ -199,6 +203,7 @@ export default {
     async getTopicExercise({ commit }, exerciseID) {//commit này để gọi đến mutation
         try {
             const res = await axios.get(`/Exercises/${exerciseID}/Topic`)
+            commit('setTopicExercise', res.data)
             return res.data
         }
         catch (error) {
@@ -215,22 +220,188 @@ export default {
         commit('setShowLoading', true)
         //lấy các id của chủ đề
         let topicIDs = ""
-        for (const key in state.topicList) {
-            if (state.topicExercise.includes(state.topicList[key].topicName)) {
-                if(!topicIDs)
-                    topicIDs = topicIDs + "," 
-                    topicIDs = topicIDs + state.topicList[key].topicID
-            }  
+        for (const key in state.topicExercise) {
+            if (topicIDs)
+                topicIDs = topicIDs + ","
+            topicIDs = topicIDs + state.topicExercise[key].topicID
         }
-        console.log(topicIDs)
         //gọi api thêm chủ đề
-        // axios.post(`/Exercises/${state.exerciseIDSelected}/Topic?topicIDs=${topicIDs}`)
-        //     .then(response => {
-        //         dispatch('getListExercise')
-        //         commit('setShowLoading', false)
-        //     })
-        //     .catch(error => {
-        //         console.log(error)
-        //     })
+        axios.post(`/Exercises/${state.exerciseIDSelected}/Topic?topicIDs=${topicIDs}`)
+            .then(response => {
+                dispatch('getListExercise')
+                commit('setShowLoading', false)
+            })
+            .catch(error => {
+                console.log(error)
+            })
     },
+    /**
+     * thêm một câu hỏi theo id bài tập
+     * CreatedBy: Trịnh Huỳnh Đức (2-6-2023)
+     * @param {*} param0 
+     * @param {*} data 
+     */
+    async addQuestion({ commit, dispatch, state }, data) {
+        try {
+            commit('setShowLoading', true)
+            var jsondata = {
+                "questionContent": data.questionContent,
+                "questionType": data.questionType,
+                "questionExplane": data.questionExplane,
+                "questionNumber": data.questionNumber.toString(),
+                "exerciseID": data.exerciseID
+            }
+            //gọi api thêm câu hỏi
+            const response = await axios.post('/Questions', JSON.stringify(jsondata), {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            dispatch('getListQuestion', state.exerciseIDSelected)
+            commit('setShowLoading', false)
+            return response.data
+            
+        }
+        catch (error) {
+            console.log(error)
+        }
+    },
+    /**
+     * xóa câu hỏi theo id
+     * CreatedBy: Trịnh Huỳnh Đức (2-6-2023)
+     * @param {*} param0 
+     */
+    deleteQuestionById({ commit, dispatch, state }, questionID) {
+        commit('setShowLoading', true)
+        axios.delete(`/Questions/${questionID}`)
+            .then(response => {
+                commit('setShowLoading', false)
+                dispatch('getListQuestion', state.exerciseIDSelected)
+                commit('setShowNotify', "success") 
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    },
+    /**
+     * sửa một câu hỏi theo id bài tập
+     * CreatedBy: Trịnh Huỳnh Đức (2-6-2023)
+     * @param {*} param0 
+     * @param {*} data 
+     */
+    async updateQuestion({ commit, dispatch, state }, data) {
+        try {
+            commit('setShowLoading', true)
+            var jsondata = {
+                "questionID": data.questionID,
+                "questionContent": data.questionContent,
+                "questionType": data.questionType,
+                "questionExplane": data.questionExplane,
+                "questionNumber": data.questionNumber.toString(),
+                "exerciseID": data.exerciseID
+            }
+            //gọi api thêm câu hỏi
+            const response = await axios.put('/Questions', JSON.stringify(jsondata), {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            dispatch('getListQuestion', state.exerciseIDSelected)
+            commit('setShowLoading', false)
+        }
+        catch (error) {
+            console.log(error)
+        }
+    },
+    /**
+     * lấy danh sách đáp án theo id câu hỏi
+     * CreatedBy: Trịnh Huỳnh Đức (3-6-2023)
+     * @param {*} param0 
+     */
+    async getAnswers({ commit }, questionID) {//commit này để gọi đến mutation
+        try {
+            commit('setShowLoading', true)//hiển thị màn hình loading 
+            const response = await axios.get(`/Questions/${questionID}/Answer`)
+            commit('setShowLoading', false)//ẩn màn hình loading
+            return response.data
+
+        }
+        catch (error) {
+            console.log(error)
+        }
+    },
+    /**
+    * thêm đáp án
+    * CreatedBy: Trịnh Huỳnh Đức (4-6-2023)
+    * @param {*} param0 
+    * @param {*} data 
+    */
+    async addAnswer({ commit, dispatch, state }, data) {
+        try {
+            commit('setShowLoading', true)
+            //gọi api thêm đáp án
+            const response = await axios.post(`/Questions/${data.questionID}/Answer`, JSON.stringify(data.answers), {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            dispatch('getListQuestion', state.exerciseIDSelected)
+            commit('setShowLoading', false)
+        }
+        catch (error) {
+            console.log(error)
+        }
+    },
+
+    /**
+     * thêm một bài tập, câu hỏi, đáp án, chủ đề
+     * @param {*} param0 
+     * @param {*} data 
+     */
+    async insertAll({ commit, dispatch, state }, data) {
+        try {
+            debugger
+            commit('setShowLoading', true)
+            //gọi api thêm bài tập
+            const response = await axios.post('/Exercises/All', JSON.stringify(data), {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            commit('setExerciseIDSelected', response.data)
+            dispatch('getListQuestion', state.exerciseIDSelected)
+            commit('setShowLoading', false)
+            return response.data
+        }
+        catch (error) {
+            console.log(error)
+            handleException(error.response, { commit })
+        }
+    },
+}
+
+/**
+ * hàm xử lý các lối trả về từ server
+ * CreatedBy: Trịnh Huỳnh Đức (6-6-2023)
+ * @param {*} response 
+ * @param {*} param1 
+ */
+export const handleException = (response, { commit }) => {
+    switch (response.status) {
+        case 500:
+            //commit('addListException', response.data.userMsg)
+            //hiển thị thông báo
+            commit('setShowNotify', "exception") 
+            break;
+        case 400: {
+            //hiển thị thông báo
+            commit('setShowNotify', 'error')                  
+            break;
+        }
+        default:{ 
+            //hiển thị thông báo
+            commit('setShowNotify', "exception") 
+            break;
+        }
+    }
 }

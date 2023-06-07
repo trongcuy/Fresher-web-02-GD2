@@ -3,12 +3,16 @@
         <div class="dialog-header">
             EMIS ôn tập
         </div>
-        <div class="dialog-body">
-            Bạn có chắc muốn xóa bài tập này không?
+        <div class="dialog-body" v-if="content">
+            {{ content }}
+        </div>
+        <div class="dialog-body" v-if="!content">
+            {{ firstContent }}<b>{{data}}</b>{{ lastContent }}
         </div>
         <div class="dialog-footer">
-                <MSButton title="Hủy bỏ" @click="onClickCancel"/>
-                <MSButton title="Xóa" class="btn-complete" @click="onClickRemove"/>
+                <MSButton title="Đồng ý" @click="onClickCancel" v-if="type=='alert'"/>
+                <MSButton title="Hủy bỏ" @click="onClickCancel" v-if="type!='alert'"/>
+                <MSButton title="Xóa" class="btn-complete" @click="onClickOk" v-if="type!='alert'"/>
         </div>
     </div>
 </template>
@@ -18,7 +22,28 @@ import { mapMutations } from 'vuex'
 import MSButton from '../button/MSButton.vue'
 export default {
     name: "MSDialog",
-    props: [],
+    props: {
+        content: {
+            type: String,
+            default: ''
+        },
+        type: {
+            type: String,
+            default: ''
+        },
+        firstContent: {
+            type: String,
+            default: ''
+        },
+        lastContent: {
+            type: String,
+            default: ''
+        },
+        data: {
+            type: String,
+            default: ''
+        }
+    },
     components: {
         MSButton
     },
@@ -34,15 +59,14 @@ export default {
          * CreatedBy: Trịnh Huỳnh Đức (23-5-2023)
          */
         onClickCancel(){
-            this.setShowDialog(false)
+            this.$emit('onClickCancel')
         },
         /**
          * bắt sự kiện đồng ý
          * CreatedBy: Trịnh Huỳnh Đức (23-5-2023)
          */
-        onClickRemove(){
-            this.setShowDialog(false)
-            this.setShowNotify(true)
+        onClickOk(){
+            this.$emit('onClickOk')
         }
     }
 }
@@ -56,8 +80,8 @@ export default {
     font-size: 14px;
     box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
     background-color: #fff;
-    z-index: 100;
-    position: absolute;
+    z-index: 999;
+    position: fixed;
     top: calc(50vh - 90px);
     left: calc(50vw - 207px);
 }

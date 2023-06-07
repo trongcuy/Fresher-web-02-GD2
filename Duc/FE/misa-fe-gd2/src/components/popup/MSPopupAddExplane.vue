@@ -2,20 +2,16 @@
         <div class="popup-content">
             <!-- khối header trái -->
             <div class="header-left">
-                <div class="num-question">Câu 1</div>
+                <div class="num-question">Câu {{ this.numQuestion }}</div>
             </div>
             <div class="div-center" style="width: 44px;height: 39px;position: absolute;top: 0px;right: 0px;z-index: 3;"><img
                     src="../../assets/img/ic_help.svg" /></div>
-            <ckeditor :editor="editor"
+            <ckeditor :editor="editor" @input="onInputEditor()"
                 v-model="dataEditor" :config="editorConfig"></ckeditor>
-            <!-- <textarea class="input-question" v-show="typePopupAdd == 'more-explane'"
-                placeholder="Nhập lời giải tại đây..."></textarea> -->
         </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import { mapMutations } from 'vuex'
 export default {
     name: 'MSPopupAddExplane',
     components: {
@@ -25,6 +21,14 @@ export default {
             type: String,
             default: ''
         },
+        content: {
+            type: String,
+            default: ''
+        },
+        numQuestion: {
+            type: String,
+            default: ''
+        }
     },
     data() {
         return {
@@ -36,11 +40,13 @@ export default {
             dataEditor: '',//giá trị của ckeditor
         }
     },
-    computed: {
-        ...mapGetters(['typePopupAdd']),
-    },
     methods: {
-        ...mapMutations(['setTypePopupAdd']),
+        onInputEditor(){
+            this.$emit('setQuestionExplane', this.dataEditor)
+        }
+    },
+    created(){
+        this.dataEditor = this.content
     }
 }
 </script>
@@ -96,7 +102,7 @@ export default {
     position: absolute;
     top: 0px;
     left: 0px;
-    z-index: 3;
+    z-index: 103;
 }
 .num-question {
     position: absolute;

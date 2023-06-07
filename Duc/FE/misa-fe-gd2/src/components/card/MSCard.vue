@@ -80,6 +80,8 @@ export default {
             this.showMenu=false
             if(value=="Xóa")
             this.$emit('onClickRemove')
+            if(value=="Xem")
+            this.$emit('onClickOpen')
         }
     }
 }

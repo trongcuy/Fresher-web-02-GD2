@@ -1,16 +1,13 @@
 <template>
 	<TheHeader v-if="!$route.path.includes('/course/create')"/>
 	<RouterView name="main"/>
-	<MSOverlay v-if="showOverlay"/>
-	<MSDialog v-if="showDialog"/>
-	<MSNotify v-if="showNotify"/>
+	<MSNotify v-if="showNotify!='no'" :content="this.contentNotify"/>
 	<MSLoading v-if="showLoading"/>
 </template>
 <script>
 import { mapGetters } from 'vuex'
+import {mapMutations} from 'vuex'
 import TheHeader from './components/TheHeader.vue'
-import MSOverlay from './components/popup/MSOverlay.vue'
-import MSDialog from './components/notify/MSDialog.vue'
 import MSNotify from './components/notify/MSNotify.vue'
 import MSLoading from './components/notify/MSLoading.vue'
 export default {
@@ -19,13 +16,30 @@ export default {
 	components: {
 		TheHeader,
 		TheHeader,
-		MSOverlay,
-		MSDialog,
 		MSNotify,
 		MSLoading
 	},
+	watch: {
+		showNotify: function() {
+			this.contentNotify = this.resource.NotifyContent[this.showNotify]
+			//sau 3s tự đóng
+            setTimeout(() => {
+                this.setShowNotify("no")
+            }, 5000)
+		}
+	},
+	data() {
+		const resource = window.Resource
+		return {
+			resource,
+			contentNotify: '',//lưu nội dung của thông báo
+		}
+	},
 	computed: {
 		...mapGetters(['showOverlay', 'showDialog', 'showNotify', 'showLoading'])
+	},
+	methods: {
+		...mapMutations(['setShowNotify'])
 	}
 }
 </script>

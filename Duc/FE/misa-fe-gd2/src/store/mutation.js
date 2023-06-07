@@ -132,4 +132,11 @@ export default {
     setTopicExercise(state, value) {
         state.topicExercise = value
     },
+    /*
+    * set numQuestion
+    * CreatedBy: Trịnh Huỳnh Đức (1-6-2023)
+    */
+    setNumQuestion(state, value) {
+        state.numQuestion = value
+    },
 }

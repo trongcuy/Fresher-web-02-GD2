@@ -9,6 +9,11 @@
             <div class="body-image">
                 <p>Ảnh đại diện</p>
                 <img src="../../assets/img/default.png" />
+                <div class="load-image">
+                    <img src="../../assets/img/ic_image.svg" @click="convertToInput" />
+                    <input ref="fileInput" type="file" accept=".png,.jpg,.jpeg,.bmp" />
+                </div>
+
             </div>
             <div class="body-right div-flex-column">
                 <MSInput title="Tên bài tập" defaultValue="Nhập tên bài tập..." :value="newExercise.exerciseName"
@@ -20,11 +25,8 @@
                         :listSelect="gradeOptions" @setDefaultValue="setValueGrade" />
                 </div>
 
-                <MSComboboxTag title="Chủ đề" defaultValue="Chọn chủ đề" 
-                    valueField="topicID" 
-                    labelField="topicName"
-                    v-model="topicSelecteds" 
-                    :data="topics" />
+                <MSComboboxTag title="Chủ đề" defaultValue="Chọn chủ đề" valueField="topicID" labelField="topicName"
+                    v-model="topicSelecteds" :data="topics" />
                 <MSInput title="Thẻ tìm kiếm" class="input-search" />
             </div>
         </div>
@@ -127,12 +129,18 @@ export default {
             this.getTopic(data).then(topicData => {
                 this.topics = topicData
             })
+            //reset lại chủ đề đã chọn
+            this.topicSelecteds = []
+            this.setTopicExercise(this.topicSelecteds)
         },
         /**
          * bắt sự kiện lưu thông tin
          * CreatedBy: Trịnh Huỳnh Đức (1-6-2023)
          */
         onClickSave() {
+            //nếu chưa nhập tên thì ko cho lưu
+            if (!this.newExercise.exerciseName)
+                return
             //lưu thông tin bài tập
             this.$emit('onSaveInfor', this.newExercise)
             //lưu thông tin chủ đề
@@ -146,6 +154,14 @@ export default {
          */
         setExerciseName(value) {
             this.newExercise.exerciseName = value
+        },
+        /**
+         * bat su kien click ảnh thì mở input file
+         * CreatedBy: Trịnh Huỳnh Đức (1-6-2023)
+         * @param {*} value 
+         */
+        convertToInput() {
+            this.$refs.fileInput.click()
         },
     },
     created() {
@@ -164,23 +180,13 @@ export default {
         this.getTopic(data).then(topicData => {
             this.topics = topicData
         })
-        //lấy chủ đề theo id bài tập  
-        if(this.topicExercise.length > 0) {//nếu đã chọn trước đó thì lấy luôn mà ko gọi api
-            this.topicSelecteds = this.topicExercise
-        }  
-        else {
-            const exerciseID = this.$route.query.exerciseID
-            if (exerciseID) {//nếu là sửa bài tập thì mới lấy chủ đề của bài tập đó
-                this.getTopicExercise(exerciseID).then(data => {
-                    this.topicSelecteds = data
-                })
-            }
-        }       
+        //lấy chủ đề theo id bài tập         
+        this.topicSelecteds = this.topicExercise
     }
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .div-main {
     background-color: #ffffff;
     border-radius: 10px;
@@ -189,77 +195,91 @@ export default {
     left: calc(50vw - 400px);
     top: 50px;
     position: absolute;
-    z-index: 3;
-}
+    z-index: 103;
 
-.header {
-    height: 84px;
-    padding: 24px;
-    position: relative;
-}
+    .header {
+        height: 84px;
+        padding: 24px;
+        position: relative;
 
-.header-title {
-    font-weight: 700;
-    font-size: 28px;
-    line-height: 36px;
-    color: #4e5b6a;
-}
+        .header-title {
+            font-weight: 700;
+            font-size: 28px;
+            line-height: 36px;
+            color: #4e5b6a;
+        }
 
-.header-close {
-    cursor: pointer;
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    width: 32px;
-    height: 32px;
-}
+        .header-close {
+            cursor: pointer;
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 32px;
+            height: 32px;
 
-.header-close img {
-    width: 16px;
-    height: 16px;
-}
+            img {
+                width: 16px;
+                height: 16px;
+            }
+        }
 
-.body {
-    display: flex;
-    justify-content: space-between;
-    padding: 0px 24px 24px 24px;
-}
+    }
 
-.body-image {
-    width: 260px;
-    height: 100%;
-}
+    .body {
+        display: flex;
+        justify-content: space-between;
+        padding: 0px 24px 24px 24px;
 
-.body-image>p {
-    padding-bottom: 4px;
-    font-size: 14px;
-    font-weight: 500;
-}
+        .body-image {
+            width: 260px;
+            height: 100%;
+            position: relative;
 
-.body-image img {
-    height: auto;
-    width: 100%;
-}
+            p {
+                padding-bottom: 4px;
+                font-size: 14px;
+                font-weight: 500;
+            }
 
-.body-right {
-    width: 452px;
-    height: 100%;
-    gap: 16px;
-}
+            img {
+                height: auto;
+                width: 100%;
+            }
 
-.div-select {
-    gap: 12px;
-}
+            .load-image {
+                height: 40px;
+                width: 40px;
+                position: absolute;
+                right: 12px;
+                bottom: 20px;
 
-.input-search img {
-    height: 60px;
-}
+                input {
+                    display: none;
+                }
+            }
+        }
 
-.div-button {
-    display: flex;
-    align-items: center;
-    justify-content: end;
-    padding: 0px 24px 24px 24px;
-    gap: 12px;
+        .body-right {
+            width: 452px;
+            height: 100%;
+            gap: 16px;
+
+            .div-select {
+                gap: 12px;
+            }
+
+            .input-search img {
+                height: 60px;
+            }
+        }
+    }
+
+    .div-button {
+        display: flex;
+        align-items: center;
+        justify-content: end;
+        padding: 0px 24px 24px 24px;
+        gap: 12px;
+    }
 }
 </style>

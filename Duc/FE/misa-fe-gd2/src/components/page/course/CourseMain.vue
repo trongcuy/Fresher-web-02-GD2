@@ -26,14 +26,29 @@
             <MSCard v-for="(item, index) in exerciseList" :grade="item.gradeName" :subject="item.subjectName"
                 :title="item.exerciseName" :state="item.exerciseState" :numQuestion="item.numQuestion"
                 @click="onClickCardExercise(item.exerciseID)" 
-                @onClickRemove="onClickRemove(item.exerciseID)"/>
+                @onClickRemove="onClickRemove(item)"
+                @onClickOpen="onClickCardExercise(item.exerciseID)"/>
         </div>
         <!-- button xem thêm -->
         <MSButton title="Xem thêm" class="btn-more" @click="onClickMore" v-if="exerciseList.length==pageSize"/>
+        <!-- ảnh khi ko có bài tập -->
+        <div class="no-content" v-if="exerciseList.length==0">
+            <img src="../../../assets/img/not-found.svg"/>
+            <p>Không tìm thấy học liệu</p>
+        </div>
     </div>
+    <MSDialog v-if="showDialog" 
+        :firstContent="this.resource.DialogContent.removeExercise.firtContent" 
+        :lastContent="this.resource.DialogContent.removeExercise.lastContent"
+        :data="this.exerciseSelected.exerciseName"
+        @onClickOk="onClickOkRemove" 
+        @onClickCancel="onClickCancelRemove"/>
+	<MSOverlay v-if="showOverlay"/>
 </template>
 
 <script>
+import MSDialog from '../../notify/MSDialog.vue'
+import MSOverlay from '../../popup/MSOverlay.vue'
 import MSInput from '../../input/MSInput.vue'
 import MSCombobox from '../../input/MSCombobox.vue'
 import MSCard from '../../card/MSCard.vue'
@@ -45,17 +60,24 @@ export default {
     name: "CourseMain",
     props: [],
     components: {
+        MSDialog,
+        MSOverlay,
         MSInput,
         MSCombobox,
         MSCard,
         MSButton
     },
     data() {
+        const resource = window.Resource
         return {
+            resource,
+            showDialog: false,
+            showOverlay: false,
             searchValue: '',//giá trị ô tìm kiếm
             stateValue: 'Tất cả học liệu',//trạng thái trong combobox
             subjectValue: 'Tất cả các môn',//giá trị môn học trong combobox
             gradeValue: 'Tất cả các khối',//giá trị môn học trong combobox
+            exerciseSelected: {},//lưu id bài tập đang chọn
         }
     },
     watch: {
@@ -96,7 +118,7 @@ export default {
          * CreatedBy: Trịnh Huỳnh Đức (30-5-2023)
          */
         onClickMore() {
-            this.setPageSize(this.pageSize + 6)
+            this.setPageSize(this.pageSize + 9)
         },
         /**
          * set giá trị input
@@ -181,14 +203,39 @@ export default {
          * CreatedBy: Trịnh Huỳnh Đức (31-5-2023)
          * @param {*} exerciseID 
          */
-        onClickRemove(exerciseID) {
-            this.deleteExerciseById(exerciseID)
-        }
+        onClickRemove(item) {
+            //hiện dialog xác nhận xóa
+            this.showOverlay = true
+            this.showDialog = true
+            //gán id bài tập đã chọn
+            this.exerciseSelected = item
+        },
+        /**
+         * bắt sự kiện đồng ý xóa bài tập
+         * CreatedBy: Trịnh Huỳnh Đức (31-5-2023)
+         * @param {*} exerciseID 
+         */
+        onClickOkRemove(){
+            this.deleteExerciseById(this.exerciseSelected.exerciseID)
+            //đóng dialog
+            this.showOverlay = false
+            this.showDialog = false
+        },
+        /**
+         * hủy xóa bài tập
+         * CreatedBy: Trịnh Huỳnh Đức (2-6-2023)
+         */
+        onClickCancelRemove(){
+            //đóng dialog
+            this.showOverlay = false
+            this.showDialog = false
+        },
     }
 }
 </script>
 <style scoped>
 .div-main>img {
+    margin-top: 64px;
     width: 100%;
     height: auto;
     border-radius: 10px;
@@ -280,5 +327,18 @@ export default {
 }
 .card-hidden-btn {
     margin-bottom: 30px;
+}
+.no-content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 22px;
+    /* margin-top: -30px; */
+}
+.no-content img {
+    height: 128px;
+    width: 117px;
+    margin-bottom: 24px;
 }
 </style>

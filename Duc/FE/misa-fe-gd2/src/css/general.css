@@ -151,7 +151,66 @@ transform: scale(1.1); /* Áp dụng hiệu ứng phóng to 1.1 lần khi di chu
     padding: 5px;
     border-radius: 8px;
     top: 4px;
-    left: -150px;
+    left: -200px;
     border: 1px solid #4E5B6A;
     white-space: nowrap;
+}
+
+/* popupadd */
+/* tùy chỉnh ckeditor */
+.popup-content .ck.ck-toolbar>.ck-toolbar__items {
+    justify-content: end;
+    padding-right: 35px;
+    background-color: #fff2ab;
+}
+
+.popup-content .ck.ck-editor__main>.ck-editor__editable:not(.ck-focused) {
+    border: none;
+    background-color: #fff2ab;
+}
+
+.popup-content .ck.ck-toolbar {
+    background: #fff2ab !important;
+    border: none;
+    padding: 0 var(--ck-spacing-small);
+}
+
+.popup-content .ck.ck-editor__main>.ck-editor__editable {
+    background: #fff2ab;
+    border: none;
+    padding: 0px 24px;
+    margin-top: -4px;
+}
+
+.popup-content .ck.ck-editor__main>.ck-editor__editable:focus {
+    background-color: #fff2ab;
+    outline: none;
+    border: none;
+    padding: 0px 24px;
+    margin-top: -4px;
+    box-shadow: 0 0px 0px rgba(90, 125, 141, .16);
+}
+
+.popup-content .ck.ck-editor__main>.ck-editor__editable.ck-focused {
+    outline: none;
+    border: none;
+}
+
+/* combobox của popupadd */
+.combobox-popup {
+    width: 312px;
+}
+
+.combobox-popup>input {
+    border-radius: 0px 0px 10px 0px;
+    width: 100%;
+    padding-left: 70px;
+    font-weight: 700;
+    font-size: 16px;
+    background-color: #f8e373;
+    border: none;
+}
+
+.combobox-popup>input:hover {
+    border: none;
 }

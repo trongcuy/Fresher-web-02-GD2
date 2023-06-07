@@ -2,10 +2,9 @@ export default {
     username: "Trịnh Huỳnh Đức",
     showOverlay: false,//lớp phủ
     typePopupAdd: "select",//loại popup thêm câu hỏi
-    showDialog: false,//dialog
-    showNotify: false,//notify
+    showNotify: 'no',//notify
     showLoading: false,//loading
-    pageSize: 6,//số bản ghi
+    pageSize: 9,//số bản ghi
     pageIndex: 1,//số trang
     exerciseList: [],//danh sách bài tập
     dataFilter: {
@@ -22,5 +21,6 @@ export default {
     exerciseIDSelected: "",//lưu id bài tập đang thao tác
     exerciseSelected: {},//lưu bài tập đang thao tác
     questionList: [],//lưu danh sách câu hỏi của bai tap
+    numQuestion: 0,//lưu số câu hỏi của bài tập
     topicExercise: [],//lưu danh sách chủ đề của bài tập đang sửa
 }

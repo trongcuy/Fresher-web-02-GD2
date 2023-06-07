@@ -1,7 +1,8 @@
 const tooltipDirective = {
     mounted(el, binding) {
         const tooltipText = binding.value;
-
+        if(!tooltipText)
+        return
         // Tạo một phần tử span cho tooltip
         const tooltip = document.createElement('span');
         tooltip.className = 'tooltip';

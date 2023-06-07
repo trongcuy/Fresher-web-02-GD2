@@ -3,8 +3,8 @@
     <div class="div-input">
         <p v-if="title">{{ title }}<span style="color: red;" v-if="require"> *</span></p>
         <input class="input" type="text" :placeholder="defaultValue" v-model="inputValue"
-            :class="{'icon-left':type=='icon-left'}"
-            @input="() => this.$emit('setValueInput', this.inputValue)" />
+            :class="{ 'icon-left': type == 'icon-left' }" @blur="onBlurInput" @input="onInput" />
+        <p class="error" v-if="this.require && showError">Không được bỏ trống</p>
     </div>
 </template>
 
@@ -36,6 +36,7 @@ export default {
     data() {
         return {
             inputValue: this.value,
+            showError: false,//show error validate
         }
     },
     watch: {
@@ -46,32 +47,59 @@ export default {
         }
     },
     methods: {
-
+        /**
+         * sự kiện blur input
+         * CreatedBy: Trịnh Huỳnh Đức(25-5-2023)
+         */
+        onBlurInput() {
+            if (!this.inputValue)
+                this.showError = true
+        },
+        /**
+         * sự kiện blur input
+         * CreatedBy: Trịnh Huỳnh Đức(25-5-2023)
+         */
+        onInput() {
+            this.$emit('setValueInput', this.inputValue)
+            if (this.inputValue)
+                this.showError = false
+        }
     }
 }
 </script>
 
-<style scoped>
-p {
-    margin-bottom: 4px;
-    font-size: 14px;
-}
-.input {
-    border-radius: 10px;
-    border: 1px solid #b6b9ce;
-    width: 100%;
-    height: 40px;
-    padding: 0px 12px;
-    outline: none;
-}
-.input:focus {
-    border: 1px solid #8a6bf6;
-}
+<style scoped lang="scss">
 .div-input {
     display: flex;
     flex-direction: column;
-}
-.icon-left {
-    padding-left: 34px;
+
+    p {
+        margin-bottom: 4px;
+        font-size: 14px;
+    }
+
+    .input {
+        border-radius: 10px;
+        border: 1px solid #b6b9ce;
+        width: 100%;
+        height: 40px;
+        padding: 0px 12px;
+        outline: none;
+    }
+
+    .input:focus {
+        border: 1px solid #8a6bf6;
+    }
+
+    .icon-left {
+        padding-left: 34px;
+    }
+
+    .error {
+        font-size: 14px;
+        color: #ff6161;
+        margin: 0px;
+        font-weight: 500;
+    }
 }
 </style>

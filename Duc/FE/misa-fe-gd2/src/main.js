@@ -27,8 +27,9 @@ app.use(store)
 
 //khai báo biến dùng chung
 import Resource from './helper/resource'
+import Enums from './helper/enums'
 window.Resource = Resource.VI
-
+window.Enums = Enums
 //khai báo ckeditor dùng nhiều lần
 import CKEditor from '@ckeditor/ckeditor5-vue'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'

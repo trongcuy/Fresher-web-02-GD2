@@ -8,7 +8,10 @@
             <div class="div-option"
                 :class="{ 'div-option-reverse2': optionReverse && !title, 'div-option-reverse': optionReverse && title }"
                 v-if="isShowOption" v-click-outside="() => { isShowOption = false }">
-                <p v-for="(item, index) in listSelect" :key="index" class="option" @click="setOptionValue(item)">{{ item }}
+                <p v-for="(item, index) in listSelect" 
+                    :class="{'item-selected': item==this.optionValue}"
+                    :key="index" class="option" 
+                    @click="setOptionValue(item)">{{ item }}
                 </p>
             </div>
             
@@ -93,6 +96,7 @@ export default {
     width: auto;
     box-sizing: border-box;
     position: relative;
+    
 }
 
 .block>p {
@@ -157,7 +161,9 @@ input:focus {
     z-index: 11;
     background-color: #ffffff;
 }
-
+.div-option p {
+    cursor: pointer;
+}
 .div-option-reverse {
     top: -110px;
     left: 0px;
@@ -193,5 +199,8 @@ p {
 .icon-x img {
     width: 14px;
     height: 14px;
+}
+.item-selected {
+    color: #8a6bf6;
 }
 </style>

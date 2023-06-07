@@ -17,5 +17,6 @@ export default {
     exerciseIDSelected: state => state.exerciseIDSelected,
     exerciseSelected: state => state.exerciseSelected,
     questionList: state => state.questionList,
-    topicExercise: state => state.topicExercise
+    topicExercise: state => state.topicExercise,
+    numQuestion: state => state.numQuestion
 }

@@ -1,25 +1,35 @@
 <template>
     <div class="div-notify div-flex-row">
         <div class="div-flex-row">
-        <div class="div-line"></div>
-        <img src="../../assets/img/icon-success.jpg" class="icon-success"/>
-        Bạn đã xóa thành công
+            <div class="div-line" :class="{'div-line-error': this.showNotify!='success'}"></div>
+            <img src='../../assets/img/icon-success.jpg' class="icon-success" v-if="this.showNotify=='success'"/>
+            <img src='../../assets/img/ic_error.svg' class="icon-error" v-if="this.showNotify!='success'"/>
+            {{ this.content }}
         </div>
-        <img src="../../assets/img/ic_close_notify.jpg" class="icon-close" @click="onClickClose"/>
+        <img src="../../assets/img/ic_close_notify.jpg" class="icon-close" @click="onClickClose" />
     </div>
 </template>
 
 <script>
 import { mapMutations } from 'vuex'
+import { mapGetters } from 'vuex'  
 export default {
     name: "MSNotify",
-    props: [],
+    props: {
+        content: {
+            type: String,
+            default: ''
+        }
+    },
     components: {
     },
     data() {
         return {
-
+            
         }
+    },
+    computed: {
+        ...mapGetters(['showNotify'])
     },
     methods: {
         ...mapMutations(['setShowNotify']),
@@ -27,8 +37,8 @@ export default {
          * bắt sự kiện đóng thông báo
          * CreatedBy: Trịnh Huỳnh Đức (23-5-2023)
          */
-        onClickClose(){
-            this.setShowNotify(false)
+        onClickClose() {
+            this.setShowNotify('no')
         }
     }
 }
@@ -39,8 +49,8 @@ export default {
     width: 500px;
     box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
     background-color: #fff;
-    z-index: 100;
-    position: absolute;
+    z-index: 999;
+    position: fixed;
     top: -100px;
     left: calc(50vw - 250px);
     border-radius: 20px;
@@ -48,12 +58,14 @@ export default {
     justify-content: space-between;
     animation: slideDown 1s forwards;
 }
+
 /* hiệu ứng chuyển động */
 @keyframes slideDown {
     to {
         top: 20px;
     }
 }
+
 .div-line {
     width: 3px;
     height: 35px;
@@ -61,13 +73,22 @@ export default {
     border-radius: 10px;
     margin-right: 12px;
 }
+.div-line-error {
+    background-color: #ff6161;
+}
 .icon-close {
     height: 100%;
     width: auto;
 }
+
 .icon-success {
     height: 36px;
     width: auto;
     margin-right: 12px;
 }
-</style>
+.icon-error {
+    height: 32px;
+    width: auto;
+    margin-right: 12px;
+    margin-left: 8px;
+}</style>
