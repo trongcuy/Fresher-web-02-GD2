@@ -1,0 +1,17 @@
+C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\EMIS.BL\bin\Debug\net6.0\EMIS.BL.deps.json
+C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\EMIS.BL\bin\Debug\net6.0\EMIS.BL.dll
+C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\EMIS.BL\bin\Debug\net6.0\EMIS.BL.pdb
+C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\EMIS.BL\obj\Debug\net6.0\EMIS.BL.csproj.AssemblyReference.cache
+C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\EMIS.BL\obj\Debug\net6.0\EMIS.BL.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\EMIS.BL\obj\Debug\net6.0\EMIS.BL.AssemblyInfoInputs.cache
+C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\EMIS.BL\obj\Debug\net6.0\EMIS.BL.AssemblyInfo.cs
+C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\EMIS.BL\obj\Debug\net6.0\EMIS.BL.csproj.CoreCompileInputs.cache
+C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\EMIS.BL\obj\Debug\net6.0\EMIS.BL.dll
+C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\EMIS.BL\obj\Debug\net6.0\refint\EMIS.BL.dll
+C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\EMIS.BL\obj\Debug\net6.0\EMIS.BL.pdb
+C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\EMIS.BL\obj\Debug\net6.0\ref\EMIS.BL.dll
+C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\EMIS.BL\bin\Debug\net6.0\EMIS.Common.dll
+C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\EMIS.BL\bin\Debug\net6.0\EMIS.DL.dll
+C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\EMIS.BL\bin\Debug\net6.0\EMIS.Common.pdb
+C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\EMIS.BL\bin\Debug\net6.0\EMIS.DL.pdb
+C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\EMIS.BL\obj\Debug\net6.0\EMIS.BL.csproj.CopyComplete

@@ -9,6 +9,7 @@
 <script>
 import CourseHeader from '../course/CourseHeader.vue'
 import CourseMain from '../course/CourseMain.vue'
+import { mapActions } from 'vuex'
 export default {
     name: "CoursePage",
     props: [],
@@ -21,6 +22,17 @@ export default {
 
 		}
     },
+    methods: {
+        ...mapActions(['getListExercise', 'getListSubject', 'getListGrade'])
+    },
+    created() {
+        //lấy danh sách bài tập
+        this.getListExercise()
+        //lấy danh sách môn
+        this.getListSubject()
+        //lấy danh sách khối
+        this.getListGrade()
+    }
 }
 </script>
 <style scoped>

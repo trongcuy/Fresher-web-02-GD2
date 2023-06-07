@@ -21,11 +21,11 @@
                 class="combobox" 
                 :listSelect="['Năm học 2022-2023', 'Năm học 2021-2022']"
                 defaultValue="Năm học 2022-2023" 
-                src="https://sisapapp.misacdn.net/lms/img/ic_multi.7d8b269c.svg"></MSCombobox>
+                src="https://cegovapp.misacdn.net/cegov/img/ic_drop-down.fa70eead.svg"></MSCombobox>
             <div class="div-icon"><img src="https://sisapapp.misacdn.net/lms/img/ic_Material.0dcea9c1.svg"/></div>
-            <div class="div-icon"><img src="https://sisapapp.misacdn.net/lms/img/ic_Setting_24.425ce083.svg"/></div>
-            <div class="div-icon"><img src="https://sisapapp.misacdn.net/lms/img/ic_Help_20.fbed8b0e.svg"/></div>
-            <div class="div-icon"><img src="https://sisapapp.misacdn.net/lms/img/ic_Noti_24.9f8729e8.svg"/></div>
+            <div class="div-icon" v-tooltip="'Thiết lập'"><img src="https://sisapapp.misacdn.net/lms/img/ic_Setting_24.425ce083.svg"/></div>
+            <div class="div-icon" v-tooltip="'Trợ giúp'"><img src="https://sisapapp.misacdn.net/lms/img/ic_Help_20.fbed8b0e.svg"/></div>
+            <div class="div-icon" v-tooltip="'Thông báo'"><img src="https://sisapapp.misacdn.net/lms/img/ic_Noti_24.9f8729e8.svg"/></div>
             <div class="div-avatar">
                 <p>Xin chào, <b>Đức</b></p>
                 <img src="../assets/img/avatar-default.png" />
@@ -80,6 +80,7 @@ export default {
     
 }
 .div-icon {
+    position: relative;
     width: 40px;
     height: 40px;
     display: flex;

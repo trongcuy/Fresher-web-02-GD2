@@ -1,0 +1,14 @@
+C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\Common\bin\Debug\net6.0\EMIS.Common.deps.json
+C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\Common\bin\Debug\net6.0\EMIS.Common.dll
+C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\Common\bin\Debug\net6.0\EMIS.Common.pdb
+C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\Common\obj\Debug\net6.0\EMIS.Common.csproj.AssemblyReference.cache
+C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\Common\obj\Debug\net6.0\EMIS.Common.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\Common\obj\Debug\net6.0\EMIS.Common.AssemblyInfoInputs.cache
+C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\Common\obj\Debug\net6.0\EMIS.Common.AssemblyInfo.cs
+C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\Common\obj\Debug\net6.0\EMIS.Common.csproj.CoreCompileInputs.cache
+C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\Common\obj\Debug\net6.0\EMIS.Common.dll
+C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\Common\obj\Debug\net6.0\refint\EMIS.Common.dll
+C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\Common\obj\Debug\net6.0\EMIS.Common.pdb
+C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\Common\obj\Debug\net6.0\ref\EMIS.Common.dll
+C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\Common\obj\Debug\net6.0\EMIS.Common.Resource.resources
+C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\Common\obj\Debug\net6.0\EMIS.Common.csproj.GenerateResource.cache
