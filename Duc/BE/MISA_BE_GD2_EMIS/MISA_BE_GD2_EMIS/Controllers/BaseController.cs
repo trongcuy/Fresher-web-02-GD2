@@ -1,5 +1,8 @@
 ﻿using EMIS.BL.BaseBL;
+using EMIS.Common;
+using EMIS.Common.ExceptionEntity;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -32,19 +35,12 @@ namespace MISA_BE_GD2_EMIS.Controllers
         {
             try
             {
-                //gọi đến BaseBL lấy tất cả 
-                var result = _baseBL.GetAll();
-                //Xử lý kết quả trả về ở db
-                if(result == null)
-                {
-                    return NoContent();
-                }
-                return Ok(result);
+                return StatusCode(StatusCodes.Status200OK, _baseBL.GetAll());
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return BadRequest(ex.Message);
+                return HandleException(ex);
             }
         }
 
@@ -60,19 +56,12 @@ namespace MISA_BE_GD2_EMIS.Controllers
         {
             try
             {
-                //gọi đến BaseBL 
-                var result = _baseBL.GetById(id);
-                //Xử lý kết quả trả về ở db
-                if (result == null)
-                {
-                    return NoContent();
-                }
-                return Ok(result);
+                return StatusCode(StatusCodes.Status200OK, _baseBL.GetById(id));
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return BadRequest(ex.Message);
+                return HandleException(ex);
             }
         }
 
@@ -88,19 +77,12 @@ namespace MISA_BE_GD2_EMIS.Controllers
         {
             try
             {
-                //gọi đến BaseBL 
-                var result = _baseBL.Insert(value);
-                //Xử lý kết quả trả về ở db
-                if (result == 0)
-                {
-                    return BadRequest();
-                }
-                return Ok(result);
+                return StatusCode(StatusCodes.Status201Created, _baseBL.Insert(value));
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return BadRequest(ex.Message);
+                return HandleException(ex);
             }
         }
 
@@ -116,19 +98,12 @@ namespace MISA_BE_GD2_EMIS.Controllers
         {
             try
             {
-                //gọi đến BaseBL 
-                var result = _baseBL.Update(value);
-                //Xử lý kết quả trả về ở db
-                if (result == 0)
-                {
-                    return BadRequest();
-                }
-                return Ok(result);
+                return StatusCode(StatusCodes.Status200OK, _baseBL.Update(value));
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return BadRequest(ex.Message);
+                return HandleException(ex);
             }
         }
         
@@ -144,21 +119,36 @@ namespace MISA_BE_GD2_EMIS.Controllers
         {
             try
             {
-                //gọi đến BaseBL
-                var result = _baseBL.DeleteById(id);
-                //Xử lý kết quả trả về ở db
-                if (result == 0)
-                {
-                    return NoContent();
-                }
-                return Ok(result);
+                return StatusCode(StatusCodes.Status200OK, _baseBL.DeleteById(id));
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return BadRequest(ex.Message);
+                return HandleException(ex);
             }
-        } 
+        }
+
+        /// <summary>
+        /// Hàm xử lý ngoại lệ
+        /// </summary>
+        /// <param name="ex"></param>
+        /// <returns></returns>
+        protected IActionResult HandleException(Exception ex)
+        {
+            var error = new
+            {
+                devMsg = ex.Message,
+                userMsg = Resource.ResourceManager.GetString(name: "ErrorMessage"),
+                errorMsg = ex.Data["Error"]
+            };
+
+            if (ex is ErrorException)
+            {
+                return BadRequest(error);
+            }
+            return StatusCode((int)HttpStatusCode.InternalServerError, error);
+        }
+
         #endregion
     }
 }

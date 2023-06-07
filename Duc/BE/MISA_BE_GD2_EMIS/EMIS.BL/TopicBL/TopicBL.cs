@@ -16,11 +16,14 @@ namespace EMIS.BL.TopicBL
         private ITopicDL _topicDL;
         #endregion
 
+        #region Constructor
         public TopicBL(ITopicDL topicDL) : base(topicDL)
         {
             _topicDL = topicDL;
         }
+        #endregion
 
+        #region Methods
         /// <summary>
         /// lấy ra tất cả chủ đề theo id môn và khối
         /// CreatedBy: Trịnh Huỳnh Đức (29-5-2023)
@@ -31,6 +34,7 @@ namespace EMIS.BL.TopicBL
         public IEnumerable<Topic> GetAllTopic(string subjectID, string gradeID)
         {
             return _topicDL.GetAllTopic(subjectID, gradeID);
-        }
+        } 
+        #endregion
     }
 }

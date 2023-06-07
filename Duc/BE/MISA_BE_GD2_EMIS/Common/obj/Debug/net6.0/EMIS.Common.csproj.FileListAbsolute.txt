@@ -10,3 +10,5 @@ C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MI
 C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\Common\obj\Debug\net6.0\refint\EMIS.Common.dll
 C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\Common\obj\Debug\net6.0\EMIS.Common.pdb
 C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\Common\obj\Debug\net6.0\ref\EMIS.Common.dll
+C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\Common\obj\Debug\net6.0\EMIS.Common.Resource.resources
+C:\Users\DELL\OneDrive\Tài liệu\TaiLieuCodeVue\Fresher-web-02-GD2\Duc\BE\MISA_BE_GD2_EMIS\Common\obj\Debug\net6.0\EMIS.Common.csproj.GenerateResource.cache

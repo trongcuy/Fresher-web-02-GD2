@@ -13,5 +13,11 @@ namespace EMIS.Common.Entity
         public int AnswerState { get; set; }
         public Guid? AnswerImage { get; set; }
         public Guid QuestionID { get; set; }
+
+        public Answer()
+        {
+            AnswerImage = new Guid();
+            QuestionID = new Guid();
+        }
     }
 }

@@ -29,7 +29,7 @@ namespace EMIS.DL.BaseDL
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public int Insert(T value);
+        public string Insert(T value);
 
         /// <summary>
         /// Cập nhật một đối tượng

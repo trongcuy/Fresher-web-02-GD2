@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MISA_BE_GD2_EMIS.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class SubjectsController : BaseController<Subject>
     {

@@ -1,7 +1,10 @@
-﻿using EMIS.DL.BaseDL;
+﻿using EMIS.Common;
+using EMIS.Common.ExceptionEntity;
+using EMIS.DL.BaseDL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,12 +14,14 @@ namespace EMIS.BL.BaseBL
     {
         #region Fields 
         private IBaseDL<T> _baseDL;
+        protected List<string> errorList;
         #endregion
 
         #region Constructor 
         public BaseBL(IBaseDL<T> baseDL)
         {
             _baseDL = baseDL;
+            errorList = new List<string>();
         }
         #endregion
 
@@ -48,9 +53,16 @@ namespace EMIS.BL.BaseBL
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public int Insert(T value)
+        public string Insert(T value)
         {
-            return _baseDL.Insert(value);
+            if (Validate(value))
+            {
+                return _baseDL.Insert(value);
+            }
+            else
+            {
+                throw new ErrorException(devmsg: Resource.ResourceManager.GetString(name: "InvalidData"), errors: errorList);
+            }
         }
 
         /// <summary>
@@ -61,7 +73,15 @@ namespace EMIS.BL.BaseBL
         /// <returns></returns>
         public int Update(T value)
         {
-            return _baseDL.Update(value);
+            if (Validate(value))
+            {
+                return _baseDL.Update(value);
+            }
+            else
+            {
+                throw new ErrorException(devmsg: Resource.ResourceManager.GetString(name: "InvalidData"), errors: errorList);
+            }
+               
         }
 
         /// <summary> 
@@ -73,7 +93,18 @@ namespace EMIS.BL.BaseBL
         public int DeleteById(string id)
         {
             return _baseDL.DeleteById(id);
-        } 
+        }
+
+        /// <summary>
+        /// hàm validate
+        /// CreatedBy: Trịnh Huỳnh Đức (7-6-2023)
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        protected virtual bool Validate(T value)
+        {
+            return true;
+        }
         #endregion
     }
 }

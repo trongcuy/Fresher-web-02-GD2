@@ -11,11 +11,19 @@ namespace EMIS.BL.QuestionBL
     public interface IQuestionBL:IBaseBL<Question>
     {
         /// <summary>
-        /// lấy ra tất cả câu hỏi theo id bài tập
-        /// CreatedBy: Trịnh Huỳnh Đức (29-5-2023)
+        /// lấy ra tất cả đáp án theo id câu hỏi
+        /// CreatedBy: Trịnh Huỳnh Đức (3-6-2023)
         /// </summary>
-        /// <param name="exerciseID"></param>
+        /// <param name="questionID"></param>
         /// <returns></returns>
-        public IEnumerable<Question> GetAllQuestion(string exerciseID);
+        public IEnumerable<Answer> GetAllAnswer(string questionID);
+
+        /// <summary>
+        /// thêm đáp án theo id câu hỏi
+        /// CreatedBy: Trịnh Huỳnh Đức (3-6-2023)
+        /// </summary>
+        /// <param name="questionID"></param>
+        /// <returns></returns>
+        public int InsertAnswer(string questionID, List<Answer> answers);
     }
 }

@@ -11,11 +11,27 @@ namespace EMIS.DL.QuestionDL
     public interface IQuestionDL : IBaseDL<Question>
     {
         /// <summary>
-        /// lấy câu hỏi theo id bài tập
-        /// CreatedBy: Trịnh Huỳnh Đức (29-5-2023)
+        /// lấy đáp án theo id câu hỏi
+        /// CreatedBy: Trịnh Huỳnh Đức (3-6-2023)
         /// </summary>
-        /// <param name="exerciseID"></param>
+        /// <param name="questionID"></param>
         /// <returns></returns>
-        public IEnumerable<Question> GetAllQuestion(string exerciseID);
+        public IEnumerable<Answer> GetAllAnswer(string questionID);
+
+        /// <summary>
+        /// theem đáp án theo id câu hỏi
+        /// CreatedBy: Trịnh Huỳnh Đức (3-6-2023)
+        /// </summary>
+        /// <param name="questionID"></param>
+        /// <returns></returns>
+        public int InsertAnswer(string questionID, List<Answer> answers);
+
+        /// <summary>
+        /// xoas đáp án theo id câu hỏi
+        /// CreatedBy: Trịnh Huỳnh Đức (3-6-2023)
+        /// </summary>
+        /// <param name="questionID"></param>
+        /// <returns></returns>
+        public int DeleteAnswer(string questionID);
     }
 }

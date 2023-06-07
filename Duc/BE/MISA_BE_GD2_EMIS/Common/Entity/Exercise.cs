@@ -17,6 +17,7 @@ namespace EMIS.Common.Entity
         public string? SubjectName { get; set; }
         public Guid? SubjectImage { get; set; } = Guid.Empty;
         public string? GradeName { get; set; }
+        public int? NumQuestion { get; set; }
         public Exercise()
         {
             

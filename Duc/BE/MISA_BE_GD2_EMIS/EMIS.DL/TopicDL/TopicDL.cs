@@ -24,7 +24,7 @@ namespace EMIS.DL.TopicDL
             //tạo kết nối
             var conn = OpenConnection();
             // Chuẩn bị câu lệnh
-            var getAllCommand = $"Proc_Topic_GetAll";
+            var getAllCommand = "Proc_Topic_GetAll";
             // Chuẩn bị các tham số đầu vào
             var parameters = new DynamicParameters();
             parameters.Add("subjectID", subjectID);

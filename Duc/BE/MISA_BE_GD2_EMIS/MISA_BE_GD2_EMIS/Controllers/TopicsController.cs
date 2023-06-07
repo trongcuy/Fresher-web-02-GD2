@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MISA_BE_GD2_EMIS.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class TopicsController : BaseController<Topic>
     {
@@ -36,19 +36,12 @@ namespace MISA_BE_GD2_EMIS.Controllers
         {
             try
             {
-                //gọi đến BaseBL lấy theo trang
-                var result = _topicBL.GetAllTopic(subjectID, gradeID);
-                //Xử lý kết quả trả về ở db
-                if (result == null)
-                {
-                    return NoContent();
-                }
-                return Ok(result);
+                return StatusCode(StatusCodes.Status200OK, _topicBL.GetAllTopic(subjectID, gradeID));
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return BadRequest(ex.Message);
+                return HandleException(ex);
             }
         }
         #endregion

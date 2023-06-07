@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MISA_BE_GD2_EMIS.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class QuestionsController : BaseController<Question>
     {
@@ -25,29 +25,42 @@ namespace MISA_BE_GD2_EMIS.Controllers
 
         #region Methods
         /// <summary>
-        /// lấy tất cả câu hỏi theo id bài tập
-        /// CreatedBy: Trịnh Huỳnh Đức (29-5-2023)
+        /// lấy tất cả đáp án theo id câu hỏi
+        /// CreatedBy: Trịnh Huỳnh Đức (3-6-2023)
         /// </summary>
-        /// <param name="exerciseID"></param>
+        /// <param name="questionID"></param>
         /// <returns></returns>
-        [HttpGet("ExerciseID/{exerciseID}")]
-        public IActionResult GetAllQuestion(string exerciseID)
+        [HttpGet("{questionID}/Answer")]
+        public IActionResult GetAllAnswer(string questionID)
         {
             try
             {
-                //gọi đến BaseBL lấy theo trang
-                var result = _questionBL.GetAllQuestion(exerciseID);
-                //Xử lý kết quả trả về ở db
-                if (result == null)
-                {
-                    return NoContent();
-                }
-                return Ok(result);
+                return StatusCode(StatusCodes.Status200OK, _questionBL.GetAllAnswer(questionID));
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return BadRequest(ex.Message);
+                return HandleException(ex);
+            }
+        }
+
+        /// <summary>
+        /// thêm đáp án theo id câu hỏi
+        /// CreatedBy: Trịnh Huỳnh Đức (4-6-2023)
+        /// </summary>
+        /// <param name="questionID"></param>
+        /// <returns></returns>
+        [HttpPost("{questionID}/Answer")]
+        public IActionResult InsertAnswer(string questionID, List<Answer> answers)
+        {
+            try
+            {
+                return StatusCode(StatusCodes.Status201Created, _questionBL.InsertAnswer(questionID, answers));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return HandleException(ex);
             }
         }
         #endregion

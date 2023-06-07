@@ -76,7 +76,7 @@ namespace EMIS.DL.BaseDL
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public int Insert(T value)
+        public string Insert(T value)
         {
             //tạo kết nối
             var conn = OpenConnection();
@@ -86,7 +86,7 @@ namespace EMIS.DL.BaseDL
             var parameters = new DynamicParameters(value);
             //parameters.Add("value", value);
             // Thực hiện gọi vào db để chạy câu lệnh 
-            var result = conn.Execute(getAllCommand, param: parameters, commandType: System.Data.CommandType.StoredProcedure);
+            var result = conn.ExecuteScalar<string>(getAllCommand, param: parameters, commandType: System.Data.CommandType.StoredProcedure);
             conn.Close();
             return result;
         }
