@@ -17,4 +17,8 @@
     <ProjectReference Include="..\WEB02.EMIS.API.DL\WEB02.EMIS.API.DL.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Uploads\" />
+  </ItemGroup>
+
 </Project>

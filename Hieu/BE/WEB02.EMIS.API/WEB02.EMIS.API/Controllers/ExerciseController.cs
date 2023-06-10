@@ -112,5 +112,48 @@ namespace WEB02.EMIS.API.Controllers
                 return HandleException(ex);
             }
         }
+
+        /// <summary>
+        /// Thực hiện gửi file mẫu cho FE
+        /// </summary>
+        /// <returns></returns>
+        /// VMHieu 07/06/2023
+        [HttpGet("exampleFile")]
+        public IActionResult GetFile()
+        {
+            // Đường dẫn đầy đủ đến tệp tin cần chuyển
+            string filePath = "FileExample/Mau_nhap_khau.xlsx";
+
+            // Đọc nội dung của tệp tin
+            byte[] fileContent = System.IO.File.ReadAllBytes(filePath);
+
+            // Trả về tệp tin dưới dạng phản hồi HTTP
+            return File(fileContent, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Mau_nhap_khau.xlsx");
+        }
+
+        [HttpPost("image")]
+        public IActionResult UploadImage(IFormFile file)
+        {
+            if (file != null && file.Length > 0)
+            {
+                try
+                {
+                    string imageId = Guid.NewGuid().ToString();
+
+                    string filePath = Path.Combine("Uploads", $"{imageId}.jpg");
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        file.CopyTo(stream);
+                    }
+
+                    return Ok(new { ImageId = imageId });
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(500, ex.Message);
+                }
+            }
+            return BadRequest("No image file was uploaded.");
+        }
     }
 }

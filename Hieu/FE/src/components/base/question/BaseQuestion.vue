@@ -12,7 +12,7 @@
             <div class="question-answer">
                 <div class="question-answer__list">
                     <div v-for="(answer, index) in props.data.Answer" :key="index">
-                        <div class="anwser-item flex">
+                        <div class="answer-item">
                             <div class="answer-char" 
                                 :class="{
                                 'answer-true': answer.AnswerStatus == Enum.AnswerStatus.True || props.data.TypeQuestion == Enum.FormQuestion.Fill,
@@ -21,7 +21,7 @@
                             >
                                 {{ String.fromCharCode(65 + index) }}
                             </div>
-                            <div class="answer-text" v-html="answer.AnswerContent">
+                            <div class="answer-text flex" v-html="answer.AnswerContent">
                             </div>
                         </div>
                     </div>
@@ -32,7 +32,7 @@
             </div>
             <div class="question-toolbar flex">
                 <BaseButton class="ms-button btn-white btn-active" text="Chỉnh sửa" @click="openFormEdit"></BaseButton>
-                <BaseButton class="ms-button btn-white btn-active btn-onlyicon" v-tooltip="'Nhân bản'">
+                <BaseButton class="ms-button btn-white btn-active btn-onlyicon" @click="openFormClone" v-tooltip="'Nhân bản'">
                     <template v-slot:icon>
                         <div class="center">
                             <img :src="duplicateImg" alt="">
@@ -87,9 +87,18 @@ const store = useStore();
  * Mở form edit câu hỏi
  * VMHieu 06/06/2023
  */
-const openFormEdit = () => {
+const openFormEdit = () => {    
     store.dispatch("showFormQuestion" , props.data.TypeQuestion);
     store.dispatch("updateFormModeQuestion", Enum.FormModeQuestion.Edit);
+    store.dispatch("updateDataQuestion", props.data);
+}
+/**
+ * Mở form clone câu hỏi
+ * VMHieu 06/06/2023
+ */
+const openFormClone = () => {
+    store.dispatch("showFormQuestion" , props.data.TypeQuestion);
+    store.dispatch("updateFormModeQuestion", Enum.FormModeQuestion.Clone);
     store.dispatch("updateDataQuestion", props.data);
 }
 
@@ -145,15 +154,18 @@ const trashImg = require("@/assets/img/trash.svg");
 .question-answer__list{
     display: grid;
     grid-row-gap: 20px;
-    grid-template-columns: repeat(4,minmax(0,1fr));
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 20px;
 }
 
 .answer-item{
-    margin-right: 16px;
+    display: flex;
 }
 
 .answer-char{
     color: #fff;
+    min-width: 24px;
+    min-height: 24px;
     width: 24px;
     height: 24px;
     border-radius: 50%;
@@ -162,6 +174,11 @@ const trashImg = require("@/assets/img/trash.svg");
     background-color: #b6b9ce;
     margin-right: 8px;
     font-weight: 700;
+}
+
+.answer-text{
+    word-wrap: break-word;
+    width: 100%;
 }
 
 .answer-correct{

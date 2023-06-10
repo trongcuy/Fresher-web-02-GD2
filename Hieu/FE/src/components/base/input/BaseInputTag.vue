@@ -28,7 +28,7 @@ const props = defineProps({
     data: null,
 })
 
-const emit = defineEmits([]);
+const emit = defineEmits(['update:modelValue']);
 
 const store = useStore();
 // Biến đóng mở form

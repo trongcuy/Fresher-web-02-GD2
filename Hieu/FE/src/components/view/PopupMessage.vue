@@ -92,30 +92,30 @@ const handleSaveDelete = async () => {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 
 .btn {
     display: flex;
+
+    &-error {
+        justify-content: center;
+    }
+
+    &-warning,
+    &-question {
+        justify-content: flex-end;
+    }
+
+    &-required {
+        justify-content: flex-end;
+    }
+
+    &-right {
+        margin-left: 8px;
+    }
 }
 
-.btn-error {
-    justify-content: center;
-}
-
-.btn-warning,
-.btn-question {
-    justify-content: flex-end;
-}
-
-.btn-required {
-    justify-content: flex-end;
-}
-
-.error-validate{
+.error-validate {
     padding: 4px 0;
-}
-
-.btn-right{
-    margin-left: 8px;
 }
 </style>

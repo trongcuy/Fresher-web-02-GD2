@@ -106,19 +106,18 @@ const handleOpenPopup = (name, id) => {
 // })
 </script>
 
-<style scoped>
-.exercise-container{
-    position: relative;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 3px 20px rgba(90,125,141,.16);
-    height: 200px;
-    width: 100%;
-    overflow: hidden;
-    display: block;
-    cursor: pointer;
-}
-.exercise-img{
+<style lang="scss" scoped>
+.exercise-container {
+  position: relative;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 3px 20px rgba(90, 125, 141, 0.16);
+  height: 200px;
+  width: 100%;
+  display: block;
+  cursor: pointer;
+
+  .exercise-img {
     position: absolute;
     top: 0;
     left: 0;
@@ -129,15 +128,16 @@ const handleOpenPopup = (name, id) => {
     background-size: cover;
     background: no-repeat 50%;
     background-color: #fff;
-}
 
-.exercise-img img{
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 10px 10px 0 0;
+    }
+  }
 
-.img-content{
+  .img-content {
     position: absolute;
     left: 0;
     top: 0;
@@ -149,11 +149,12 @@ const handleOpenPopup = (name, id) => {
     padding-left: 0.5rem;
     padding-right: 0.5rem;
     border-bottom-right-radius: 10px;
-    color: rgba(255,255,255,1);
-    background-color: rgba(138,107,246,1);
-}
+    border-top-left-radius: 10px;
+    color: rgba(255, 255, 255, 1);
+    background-color: rgba(138, 107, 246, 1);
+  }
 
-.exercise-content{
+  .exercise-content {
     box-sizing: border-box;
     position: absolute;
     top: 50%;
@@ -166,41 +167,42 @@ const handleOpenPopup = (name, id) => {
     gap: 0.125rem;
     justify-content: space-between;
     font-size: 16px;
-}
 
-.content-creater img, .content-number img{
-    margin-right: 0.5rem;
-    height: 1rem;
-}
+    .content-creater img,
+    .content-number img {
+      margin-right: 0.5rem;
+      height: 1rem;
+    }
 
-.content-title{
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-    color: #4e5b6a;
-    font-weight: 700;
-    font-size: 16px;
-    line-height: 24px;
-    justify-content: space-between;
-}
+    .content-title {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      color: #4e5b6a;
+      font-weight: 700;
+      font-size: 16px;
+      line-height: 24px;
+      justify-content: space-between;
+    }
 
-.btn-more{
-    height: 32px;
-    width: 32px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    top: 0;
-    right: 0;
-    border-radius: 50%;
-    overflow: hidden;
-    margin: 12px 0;
-    z-index: 9;
-}
+    .btn-more {
+      height: 32px;
+      width: 32px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      top: 0;
+      right: 0;
+      border-radius: 50%;
+      overflow: hidden;
+      margin: 12px 0;
+      z-index: 9;
+    }
+  }
 
-.more-option{
+  .more-option {
     width: 136px;
     z-index: 2824;
     position: absolute;
@@ -215,29 +217,30 @@ const handleOpenPopup = (name, id) => {
     color: #606266;
     line-height: 1.4;
     font-size: 14px;
-    box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
-}
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
 
-.more-option .option{
-    width: 112px;
-    padding: 8px;
-    cursor: pointer;
-}
+    .option {
+      width: 112px;
+      padding: 8px;
+      cursor: pointer;
 
-.option:hover{
-    color: #8a6bf6;
-    font-weight: 700;
-}
+      &:hover {
+      color: #8a6bf6;
+      font-weight: 700;
+    }
+    }
+  }
 
-.exercise-status{
+  .exercise-status {
     font-size: 12px;
     padding: 5px;
     border-radius: 6px;
     text-align: center;
     overflow: hidden;
-    color: #8a6bf6!important;
+    color: #8a6bf6 !important;
     background: #e8e1fd;
     margin-left: 0.625rem;
-    margin-top: .125rem;
+    margin-top: 0.125rem;
+  }
 }
 </style>

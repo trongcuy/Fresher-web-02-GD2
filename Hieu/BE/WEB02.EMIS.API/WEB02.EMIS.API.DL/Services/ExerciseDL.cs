@@ -178,7 +178,7 @@ namespace WEB02.EMIS.API.DL.Services
                         Question question = dataInsertAll.question;
                         List<Answer> answers = dataInsertAll.answers;
                         List<Guid> topicIDs = dataInsertAll.topicIDs;
-                        if (exercise.ExerciseID != null)
+                        if (exercise.ExerciseID != null && exercise.ExerciseID != Guid.Empty)
                         {
                             idExercise = exercise.ExerciseID;
                             // Cập nhật bản ghi bài tập

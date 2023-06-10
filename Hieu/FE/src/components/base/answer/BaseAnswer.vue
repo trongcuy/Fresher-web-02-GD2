@@ -17,14 +17,17 @@
             </div>
         </div>
         <div class="answer-main focus" v-clickOutside="closeCKEditor" ref="answerMain" @click="openCKEditor">
-            <div class="default-content" v-if="!showCKEditor" >
+            <div class="default-content" >
                 <div>Nhập đáp án...</div>
             </div>
-            <CKEditorAnswer 
-                v-model="dataAnswer.AnswerContent" 
-                :dataEditor="props.data.AnswerContent" 
-                ref="ckedit"
-            ></CKEditorAnswer>
+            <div ref="ckeditBox">
+                <CKEditorAnswer 
+                    v-model="dataAnswer.AnswerContent" 
+                    :dataEditor="dataAnswer.AnswerContent" 
+                    ref="ckedit"
+                    :focusEditor="focusEditor"
+                ></CKEditorAnswer>
+            </div>
         </div>
     </div>
 </template>
@@ -52,7 +55,7 @@ const props = defineProps({
 const removeTick = toRef(props, 'indexRemove');
 const propData = toRef(props, 'data');
 
-const emit = defineEmits(['removeAnswer', 'saveAnswer', 'removeTick']);
+const emit = defineEmits(['removeAnswer', 'saveAnswer', 'removeTick', 'update:modelValue']);
 
 const store = useStore();
 // Biến xét đóng mở form question
@@ -60,9 +63,11 @@ const showFormQuestion = computed(() => store.state.question.showFormQuestion);
 
 const showCKEditor = ref(false);    // show ô input ckeditor
 const ckedit = ref("ckedit");    // show ô input ckeditor
+const ckeditBox = ref("ckeditBox");    // show ô input ckeditor
 const iconTrue = ref("icontrue"); // icon tick giá trị đúng
 const btnTrue = ref("btnTrue"); // button tick giá trị đúng
 const answerMain = ref("answerMain"); // ô input nhập đáp án
+const focusEditor = ref(false);
 // Data đáp án
 const dataAnswer = reactive({
     AnswerContent: "",
@@ -85,7 +90,7 @@ const icontrueImg = require("@/assets/img/icon-true.svg");
 const closeCKEditor = () => {
     answerMain.value.classList.add("not-focus");
     if (!dataAnswer.AnswerContent){
-        showCKEditor.value = false;
+        focusEditor.value = false;
     }
 }; 
 
@@ -95,7 +100,8 @@ const closeCKEditor = () => {
  */
  const openCKEditor = () => {
     answerMain.value.classList.remove("not-focus");
-    showCKEditor.value = true;
+        
+    focusEditor.value = true;
 };
 
 /**
@@ -146,15 +152,16 @@ watch((showFormQuestion), () => {
         btnTrue.value.classList.remove("btn-true");
         btnTrue.value.tick = false;
         iconTrue.value.src = tickImg;
-    } else {
-        if (props.data) {
-            for (let i in props.data) {
-                dataAnswer[i] = props.data[i];
-            }
-            //dataAnswer.AnswerStatus = Enum.AnswerStatus.False;
-            showCKEditor.value = true;
-        }
-    }
+    } 
+    // else {
+    //     if (props.data) {
+    //         for (let i in props.data) {
+    //             dataAnswer[i] = props.data[i];
+    //         }
+    //         //dataAnswer.AnswerStatus = Enum.AnswerStatus.False;
+    //         showCKEditor.value = true;
+    //     }
+    // }
 })
 /**
  * Xem sự thay đổi của dataAnswer để đẩy lên cha
@@ -186,19 +193,29 @@ watch((removeTick), () => {
  * Xem sự thay đổi của prop data để render lại đáp án
  * VMHieu 05/06/2023
  */
-// watch((propData), () => {
-//     if (props.data) {
-//         for (let i in props.data) {
-//             dataAnswer[i] = props.data[i];
-//         }
-//         //dataAnswer.AnswerStatus = Enum.AnswerStatus.False;
-//         showCKEditor.value = true;
+watch((propData), () => {
+    if (props.data) {
+        for (let i in props.data) {
+            dataAnswer[i] = props.data[i];
+        }
+        //dataAnswer.AnswerStatus = Enum.AnswerStatus.False;
+        showCKEditor.value = true;
         
-//         if (props.data.AnswerStatus == Enum.AnswerStatus.True) {
-//             answerTrue();
-//         }
-//     }
-// })
+        if (props.data.AnswerStatus == Enum.AnswerStatus.True) {
+            btnTrue.value.tick = true;
+            iconTrue.value.src = icontrueImg;
+            btnTrue.value.classList.add("btn-true");
+
+            dataAnswer.AnswerStatus = Enum.AnswerStatus.True;
+        } else {
+            btnTrue.value.tick = false;
+            iconTrue.value.src = tickImg;
+            btnTrue.value.classList.remove("btn-true");
+
+            dataAnswer.AnswerStatus = Enum.AnswerStatus.False;
+        }
+    }
+})
 
 onMounted(() => {
     // Thực hiện biding dữ liệu
@@ -294,5 +311,9 @@ onMounted(() => {
 
 .btn-true>img{
     background-color: #00c542;
+}
+
+.focus-ckeditor{
+    z-index: 999;
 }
 </style>

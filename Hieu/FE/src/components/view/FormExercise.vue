@@ -21,7 +21,9 @@
                                 <label class="label-input" @click="openUploadFile">
                                     <img :src="uploadImg" alt="">
                                 </label>
-                                <input type="file" id="upload-file" ref="file" @change="handleFileUpload">
+                                <input type="file" @input="chooseFileImg" 
+                                id="upload-file" ref="file" @change="handleFileUpload" accept=".png, .jpg, .jpeg"
+                                >
                             </div>
                         </div>
                     </div>
@@ -235,6 +237,10 @@ const handleFileUpload = (event) => {
 
     reader.readAsDataURL(file);
 };
+
+const chooseFileImg = () => {
+    console.log(file.value.files[0]);
+}
 
 onBeforeMount(() => {
     const id = route.query.id;

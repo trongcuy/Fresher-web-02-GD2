@@ -69,7 +69,8 @@ export const FormModeExercise = {
  */
 export const FormModeQuestion = {
     Add: 1,
-    Edit: 2
+    Edit: 2,
+    Clone: 3
 }
 
 /**

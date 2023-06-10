@@ -117,6 +117,46 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ExceptionDelete" xml:space="preserve">
+    <value>Xóa dữ liệu không thành công</value>
+    <comment>Xóa dữ liệu không thành công</comment>
+  </data>
+  <data name="ExceptionInsert" xml:space="preserve">
+    <value>Thêm dữ liệu không thành công</value>
+    <comment>Thêm dữ liệu không thành công</comment>
+  </data>
+  <data name="ExceptionUpdate" xml:space="preserve">
+    <value>Cập nhật dữ liệu không thành công</value>
+    <comment>Cập nhật dữ liệu không thành công</comment>
+  </data>
+  <data name="InvalidAnswerContent" xml:space="preserve">
+    <value>Đáp án phải có nội dung hoặc hình ảnh</value>
+    <comment>Đáp án phải có nội dung hoặc hình ảnh</comment>
+  </data>
+  <data name="InvalidData" xml:space="preserve">
+    <value>Dữ liệu đầu vào không hợp lệ</value>
+    <comment>Dữ liệu đầu vào không hợp lệ</comment>
+  </data>
+  <data name="InvalidGrade" xml:space="preserve">
+    <value>Khối lớp không được để trống</value>
+    <comment>Khối lớp không được để trống</comment>
+  </data>
+  <data name="InvalidQuestionContent" xml:space="preserve">
+    <value>Câu hỏi phải có nội dung hoặc hình ảnh</value>
+    <comment>Câu hỏi phải có nội dung hoặc hình ảnh</comment>
+  </data>
+  <data name="InvalidSubject" xml:space="preserve">
+    <value>Môn học không được để trống</value>
+    <comment>Môn học không được để trống</comment>
+  </data>
+  <data name="LimitAnswer" xml:space="preserve">
+    <value>Đạt giới hạn đáp án</value>
+    <comment>Đạt giới hạn đáp án</comment>
+  </data>
+  <data name="NotAnswerCorrect" xml:space="preserve">
+    <value>Câu hỏi phải có đáp án đúng</value>
+    <comment>Câu hỏi phải có đáp án đúng</comment>
+  </data>
   <data name="NullData" xml:space="preserve">
     <value>Không có dữ liệu</value>
     <comment>Không có dữ liệu</comment>

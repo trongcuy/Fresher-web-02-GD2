@@ -27,7 +27,7 @@
                     <div class="list-answer" >
                         <div v-for="(answer, index) in dataAnswerSelect" :key="index">
                             <BaseAnswer 
-                                :data="dataAnswerSelect[index]" 
+                                :data="answer" 
                                 :index="index" 
                                 @removeAnswer="removeAnswer(index)"
                                 v-model="dataAnswerSelect[index]"
@@ -60,7 +60,7 @@
                     <div class="answer-fill">
                         <div v-for="(answer, index) in dataAnswerFill" :key="index">
                             <BaseAnswerFill
-                                :data="dataAnswerFill[index]"
+                                :data="answer"
                                 :index="index"
                                 v-model="dataAnswerFill[index]"
                                 @removeAnswer="removeAnswer(index)"
@@ -258,13 +258,17 @@ const closeForm = () => {
  */
 const addAnswer = () => {
     if (showFormQuestion.value == Enum.FormQuestion.Select) {
-        let bonusAnswer = {
-            AnswerContent: "",
-            AnswerImage: "",
-            AnswerStatus: "",
-            SortOder: ""
+        if (dataAnswerSelect.length > 20) {
+            showToastWarning(Resource.ToastWarning.LimitAnswer);
+        } else {
+            let bonusAnswer = {
+                AnswerContent: "",
+                AnswerImage: "",
+                AnswerStatus: "",
+                SortOder: ""
+            }
+            dataAnswerSelect.push(bonusAnswer);
         }
-        dataAnswerSelect.push(bonusAnswer);
     } else if (showFormQuestion.value == Enum.FormQuestion.Fill) {
         let bonusAnswer = {
             AnswerContent: "",
@@ -272,7 +276,6 @@ const addAnswer = () => {
         }
         dataAnswerFill.push(bonusAnswer);
     }
-
 }
 /**
  * Xóa đáp án
@@ -311,7 +314,7 @@ const validateQuestion = () => {
     let isValid = true;
     
     // Validate chung cho các câu hỏi
-    if (!dataQuestion.QuestionContent) {
+    if (!dataQuestion.QuestionContent && !dataQuestion.QuestionImage) {
         isValid = false;
         openPopupError(Resource.PopupMessage.NotQuestion);
     }
@@ -384,7 +387,7 @@ const saveClose = async () => {
         Answers: [],
         TopicIDs: []
     }
-    const id = route.query.id;
+    let id = route.query.id;
     if (validateQuestion()) {
         // Thêm các trường còn thiếu cho câu hỏi
         dataQuestion = {...dataQuestion, TypeQuestion: Number(typeQuestion.value)};
@@ -450,13 +453,18 @@ const saveClose = async () => {
         if (props.dataExercise.Topics) {
             dataAll.TopicIDs = Object.values(props.dataExercise.Topics);
         }
+        
         if (formModeQuestion.value == Enum.FormModeQuestion.Edit) {
             await store.dispatch("putMultipleData", dataAll);
             store.dispatch("getAllByID", id);
-        } else if (formModeQuestion.value == Enum.FormModeQuestion.Add) {
+        } else if (formModeQuestion.value == Enum.FormModeQuestion.Add || formModeQuestion.value == Enum.FormModeQuestion.Clone) {
             await store.dispatch("postMultipleData", dataAll);
-            store.dispatch("getAllByID", exerciseID.value);
-            let id = exerciseID.value;
+            if (!id){
+                id = exerciseID.value;
+                store.dispatch("getAllByID", exerciseID.value);
+            } else {
+                store.dispatch("getAllByID", id);
+            }
             // Đổi route về form bài tập đã có câu hỏi
             router.push({ path: "/storage/create", query: {id} });
         }
@@ -465,8 +473,163 @@ const saveClose = async () => {
     }
 }
 
-const resetForm = () => {
+/**
+ * Thêm câu hỏi và đóng form
+ */
+ const saveAdd = async () => {
+    let dataAll = {
+        Exercise: {},
+        Question: {},
+        Answers: [],
+        TopicIDs: []
+    }
+    let id = route.query.id;
+    if (validateQuestion()) {
+        // Thêm các trường còn thiếu cho câu hỏi
+        dataQuestion = {...dataQuestion, TypeQuestion: Number(typeQuestion.value)};
+        dataQuestion = {...dataQuestion, SortOder: numberQuestion.value};
 
+        // Thêm bài tập nếu ở form thêm
+        if (!id) {
+            dataQuestion = {...dataQuestion, ExerciseID: exerciseID.value};
+            for (let prop in dataQuestion) {
+                if (!dataQuestion[prop]) {
+                    delete dataQuestion[prop];
+                }
+            }
+        } else {
+            for (let prop in dataQuestion) {
+                if (!dataQuestion[prop]) {
+                    delete dataQuestion[prop];
+                }
+            }
+        }
+        // Thêm đáp án cho câu hỏi
+        if (dataQuestion.TypeQuestion != Enum.FormQuestion.Essay) {
+            let arrayAnswer = [];
+            switch (dataQuestion.TypeQuestion) {
+                // Câu hỏi chọn đáp án
+                case Enum.FormQuestion.Select:
+                    for (let prop in dataAnswerSelect) {
+                        for (let i in dataAnswerSelect[prop]) {
+                            if (!dataAnswerSelect[prop][i]) {
+                                delete dataAnswerSelect[prop][i];
+                            }
+                        }
+                        arrayAnswer.push(dataAnswerSelect[prop]);
+                    }
+                    break;
+                case Enum.FormQuestion.YesOrNo:
+                    // Câu hỏi đúng sai
+                    for (let prop in dataAnswerYesNo) {
+                        for (let i in dataAnswerYesNo[prop]) {
+                            if (!dataAnswerYesNo[prop][i]) {
+                                delete dataAnswerYesNo[prop][i];
+                            }
+                        }
+                        arrayAnswer.push(dataAnswerYesNo[prop]);
+                    }
+                    break;
+                case Enum.FormQuestion.Fill: 
+                    // Câu hỏi điền vào ô trống
+                    for (let prop in dataAnswerFill) {
+                        arrayAnswer.push(dataAnswerFill[prop]);
+                    }
+                    break;
+                default:
+                    break;
+            }
+            if (arrayAnswer) {
+                dataAll.Answers = arrayAnswer;
+            }
+        }
+
+        dataAll.Exercise = props.dataExercise;
+        dataAll.Question = dataQuestion;
+        if (props.dataExercise.Topics) {
+            dataAll.TopicIDs = Object.values(props.dataExercise.Topics);
+        }
+        
+        if (formModeQuestion.value == Enum.FormModeQuestion.Edit) {
+            await store.dispatch("putMultipleData", dataAll);
+            store.dispatch("getAllByID", id);
+        } else if (formModeQuestion.value == Enum.FormModeQuestion.Add || formModeQuestion.value == Enum.FormModeQuestion.Clone) {
+            await store.dispatch("postMultipleData", dataAll);
+            if (!id){
+                id = exerciseID.value;
+                store.dispatch("getAllByID", exerciseID.value);
+            } else {
+                store.dispatch("getAllByID", id);
+            }
+            // Đổi route về form bài tập đã có câu hỏi
+            router.push({ path: "/storage/create", query: {id} });
+        }
+        resetForm();
+    }
+}
+
+/**
+ * Reset lại form 
+ * VMHieu 07/06/2023
+ */
+const resetForm = () => {
+    dataQuestion = reactive({
+        QuestionContent: "",
+        QuestionNote: "",
+        QuestionImage: "",
+        SortOder: "",
+        TypeQuestion: ""
+    });
+
+    dataAnswerSelect = reactive([
+    {
+            AnswerContent: "",
+            AnswerImage: "",
+            AnswerStatus: "",
+            SortOder: "1"
+    },
+    {
+            AnswerContent: "",
+            AnswerImage: "",
+            AnswerStatus: "",
+            SortOder: "2"
+    },
+    {
+            AnswerContent: "",
+            AnswerImage: "",
+            AnswerStatus: "",
+            SortOder: "3"
+    },
+    {
+            AnswerContent: "",
+            AnswerImage: "",
+            AnswerStatus: "",
+            SortOder: "4"
+    }
+    ])
+
+
+    dataAnswerYesNo = reactive([
+    {
+            AnswerContent: "Đúng",
+            AnswerImage: "",
+            AnswerStatus: "",
+            SortOder: "1"
+    },
+    {
+            AnswerContent: "Sai",
+            AnswerImage: "",
+            AnswerStatus: "",
+            SortOder: "2"
+    }
+    ])
+
+    dataAnswerFill = reactive([
+        {
+            AnswerContent: "",
+            SortOder: "1"
+        }
+    ])
 }
 
 /**
@@ -519,8 +682,11 @@ watch((showFormQuestion), () => {
     })
 
     // Gán giá trị cho data câu hỏi và đáp án nếu ở form sửa
-    if (showFormQuestion.value && formModeQuestion.value == Enum.FormModeQuestion.Edit) {
+    if (showFormQuestion.value && formModeQuestion.value == Enum.FormModeQuestion.Edit || formModeQuestion.value == Enum.FormModeQuestion.Clone) {
         Object.assign(dataQuestion, question.value);
+        if (formModeQuestion.value == Enum.FormModeQuestion.Clone) {
+            dataQuestion.SortOder = numberQuestion.value;
+        }
 
         switch (question.value.TypeQuestion) {
             case Enum.FormQuestion.Select:

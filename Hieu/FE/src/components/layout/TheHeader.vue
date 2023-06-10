@@ -90,6 +90,10 @@ const avatarImg = require("@/assets/img/getavatar.png");
     align-items: center;
   }
 
+  .header-right {
+    padding: 16px;
+  }
+
   .menu-item {
     font-size: 16px;
     color: var(--color-text);

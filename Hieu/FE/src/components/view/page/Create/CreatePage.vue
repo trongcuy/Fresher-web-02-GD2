@@ -64,135 +64,25 @@
             </div>
         </div>
         <div class="create-main">
-            <div class="create-main__form" v-show="!showListQuestion">
-                <div class="form-import center">
-                    <div class="import-title">
-                        Tách câu hỏi tự động sử dụng công nghệ AI
-                    </div>
-                    <div class="import-box flex">
-                        <div class="import-box__avatar">
-                            <img :src="importImg" alt="">
-                        </div>
-                        <div class="import-box__content">
-                            Nhấn để tải lên file bài tập hoặc kéo thả file vào đây. <br />
-                            File có định dạng xls, xlsx, doc, docx, pdf
-                        </div>
-                        <div class="import-box__btn flex">
-                            <BaseButton class="ms-button btn-active btn-upload" text="Tải lên file bài tập"></BaseButton>
-                            <BaseButton class="ms-button btn-active btn-green" text="Tải file Excel mẫu"></BaseButton>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-create">
-                    <div class="create-title">
-                        hoặc tự tạo câu hỏi mới
-                    </div>
-                    <div class="create-option">
-                        <div class="create-toolbar flex">
-                            <div class="question-library">
-                                <div class="question-avatar question-hover">
-                                    <img :src="libraryImg" alt="">
-                                </div>
-                                <div class="question-text">Thư viện học liệu</div>
-                            </div>
-                            <div class="question-line">
-                                <div class="question-avatar">
-                                    <img :src="lineImg" alt="">
-                                </div>
-                            </div>
-                            <div class="question">
-                                <div class="question-select" @click="openFormQuestion(Enum.FormQuestion.Select)">
-                                    <div class="question-avatar question-hover">
-                                        <img :src="selectImg" alt="">
-                                    </div>
-                                    <div class="question-text">Chọn đáp án</div>
-                                </div>
-                                <div class="question-yesno" @click="openFormQuestion(Enum.FormQuestion.YesOrNo)">
-                                    <div class="question-avatar question-hover">
-                                        <img :src="yesnoImg" alt="">
-                                    </div>
-                                    <div class="question-text">Đúng sai</div>
-                                </div>
-                                <div class="question-fill" @click="openFormQuestion(Enum.FormQuestion.Fill)">
-                                    <div class="question-avatar question-hover">
-                                        <img :src="fillImg" alt="">
-                                    </div>
-                                    <div class="question-text">Điền vào chỗ trống</div>
-                                </div>
-                                <div class="question-essay" @click="openFormQuestion(Enum.FormQuestion.Essay)">
-                                    <div class="question-avatar question-hover">
-                                        <img :src="essayImg" alt="">
-                                    </div>
-                                    <div class="question-text">Tự luận</div>
-                                </div>
-                                <div class="question-group" @click="openFormQuestion(Enum.FormQuestion.Group)">
-                                    <div class="question-avatar question-hover">
-                                        <img :src="groupImg" alt="">
-                                    </div>
-                                    <div class="question-text">Câu hỏi nhóm</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="create-main__list" v-show="showListQuestion">
-                <div class="question-list">
-                    <div v-for="(question, index) in dataQuestion" :key="index">
-                        <BaseQuestion :data="question" :index="index"></BaseQuestion>
-                    </div>
-                </div>
-                <div class="create-option option-list" v-tooltip="{
-                        theme: {
-                            placement: 'left',
-                        },
-                    }">
-                    <div class="question-library" v-tooltip="'Thư viện'">
-                        <div class="question-avatar question-hover">
-                            <img :src="libraryImg" alt="">
-                        </div>
-                    </div>
-                    <div class="question-select" @click="openFormQuestion(Enum.FormQuestion.Select)" v-tooltip="'Thêm câu chọn đáp án'">
-                        <div class="question-avatar question-hover">
-                            <img :src="selectImg" alt="">
-                        </div>
-                    </div>
-                    <div class="question-yesno" @click="openFormQuestion(Enum.FormQuestion.YesOrNo)" v-tooltip="'Thêm câu chọn đúng sai'">
-                        <div class="question-avatar question-hover">
-                            <img :src="yesnoImg" alt="">
-                        </div>
-                    </div>
-                    <div class="question-fill" @click="openFormQuestion(Enum.FormQuestion.Fill)" v-tooltip="'Thêm câu điền vào chỗ trống'">
-                        <div class="question-avatar question-hover">
-                            <img :src="fillImg" alt="">
-                        </div>
-                    </div>
-                    <div class="question-essay" @click="openFormQuestion(Enum.FormQuestion.Essay)" v-tooltip="'Thêm câu tự luận'">
-                        <div class="question-avatar question-hover">
-                            <img :src="essayImg" alt="">
-                        </div>
-                    </div>
-                    <div class="question-group" @click="openFormQuestion(Enum.FormQuestion.Group)" v-tooltip="'Thêm câu hỏi nhóm'">
-                        <div class="question-avatar question-hover">
-                            <img :src="groupImg" alt="">
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <CreateForm v-show="!showListQuestion"></CreateForm>
+            <CreateList v-show="showListQuestion" :data="dataQuestion"></CreateList>
         </div>
         <ToastMessage></ToastMessage>
     </div>
     <FormQuestion :data="dataQuestion" :dataExercise="dataExercise"></FormQuestion>
     <FormExercise :data="dataExercise" v-model="dataExerciseAdd" @saveForm="saveForm"></FormExercise>
+    <FormImport></FormImport>
 </template>
 
 <script setup>
 import BaseCombobox from '@/components/base/combobox/BaseCombobox.vue';
 import BaseButton from '@/components/base/button/BaseButton.vue';
-import BaseQuestion from '@/components/base/question/BaseQuestion.vue';
 import FormQuestion from '@/components/view/FormQuestion.vue';
 import FormExercise from '@/components/view/FormExercise.vue';
+import FormImport from '@/components/view/FormImport.vue';
 import ToastMessage from '@/components/view/ToastMessage.vue';
+import CreateForm from '@/components/view/page/Create/CreatePage/CreateForm.vue'
+import CreateList from '@/components/view/page/Create/CreatePage/CreateList.vue'
 import { useRouter, useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import { computed, reactive, onBeforeMount, watch, ref, defineProps, onMounted } from 'vue'; 

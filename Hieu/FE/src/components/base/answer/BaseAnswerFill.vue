@@ -26,7 +26,7 @@ const props = defineProps({
 
 const propData = toRef(props, "data");
 
-const emit = defineEmits(['removeAnswer']);
+const emit = defineEmits(['removeAnswer', 'update:modelValue']);
 
 const store = useStore();
 // Biến xét đóng mở form question
@@ -53,11 +53,27 @@ const removeAnswer = () => {
  * VMHieu 05/06/2023 
  */
 watch((dataAnswer) , () => {
+    dataAnswer.SortOder = props.index;
+    if (typeof dataAnswer.SortOder !== 'string') {
+        dataAnswer.SortOder = dataAnswer.SortOder.toString();
+    }
     emit('update:modelValue', dataAnswer);
 })
 
-watch((showFormQuestion) , () => {
-    console.log(props.data);
+// watch((showFormQuestion) , () => {
+//     console.log(props.data);
+// })
+
+/**
+ * Xem sự thay đổi của data để render lại
+ * VMHieu 08/06/2023
+ */
+watch((propData), () => {
+    if (props.data) {
+        for (let i in props.data) {
+            dataAnswer[i] = props.data[i];
+        }
+    }
 })
 
 onMounted(() => {

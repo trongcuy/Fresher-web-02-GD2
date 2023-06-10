@@ -46,6 +46,7 @@ const state = {
     formModeExercise: 0, // Mode của page bài tập,
     refresh: false,     // refresh lại trang
     idDelete: "",   // ID của bản ghi cần xóa
+    showImport: false, // show form upload
 }
 
 const mutations = {
@@ -192,6 +193,15 @@ const mutations = {
      */
     updateIdExerciseDelete(state, payload) {
         state.idDelete = payload;
+    },
+
+    /**
+     * Mở form upload
+     * @param {*} context 
+     * @param {*} data 
+     */
+    showImport(state, payload) {
+        state.showImport = payload;
     }
 
 }
@@ -296,10 +306,10 @@ const actions = {
             const res = await axios.put(`${constants.API_URL}/api/${constants.API_VERSION}/exercise/multiple`, data)
             //context.commit('postMultipleData', res.data);
             // Hiện toast thành công
-            handleShowToast(context, Resource.ToastSuccess.AddSuccess, Enum.ToastStatus.Success);
+            handleShowToast(context, Resource.ToastSuccess.EditSuccess, Enum.ToastStatus.Success);
         } catch (error) {
             // hiện toast thất bại
-            handleShowToast(context, Resource.ToastFail.AddFail, Enum.ToastStatus.Fail);
+            handleShowToast(context, Resource.ToastFail.EditFail, Enum.ToastStatus.Fail);
         }
     },
 
@@ -339,6 +349,23 @@ const actions = {
             handleShowToast(context, Resource.ToastFail.DeleteFail, Enum.ToastStatus.Fail);
         }
     },
+
+    /**
+     * Tải file mẫu
+     * @param {*} context
+     * VMHieu 07/06/2023 
+     */
+    downloadFileExample(context) {
+        try {
+            window.open(`${constants.API_URL}/api/${constants.API_VERSION}/exercise/exampleFile`, 'Download');   
+        } catch (error) {
+            // Hiện toast thất bại
+            context.commit('updateToastMsg', Resource.ToastFail.DownloadFileFail);
+
+            handleShowToast(context);
+        }
+    },
+
     /**
      * Thay đổi bản ghi được lấy
      * @param {*} context 
@@ -393,6 +420,15 @@ const actions = {
      */
     updateIdExerciseDelete(context, data) {
         context.commit("updateIdExerciseDelete", data);
+    },
+
+    /**
+     * Mở form upload
+     * @param {*} context 
+     * @param {*} data 
+     */
+    showImport(context, data) {
+        context.commit("showImport", data);
     }
 }
 

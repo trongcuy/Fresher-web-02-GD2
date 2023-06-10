@@ -61,6 +61,96 @@ namespace WEB02.EMIS.API.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Xóa dữ liệu không thành công.
+        /// </summary>
+        public static string ExceptionDelete {
+            get {
+                return ResourceManager.GetString("ExceptionDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Thêm dữ liệu không thành công.
+        /// </summary>
+        public static string ExceptionInsert {
+            get {
+                return ResourceManager.GetString("ExceptionInsert", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cập nhật dữ liệu không thành công.
+        /// </summary>
+        public static string ExceptionUpdate {
+            get {
+                return ResourceManager.GetString("ExceptionUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Đáp án phải có nội dung hoặc hình ảnh.
+        /// </summary>
+        public static string InvalidAnswerContent {
+            get {
+                return ResourceManager.GetString("InvalidAnswerContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dữ liệu đầu vào không hợp lệ.
+        /// </summary>
+        public static string InvalidData {
+            get {
+                return ResourceManager.GetString("InvalidData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Khối lớp không được để trống.
+        /// </summary>
+        public static string InvalidGrade {
+            get {
+                return ResourceManager.GetString("InvalidGrade", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Câu hỏi phải có nội dung hoặc hình ảnh.
+        /// </summary>
+        public static string InvalidQuestionContent {
+            get {
+                return ResourceManager.GetString("InvalidQuestionContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Môn học không được để trống.
+        /// </summary>
+        public static string InvalidSubject {
+            get {
+                return ResourceManager.GetString("InvalidSubject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Đạt giới hạn đáp án.
+        /// </summary>
+        public static string LimitAnswer {
+            get {
+                return ResourceManager.GetString("LimitAnswer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Câu hỏi phải có đáp án đúng.
+        /// </summary>
+        public static string NotAnswerCorrect {
+            get {
+                return ResourceManager.GetString("NotAnswerCorrect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Không có dữ liệu.
         /// </summary>
         public static string NullData {

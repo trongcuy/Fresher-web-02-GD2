@@ -1,8 +1,10 @@
-﻿using System;
+﻿using MISA.Web02.CeGov.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WEB02.EMIS.API.Common;
 using WEB02.EMIS.API.DL.Interfaces;
 
 namespace WEB02.EMIS.API.BL.Services
@@ -57,7 +59,15 @@ namespace WEB02.EMIS.API.BL.Services
         /// CreatedBy VMHieu 27/05/2023
         public string Insert(T entity)
         {
-            return _baseDL.Insert(entity);
+            var isValid = Validate(entity);
+            if (isValid)
+            {
+                return _baseDL.Insert(entity);
+            }
+            else
+            {
+                throw new ErrorException(devmsg: Resources.ResourceManager.GetString(name: "InvalidData"), listErrors: errorList);
+            }
         }
         /// <summary>
         /// Sửa 1 bản ghi
@@ -68,7 +78,15 @@ namespace WEB02.EMIS.API.BL.Services
         /// CreatedBy VMHieu 27/05/2023
         public int Update(T entity, Guid id)
         {
-            return _baseDL.Update(entity, id);
+            var isValid = Validate(entity);
+            if (isValid)
+            {
+                return _baseDL.Update(entity, id);
+            }
+            else
+            {
+                throw new ErrorException(devmsg: Resources.ResourceManager.GetString(name: "InvalidData"), listErrors: errorList);
+            }
         }
         /// <summary>
         /// Xóa 1 bản ghi
@@ -79,6 +97,17 @@ namespace WEB02.EMIS.API.BL.Services
         public int Delete(Guid id)
         {
             return _baseDL.Delete(id);
+        }
+
+        /// <summary>
+        /// Validate dữ liệu
+        /// </summary>
+        /// <param name="entity">Dữ liệu bản ghi cần validate</param>
+        /// <returns>true - nếu hợp lệ, false - nếu không hợp lệ</returns>
+        /// CreatedBy VMHieu 30/03/2023
+        protected virtual bool Validate(T entity)
+        {
+            return true;
         }
         #endregion
     }

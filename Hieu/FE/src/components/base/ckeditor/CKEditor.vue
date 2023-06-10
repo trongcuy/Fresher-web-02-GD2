@@ -1,6 +1,6 @@
 <template>
     <div>
-      <ckeditor :editor="editor" v-model="editorData" :config="editorConfig" ref="editor"></ckeditor>
+      <ckeditor :editor="editor" v-model="editorData" :config="editorConfig" ref="editor" @ready= "onEditorReady"></ckeditor>
     </div>
 </template>
   
@@ -18,7 +18,8 @@ export default {
         editorConfig: {
             toolbar: [ 'bold', 'italic', 'undo', 'redo', 'uploadImage' ],
             placeholder: Resource.DataCKEditor.placeholderQuestion,
-        }
+        },
+        startupFocus: true
       };
     },
     computed: mapState({
@@ -30,6 +31,11 @@ export default {
           this.editorData = this.dataEditor;
         }
       })
+    },
+    methods: {
+      onEditorReady(editor){
+        editor.focus();
+      }
     },
     watch: {
         // Xem sự thay đổi của v-model để đẩy lên component cha

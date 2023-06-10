@@ -92,7 +92,8 @@ export const ToastSuccess = {
  * CreatedBy VMHieu 30/05/2023
  */
 export const ToastWarning = {
-    LeastAnswer: "Câu hỏi phải có ít nhất một đáp án",
+    LeastAnswer: "Câu hỏi phải có ít nhất một đáp án!",
+    LimitAnswer: "Số đáp án đạt giới hạn!"
 }
 /**
  * Nội dung thông báo toast message

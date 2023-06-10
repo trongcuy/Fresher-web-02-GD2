@@ -1,7 +1,7 @@
 <template>
-    <div class="ckeditor-answer">
+    <div class="ckeditor-answer" ref="box">
         <div class="custom-ckeditor">
-            <ckeditor :editor="editor" ref="editor" v-model="editorData" :config="editorConfig"></ckeditor>
+            <ckeditor :editor="editor" ref="editor" v-model="editorData" :config="editorConfig" @click="onEditorReady()"></ckeditor>
         </div>
     </div>
 </template>
@@ -20,8 +20,8 @@ export default {
         editorConfig: {
             toolbar: [ 'bold', 'italic' ],
         },
-        
-        startupFocus: true
+        startupFocus: false,
+        showPlaceholder: true
       };
     },
     computed: mapState({
@@ -33,6 +33,11 @@ export default {
           this.editorData = this.dataEditor;
         }
       })
+    },
+    methods: {
+      onEditorReady(editor){
+        editor.focus();
+      }
     },
     watch: {
         // Xem sự thay đổi của v-model để đẩy lên component cha
@@ -50,10 +55,21 @@ export default {
           if (!this.showFormQuestion) {
             this.editorData = "";
           }
+        },
+
+        focusEditor: function() {
+          if (this.focusEditor) {
+            this.$refs.box.classList.add("focus-ckeditor");
+
+            // 
+          } else {
+            this.$refs.box.classList.remove("focus-ckeditor");
+          }
         }
     },
     props: {
-      dataEditor: null
+      dataEditor: null,
+      focusEditor: null
     }
   };
 
@@ -76,6 +92,11 @@ export default {
     padding-bottom: 12px;
     box-sizing: border-box;
     background-color: #ffaec7;
+}
+
+
+.focus-ckeditor{
+    z-index: 999;
 }
 
 .custom-ckeditor{
