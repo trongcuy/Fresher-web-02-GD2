@@ -33,3 +33,11 @@ C:\Users\Admin\source\repos\Fresher-web-02-GD2\Hieu\BE\WEB02.EMIS.API\WEB02.EMIS
 C:\Users\Admin\source\repos\Fresher-web-02-GD2\Hieu\BE\WEB02.EMIS.API\WEB02.EMIS.API\obj\Debug\net6.0\WEB02.EMIS.API.pdb
 C:\Users\Admin\source\repos\Fresher-web-02-GD2\Hieu\BE\WEB02.EMIS.API\WEB02.EMIS.API\obj\Debug\net6.0\WEB02.EMIS.API.genruntimeconfig.cache
 C:\Users\Admin\source\repos\Fresher-web-02-GD2\Hieu\BE\WEB02.EMIS.API\WEB02.EMIS.API\obj\Debug\net6.0\ref\WEB02.EMIS.API.dll
+C:\Users\Admin\source\repos\Fresher-web-02-GD2\Hieu\BE\WEB02.EMIS.API\WEB02.EMIS.API\bin\Debug\net6.0\Aspose.Cells.dll
+C:\Users\Admin\source\repos\Fresher-web-02-GD2\Hieu\BE\WEB02.EMIS.API\WEB02.EMIS.API\bin\Debug\net6.0\SkiaSharp.dll
+C:\Users\Admin\source\repos\Fresher-web-02-GD2\Hieu\BE\WEB02.EMIS.API\WEB02.EMIS.API\bin\Debug\net6.0\System.Security.Cryptography.Pkcs.dll
+C:\Users\Admin\source\repos\Fresher-web-02-GD2\Hieu\BE\WEB02.EMIS.API\WEB02.EMIS.API\bin\Debug\net6.0\runtimes\osx\native\libSkiaSharp.dylib
+C:\Users\Admin\source\repos\Fresher-web-02-GD2\Hieu\BE\WEB02.EMIS.API\WEB02.EMIS.API\bin\Debug\net6.0\runtimes\win-arm64\native\libSkiaSharp.dll
+C:\Users\Admin\source\repos\Fresher-web-02-GD2\Hieu\BE\WEB02.EMIS.API\WEB02.EMIS.API\bin\Debug\net6.0\runtimes\win-x64\native\libSkiaSharp.dll
+C:\Users\Admin\source\repos\Fresher-web-02-GD2\Hieu\BE\WEB02.EMIS.API\WEB02.EMIS.API\bin\Debug\net6.0\runtimes\win-x86\native\libSkiaSharp.dll
+C:\Users\Admin\source\repos\Fresher-web-02-GD2\Hieu\BE\WEB02.EMIS.API\WEB02.EMIS.API\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.Pkcs.dll

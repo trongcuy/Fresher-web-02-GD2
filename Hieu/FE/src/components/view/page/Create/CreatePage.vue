@@ -71,7 +71,7 @@
     </div>
     <FormQuestion :data="dataQuestion" :dataExercise="dataExercise"></FormQuestion>
     <FormExercise :data="dataExercise" v-model="dataExerciseAdd" @saveForm="saveForm"></FormExercise>
-    <FormImport></FormImport>
+    <FormImport :dataExercise="dataExercise"></FormImport>
 </template>
 
 <script setup>

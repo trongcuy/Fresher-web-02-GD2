@@ -61,6 +61,24 @@ namespace WEB02.EMIS.API.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Trạng thái đáp án không đúng.
+        /// </summary>
+        public static string AnswerStatus {
+            get {
+                return ResourceManager.GetString("AnswerStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ô nhập liệu không được để trống.
+        /// </summary>
+        public static string ErrorCellRequire {
+            get {
+                return ResourceManager.GetString("ErrorCellRequire", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Xóa dữ liệu không thành công.
         /// </summary>
         public static string ExceptionDelete {
@@ -84,6 +102,15 @@ namespace WEB02.EMIS.API.Common {
         public static string ExceptionUpdate {
             get {
                 return ResourceManager.GetString("ExceptionUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trạng thái bài tập không đúng.
+        /// </summary>
+        public static string ExerciseStatus {
+            get {
+                return ResourceManager.GetString("ExerciseStatus", resourceCulture);
             }
         }
         
@@ -156,6 +183,60 @@ namespace WEB02.EMIS.API.Common {
         public static string NullData {
             get {
                 return ResourceManager.GetString("NullData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Loại câu hỏi không đúng.
+        /// </summary>
+        public static string TypeQuestion {
+            get {
+                return ResourceManager.GetString("TypeQuestion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tự luận.
+        /// </summary>
+        public static string TypeQuestion_Essay {
+            get {
+                return ResourceManager.GetString("TypeQuestion_Essay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Điền vào chỗ trống.
+        /// </summary>
+        public static string TypeQuestion_Fill {
+            get {
+                return ResourceManager.GetString("TypeQuestion_Fill", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Câu hỏi nhóm.
+        /// </summary>
+        public static string TypeQuestion_Group {
+            get {
+                return ResourceManager.GetString("TypeQuestion_Group", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chọn đáp án.
+        /// </summary>
+        public static string TypeQuestion_Select {
+            get {
+                return ResourceManager.GetString("TypeQuestion_Select", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Đúng sai.
+        /// </summary>
+        public static string TypeQuestion_YesOrNo {
+            get {
+                return ResourceManager.GetString("TypeQuestion_YesOrNo", resourceCulture);
             }
         }
     }

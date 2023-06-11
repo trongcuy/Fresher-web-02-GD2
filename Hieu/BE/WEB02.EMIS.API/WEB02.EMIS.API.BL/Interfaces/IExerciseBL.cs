@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using MISA.Web02.CeGov.Common.Entity.DTO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -54,5 +56,28 @@ namespace WEB02.EMIS.API.BL.Interfaces
         /// <exception cref="ErrorException"></exception>
         /// VMHieu 06/06/2023
         public Boolean UpdateMultiple(DataInsertAll dataInsertAll);
+
+        /// <summary>
+        /// Kiểm tra các bản ghi trong file import excel
+        /// </summary>
+        /// <param name="excelFile"></param>
+        /// <returns>Số bản ghi hợp lệ, không hợp lệ và tổng số bản ghi</returns>
+        /// CreatedBY VMHieu 19/04/2023
+        public ExcelCheckTotal ExcelCheck(IFormFile excelFile);
+
+        /// <summary>
+        /// Lấy dữ liệu file excel sau khi check
+        /// </summary>
+        /// <param name="statusCheck">true - lấy tất cả, false - lấy các bản ghi lỗi</param>
+        /// <returns></returns>
+        /// CreatedBy VMHieu 11/06/2023
+        public MemoryStream GetExcelFileCheck(Boolean statusCheck = false);
+
+        /// <summary>
+        /// Thưc hiện import từ dữ liệu file
+        /// </summary>
+        /// <returns></returns>
+        /// CreatedBy VMHieu 11/06/2023
+        public Guid Import(ExerciseData exerciseData);
     }
 }

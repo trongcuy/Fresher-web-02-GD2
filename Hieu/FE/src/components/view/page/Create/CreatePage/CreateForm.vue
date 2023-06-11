@@ -119,11 +119,14 @@ const openFormQuestion = (status) => {
  * Thực hiện chọn file
  * VMHieu 07/06/2023
  */
-const handleUploadFile = () => {
+const handleUploadFile = async () => {
     const files = upload.value.files[0];
 
     if (files) {
-        console.log(files);
+        var formData = new FormData();
+        formData.append("excelFile", files);
+
+        store.dispatch("checkFile", formData);
         store.dispatch("showImport", true);
     }
 }

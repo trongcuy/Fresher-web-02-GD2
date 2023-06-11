@@ -47,6 +47,11 @@ const state = {
     refresh: false,     // refresh lại trang
     idDelete: "",   // ID của bản ghi cần xóa
     showImport: false, // show form upload
+    resultCheckFile: {      // Kết quả check file
+        Total: 0,
+        TotalSuccess: 0,
+        TotalFail: 0
+    },
 }
 
 const mutations = {
@@ -186,6 +191,16 @@ const mutations = {
     },
 
     /**
+     * Thực hiện kiểm tra các bản ghi trong file  
+     * @param {*} context 
+     * @param {*} data 
+     *  CreatedBy VMHieu 11/06/2023
+     */
+    checkFile(state, payload) {
+        state.resultCheckFile = payload;
+    },
+
+    /**
      * Cập nhật id bản ghi cần xóa
      * @param {} context 
      * @param {*} data 
@@ -202,6 +217,15 @@ const mutations = {
      */
     showImport(state, payload) {
         state.showImport = payload;
+    },
+
+    /**
+     * Thực hiện import sau khi check
+     * @param {*} context 
+     * CreatedBy VMHieu 20/04/2023
+     */
+    importExcel(state, payload) {
+        state.exerciseID = payload;
     }
 
 }
@@ -360,9 +384,72 @@ const actions = {
             window.open(`${constants.API_URL}/api/${constants.API_VERSION}/exercise/exampleFile`, 'Download');   
         } catch (error) {
             // Hiện toast thất bại
-            context.commit('updateToastMsg', Resource.ToastFail.DownloadFileFail);
+            handleShowToast(context, Resource.ToastFail.DownloadFileFail, Enum.ToastStatus.Fail);
+        }
+    },
 
-            handleShowToast(context);
+    /**
+     * Thực hiện kiểm tra các bản ghi trong file  
+     * @param {*} context 
+     * @param {*} data 
+     *  CreatedBy VMHieu 11/06/2023
+     */
+    async checkFile(context, data) {
+        try {          
+            context.commit("showLoading", true);
+            const res = await axios.post(`${constants.API_URL}/api/${constants.API_VERSION}/exercise/fileCheck`, data, {
+                    headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }
+            );
+            if (res) {
+                context.commit("checkFile", res.data);
+                context.commit("showLoading", false);
+            }  else {
+                // Hiện toast thất bại
+                handleShowToast(context, Resource.ToastFail.InvalidDataResponse, Enum.ToastStatus.Fail);
+            }
+        } catch (error) {
+            // Hiện toast thất bại
+            handleShowToast(context, Resource.ToastFail.CheckFail, Enum.ToastStatus.Fail);
+        }
+    },
+
+    /**
+     * Tải file excel sau khi check
+     * @param {} context 
+     * CreatedBy VMHieu 28/04/2023
+     */
+    downloadFileCheck(context, data) {
+        try {
+            window.open(`${constants.API_URL}/api/${constants.API_VERSION}/exercise/fileCheckResult?statusCheck=${data}`, 'Download');   
+        } catch (error) {
+            // Hiện toast thất bại
+            handleShowToast(context, Resource.ToastFail.DownloadFileFail, Enum.ToastStatus.Fail);
+        }
+    },
+
+    /**
+     * Thực hiện import sau khi check
+     * @param {*} context 
+     * CreatedBy VMHieu 20/04/2023
+     */
+    async importExcel(context, data) {
+        try {
+            context.commit("showLoading", true);
+            const res = await axios.post(`${constants.API_URL}/api/${constants.API_VERSION}/exercise/import`, data);
+            if (res) {
+                context.commit("importExcel", res.data);
+                handleShowToast(context, Resource.ToastSuccess.AddSuccess, Enum.ToastStatus.Success);
+                context.commit("showLoading", true);
+            }  else {
+                // Hiện toast thất bại
+                handleShowToast(context, Resource.ToastFail.InvalidDataResponse, Enum.ToastStatus.Fail);
+            }     
+        } catch (error) {
+            // Hiện toast thất bại
+            handleShowToast(context, Resource.ToastFail.ImportFail, Enum.ToastStatus.Fail);
         }
     },
 

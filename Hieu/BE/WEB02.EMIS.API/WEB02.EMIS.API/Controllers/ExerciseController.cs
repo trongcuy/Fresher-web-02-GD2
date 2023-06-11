@@ -131,6 +131,64 @@ namespace WEB02.EMIS.API.Controllers
             return File(fileContent, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Mau_nhap_khau.xlsx");
         }
 
+        /// <summary>
+        /// Kiểm tra các bản ghi trong file import excel
+        /// </summary>
+        /// <param name="excelFile"></param>
+        /// <returns>Số bản ghi hợp lệ, không hợp lệ và tổng số bản ghi</returns>
+        /// CreatedBY VMHieu 19/04/2023
+        [HttpPost("fileCheck")]
+        public IActionResult ExcelCheck(IFormFile excelFile)
+        {
+            try
+            {
+                var response = _exerciseBL.ExcelCheck(excelFile);
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+        }
+
+        /// <summary>
+        /// Lấy dữ liệu file excel sau khi check
+        /// </summary>
+        /// <returns></returns>
+        /// CreatedBy VMHieu 11/06/2023
+        [HttpGet("fileCheckResult")]
+        public IActionResult GetExcelFileCheck(Boolean statusCheck)
+        {
+            try
+            {
+                var response = _exerciseBL.GetExcelFileCheck(statusCheck);
+                return File(response, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Baitap_kiemtra.xlsx");
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+        }
+
+        /// <summary>
+        /// Thưc hiện import từ dữ liệu file
+        /// </summary>
+        /// <returns></returns>
+        /// CreatedBy VMHieu 11/06/2023
+        [HttpPost("import")]
+        public IActionResult Import(ExerciseData exerciseData)
+        {
+            try
+            {
+                var response = _exerciseBL.Import(exerciseData);
+                return Ok(response);
+            }
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
+        }
+
         [HttpPost("image")]
         public IActionResult UploadImage(IFormFile file)
         {

@@ -313,7 +313,4 @@ onMounted(() => {
     background-color: #00c542;
 }
 
-.focus-ckeditor{
-    z-index: 999;
-}
 </style>

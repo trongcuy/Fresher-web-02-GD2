@@ -117,6 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AnswerStatus" xml:space="preserve">
+    <value>Trạng thái đáp án không đúng</value>
+    <comment>Trạng thái đáp án không đúng</comment>
+  </data>
+  <data name="ErrorCellRequire" xml:space="preserve">
+    <value>Ô nhập liệu không được để trống</value>
+  </data>
   <data name="ExceptionDelete" xml:space="preserve">
     <value>Xóa dữ liệu không thành công</value>
     <comment>Xóa dữ liệu không thành công</comment>
@@ -128,6 +135,10 @@
   <data name="ExceptionUpdate" xml:space="preserve">
     <value>Cập nhật dữ liệu không thành công</value>
     <comment>Cập nhật dữ liệu không thành công</comment>
+  </data>
+  <data name="ExerciseStatus" xml:space="preserve">
+    <value>Trạng thái bài tập không đúng</value>
+    <comment>Trạng thái bài tập không đúng</comment>
   </data>
   <data name="InvalidAnswerContent" xml:space="preserve">
     <value>Đáp án phải có nội dung hoặc hình ảnh</value>
@@ -160,5 +171,29 @@
   <data name="NullData" xml:space="preserve">
     <value>Không có dữ liệu</value>
     <comment>Không có dữ liệu</comment>
+  </data>
+  <data name="TypeQuestion" xml:space="preserve">
+    <value>Loại câu hỏi không đúng</value>
+    <comment>Loại câu hỏi không đúng</comment>
+  </data>
+  <data name="TypeQuestion_Essay" xml:space="preserve">
+    <value>Tự luận</value>
+    <comment>Tự luận</comment>
+  </data>
+  <data name="TypeQuestion_Fill" xml:space="preserve">
+    <value>Điền vào chỗ trống</value>
+    <comment>Điền vào chỗ trống</comment>
+  </data>
+  <data name="TypeQuestion_Group" xml:space="preserve">
+    <value>Câu hỏi nhóm</value>
+    <comment>Câu hỏi nhóm</comment>
+  </data>
+  <data name="TypeQuestion_Select" xml:space="preserve">
+    <value>Chọn đáp án</value>
+    <comment>Chọn đáp án</comment>
+  </data>
+  <data name="TypeQuestion_YesOrNo" xml:space="preserve">
+    <value>Đúng sai</value>
+    <comment>Đúng sai</comment>
   </data>
 </root>

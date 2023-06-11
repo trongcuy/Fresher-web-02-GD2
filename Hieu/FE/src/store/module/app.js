@@ -103,6 +103,9 @@ const mutations = {
      */
     showLoading(state, payload) {
         state.showLoading = payload;
+        setTimeout(() => {
+            state.showLoading = false;
+        }, 3000);
     }
 }
 

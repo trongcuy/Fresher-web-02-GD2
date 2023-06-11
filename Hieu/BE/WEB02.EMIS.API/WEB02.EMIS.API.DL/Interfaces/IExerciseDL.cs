@@ -54,6 +54,15 @@ namespace WEB02.EMIS.API.DL.Interfaces
         /// <exception cref="ErrorException"></exception>
         /// VMHieu 06/06/2023
         public Boolean UpdateMultiple(DataInsertAll dataInsertAll);
+
+        /// <summary>
+        /// Thực hiện import từ file
+        /// </summary>
+        /// <param name="exerciseData"></param>
+        /// <param name="dataExcels"></param>
+        /// <returns></returns>
+        /// VMHieu 11/06/2023
+        public Guid Import(ExerciseData exerciseData, List<DataExcel> dataExcels);
     }
 
 }
