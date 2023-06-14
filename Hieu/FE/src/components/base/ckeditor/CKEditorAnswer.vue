@@ -107,7 +107,7 @@ export default {
     overflow-x: hidden;
     overflow-y: hidden;
     scrollbar-width: thin;
-    transition: .2s;
+    /* transition: .2s; */
     height: 100%;
 }
 

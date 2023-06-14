@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
 using MISA.Web02.CeGov.Common;
 using MISA.Web02.CeGov.Common.Entity.DTO;
 using System;
@@ -23,11 +24,23 @@ namespace WEB02.EMIS.API.BL.Services
     {
         private IExerciseDL _exerciseDL;
         public IMemoryCache _cache = new MemoryCache(new MemoryCacheOptions());
+        IConfiguration _configuration;
 
-        public ExerciseBL(IExerciseDL exerciseDL, IMemoryCache cache) : base(exerciseDL)
+        public ExerciseBL(IExerciseDL exerciseDL, IMemoryCache cache, IConfiguration configuration) : base(exerciseDL)
         {
             _exerciseDL = exerciseDL;
             _cache = cache;
+            _configuration = configuration;
+        }
+
+        /// <summary>
+        /// Hàm clear cache
+        /// </summary>
+        /// CreatedBy VMHieu 14/06/2023s
+        public void Clear()
+        {
+            _cache.Dispose();
+            _cache = new MemoryCache(new MemoryCacheOptions());
         }
 
         /// <summary>
@@ -162,7 +175,7 @@ namespace WEB02.EMIS.API.BL.Services
                 errorList.Add(Resources.ResourceManager.GetString(name: "InvalidSubject"));
             }
             // Validate câu hỏi (nội dung câu hỏi không được để trống)
-            if (string.IsNullOrEmpty(question.QuestionContent) && (question.QuestionImage == null || question.QuestionImage == Guid.Empty))
+            if (string.IsNullOrEmpty(question.QuestionContent) && string.IsNullOrEmpty(question.QuestionImage))
             {
                 errorList.Add(Resources.ResourceManager.GetString(name: "InvalidQuestionContent"));
             }
@@ -171,7 +184,7 @@ namespace WEB02.EMIS.API.BL.Services
             foreach(var answer in answers)
             {
                 // Kiểm tra có nội dung hay không
-                if (string.IsNullOrEmpty(answer.AnswerContent) && (answer.AnswerImage == null || answer.AnswerImage == Guid.Empty))
+                if (string.IsNullOrEmpty(answer.AnswerContent) && string.IsNullOrEmpty(answer.AnswerImage))
                 {
                     answerValid = false;
                     break;
@@ -288,6 +301,7 @@ namespace WEB02.EMIS.API.BL.Services
 
                 Workbook workbook = new Workbook(stream);
                 Worksheet worksheet = workbook.Worksheets[0];
+                int sortOder = 1;
                 // Lấy dữ liệu trong file excel, bắt đầu từ dòng thứ 3
                 for (int row = 4; row < worksheet.Cells.Rows.Count; row++)
                 {
@@ -313,7 +327,6 @@ namespace WEB02.EMIS.API.BL.Services
                     var checkEqual = true;
 
                     // Khởi tạo các trường dữ liệu
-                    var sortOder = "";
                     var typeQuestion = "";
                     var questionContent = "";
                     var questionNote = "";
@@ -336,10 +349,6 @@ namespace WEB02.EMIS.API.BL.Services
                         {
                             switch (col)
                             {
-                                case 0:
-                                    // SortOder của câu hỏi
-                                    sortOder = worksheet.Cells[row, 0].Value.ToString();
-                                    break;
                                 case 1:
                                     // Loại câu hỏi
                                     var typeQuestionRow = worksheet.Cells[row, 1].Value.ToString().Trim().ToLower();
@@ -427,7 +436,7 @@ namespace WEB02.EMIS.API.BL.Services
                             QuestionContent = questionContent,
                             QuestionNote = questionNote,
                             TypeQuestion = (TypeQuestion)Enum.Parse(typeof(TypeQuestion), typeQuestion),
-                            SortOder = sortOder
+                            SortOder = sortOder.ToString(),
                         };
 
                         var dataExcel = new DataExcel()
@@ -441,6 +450,7 @@ namespace WEB02.EMIS.API.BL.Services
                             dataResult.Add(dataExcel);
                             result.TotalSuccess++;
                             rowSuccess.Add(row);
+                            sortOder++;
                         }
                         else
                         {
@@ -454,7 +464,6 @@ namespace WEB02.EMIS.API.BL.Services
                             };
                             errorCells.Add(errorCell);
                         }
-
                     }
                     else
                     {
@@ -535,6 +544,8 @@ namespace WEB02.EMIS.API.BL.Services
         public Guid Import(ExerciseData exerciseData)
         {
             List<DataExcel> dataExcels = (List<DataExcel>)(IEnumerable<DataExcel>)_cache.Get("data");
+            // Dispose cache
+            Clear();
 
             return _exerciseDL.Import(exerciseData, dataExcels);
         }
@@ -601,10 +612,11 @@ namespace WEB02.EMIS.API.BL.Services
         {
             // Get the cell
             Cell cell = worksheet.Cells[row, col];
-            if (!string.IsNullOrEmpty(context))
+            if (!string.IsNullOrEmpty(msg))
             {
-                cell.Value = context;
+                cell.Value = msg;
             }
+            
             int commentIndex = worksheet.Comments.Add(row, col);
 
             Comment comment = worksheet.Comments[commentIndex];
@@ -660,5 +672,44 @@ namespace WEB02.EMIS.API.BL.Services
             // Apply the style to the cell
             cell.SetStyle(style);
         }
+
+        /// <summary>
+        /// Upload ảnh
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="idImage"></param>
+        /// <returns></returns>
+        /// VMHieu 12/06/2023
+        public string UploadImage(IFormFile file, Guid idImage)
+        {
+            /// Trả về lỗi nếu ảnh lớn hơn 5Mb
+            if (file.Length > 5 * 1024 * 1024)
+            {
+                throw new ErrorException(devmsg: Resources.ResourceManager.GetString(name: "ErrorFileImage"));
+            }
+
+            // Tạp tên file chứa ảnh
+            string fileName = idImage + ".jpg";
+            // Lấy đường dẫn tới thư mục chứa ảnh
+            var pathFolder = Path.Combine(Directory.GetCurrentDirectory(), _configuration["StaticFolder:UploadPath"]);
+
+            if (Directory.Exists(pathFolder))
+            {
+                Directory.CreateDirectory(pathFolder);
+            }
+
+            /// Lấy đường dẫn trực tiếp đến ảnh
+            var path = Path.Combine(pathFolder, fileName);
+
+            /// truyền ảnh vào đường dẫn đã tạo
+            using (var stream = new FileStream(path, FileMode.Create))
+            {
+                file.CopyTo(stream);
+            }
+            // Lấy đường dẫn ảnh gửi về cho client
+            var imagePath = _configuration["StaticFolder:UploadLink"] + fileName;
+            return imagePath;
+        }
     }
 }
+

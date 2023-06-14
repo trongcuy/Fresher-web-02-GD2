@@ -41,7 +41,7 @@ namespace WEB02.EMIS.API.Common.Entity
         /// <summary>
         /// Đường dẫn ảnh
         /// </summary>
-        public Guid? ExerciseImage { get; set; }
+        public string? ExerciseImage { get; set; }
         /// <summary>
         /// Trạng thái bài tập
         /// </summary>

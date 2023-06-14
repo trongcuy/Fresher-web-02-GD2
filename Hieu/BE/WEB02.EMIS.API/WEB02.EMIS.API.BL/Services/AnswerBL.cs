@@ -40,7 +40,7 @@ namespace WEB02.EMIS.API.BL.Services
             errorList.Clear();
             // Xử lý nghiệp vụ
             // Nội dung đáp án không được để trống
-            if (string.IsNullOrEmpty(answer.AnswerContent) && (answer.AnswerImage == null || answer.AnswerImage == Guid.Empty))
+            if (string.IsNullOrEmpty(answer.AnswerContent) && string.IsNullOrEmpty(answer.AnswerImage))
             {
                 errorList.Add(Resources.ResourceManager.GetString(name: "InvalidAnswerContent"));
             }

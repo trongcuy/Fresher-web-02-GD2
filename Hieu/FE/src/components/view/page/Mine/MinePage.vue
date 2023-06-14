@@ -80,10 +80,11 @@ import * as Resource from '@/common/resource/Resource';
 import * as Enum from '@/common/enum/Enum';
 import { computed, onMounted, watch, reactive, ref } from 'vue';
 import { useStore } from 'vuex';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 
 const store = useStore();
 const router = useRouter();
+const route = useRoute();
 
 const exercises = computed(() => store.state.exercise.exercises); // Bản ghi bài tập
 const grades = computed(() => store.state.grade.grades);    // Bản ghi khối
@@ -156,6 +157,7 @@ watch((exercises), () => {
         showListBody.value = false;
     }
 })
+
 </script>
 
 <style scoped>

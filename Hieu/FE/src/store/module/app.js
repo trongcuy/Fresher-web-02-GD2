@@ -7,7 +7,8 @@ const state = {
     toastStatus: 0,
     hideMainPage: false, // Show page chính
     statusDelete: 0,    // Trạng thái xóa
-    showLoading: false, // Hiển thị loading 
+    showLoading: false, // Hiển thị loading ,
+    formModeUpload: 0,
 }
 
 const mutations = {
@@ -106,6 +107,15 @@ const mutations = {
         setTimeout(() => {
             state.showLoading = false;
         }, 3000);
+    },
+
+    /**
+     * Upload mode của form upload ảnh
+     * @param {*} context 
+     * @param {*} data 
+     */
+    uploadFormModeUpload(state, payload) {
+        state.formModeUpload = payload;
     }
 }
 
@@ -194,6 +204,15 @@ const actions = {
      */
     showLoading(context, data) {
         context.commit('showLoading', data);
+    },
+
+    /**
+     * Upload mode của form upload ảnh
+     * @param {*} context 
+     * @param {*} data 
+     */
+    uploadFormModeUpload(context, data) {
+        context.commit('uploadFormModeUpload', data);
     }
 }
 

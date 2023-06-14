@@ -1,6 +1,9 @@
 <template>
-    <div>
-      <ckeditor :editor="editor" v-model="editorData" :config="editorConfig" ref="editor" @ready= "onEditorReady"></ckeditor>
+    <div ref="div">
+      <ckeditor :editor="editor" v-model="editorData" :config="editorConfig" ref="editor" 
+      @ready= "onEditorReady"
+      @myCustomButton="handleCustomButtonClick"
+      ></ckeditor>
     </div>
 </template>
   
@@ -19,7 +22,6 @@ export default {
             toolbar: [ 'bold', 'italic', 'undo', 'redo', 'uploadImage' ],
             placeholder: Resource.DataCKEditor.placeholderQuestion,
         },
-        startupFocus: true
       };
     },
     computed: mapState({
@@ -33,9 +35,14 @@ export default {
       })
     },
     methods: {
+      /**
+       * Mặc định focus vào ô nhập câu hỏi
+       * @param {*} editor 
+       * VMHieu 13/06/2023
+       */
       onEditorReady(editor){
         editor.focus();
-      }
+      },
     },
     watch: {
         // Xem sự thay đổi của v-model để đẩy lên component cha
@@ -56,7 +63,7 @@ export default {
         }
     },
     props: {
-      dataEditor: null
+      dataEditor: null,
     }
   };
 

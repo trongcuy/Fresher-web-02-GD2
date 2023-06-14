@@ -98,7 +98,6 @@ const handleUploadFile = async () => {
         formData.append("excelFile", files);
 
         store.dispatch("checkFile", formData);
-        store.dispatch("showImport", true);
     }
 }
 /**

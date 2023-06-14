@@ -494,7 +494,7 @@ select {
     background-color: #fff;
     box-shadow: 0 0 16px rgba(23,27,42,.24);
     z-index: 999;
-    max-height: 198px;
+    /* max-height: 198px; */
     overflow: auto;
     width: -webkit-fill-available;
 }

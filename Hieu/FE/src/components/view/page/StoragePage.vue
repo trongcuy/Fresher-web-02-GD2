@@ -19,7 +19,9 @@
             </div>
         </div>
         <div class="mine-controller">
-            <router-view name="mineview"></router-view>
+            <keep-alive>
+                <router-view name="mineview"></router-view>
+            </keep-alive>
         </div>
     </div>
 </template>

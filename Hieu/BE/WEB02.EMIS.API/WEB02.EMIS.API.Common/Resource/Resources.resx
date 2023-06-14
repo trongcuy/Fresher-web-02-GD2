@@ -124,6 +124,10 @@
   <data name="ErrorCellRequire" xml:space="preserve">
     <value>Ô nhập liệu không được để trống</value>
   </data>
+  <data name="ErrorFileImage" xml:space="preserve">
+    <value>Lỗi file ảnh</value>
+    <comment>Lỗi file ảnh</comment>
+  </data>
   <data name="ExceptionDelete" xml:space="preserve">
     <value>Xóa dữ liệu không thành công</value>
     <comment>Xóa dữ liệu không thành công</comment>

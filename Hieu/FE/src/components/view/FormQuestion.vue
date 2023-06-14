@@ -22,6 +22,25 @@
                     v-model="dataQuestion.QuestionContent"
                     :dataEditor="dataQuestion.QuestionContent"
                     ></CKEditor>
+                    <div class="upload-image" @click="openUploadImage">
+                        <input type="file" @input="chooseFileImg" 
+                        id="upload-file" ref="file" @change="handleFileUpload" accept=".png, .jpg, .jpeg"
+                        >
+                    </div>
+                    <div class="image-box flex" v-if="arrayImageUrl.length != 0">
+                        <div class="image-list">
+                            <div class="box-img" v-for="(item, index) in arrayImageUrl" :key="index">
+                                <img :src="`${constants.API_URL}/${item}`" alt="">
+                                <div class="icon-remove" @click="removeImage(index)">
+                                    <img :src="removeImg" alt="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="image-add"  @click="openUploadImage">
+                            <img :src="addFile" alt="">
+                            <div class="add-text">Thêm tệp đính kèm</div>
+                        </div>
+                    </div>
                 </div>
                 <div class="form-body__answer" v-if="showFormQuestion == Enum.FormQuestion.Select">
                     <div class="list-answer" >
@@ -32,6 +51,7 @@
                                 @removeAnswer="removeAnswer(index)"
                                 v-model="dataAnswerSelect[index]"
                                 :saveData="saveData"
+                                @openFormImage="openFormImage"
                             ></BaseAnswer>
                         </div>
                     </div>
@@ -95,7 +115,7 @@
             <div class="form-body">
                 <div class="form-body__header flex">
                     <div class="choose-question-type flex">
-                        <div class="form-question__number">Câu {{ numberQuestion }} </div>
+                        <div class="form-question__number">Câu {{ dataQuestion.SortOder || numberQuestion }} </div>
                     </div>
                 </div>
                 <div class="form-body__main fullscreen">
@@ -131,6 +151,14 @@
         </div>
     </div>
     <PopupMessage></PopupMessage>
+    <FormImage 
+        v-if="showFormImage && formModeUpload == Enum.FormModeUpload.Answer"
+        v-model="dataAnswerSelect[indexAnswer].AnswerImage"
+    ></FormImage>
+    <FormImage 
+        v-if="showFormImage && formModeUpload == Enum.FormModeUpload.Question"
+        v-model="dataImageQuestion"
+    ></FormImage>
 </template>
 
 <script setup>
@@ -139,6 +167,7 @@ import BaseButton from '../base/button/BaseButton.vue';
 import BaseAnswer from '../base/answer/BaseAnswer.vue';
 import PopupMessage from './PopupMessage.vue';
 import ToastMessage from './ToastMessage.vue';
+import FormImage from '@/components/view/FormImage'
 import BaseAnswerFill from '../base/answer/BaseAnswerFill.vue';
 import CKEditor from '@/components/base/ckeditor/CKEditor.vue';
 import { useStore } from 'vuex';
@@ -148,11 +177,14 @@ import * as Resource from '@/common/resource/Resource';
 import * as Enum from '@/common/enum/Enum';
 import { handleShowToast } from '@/common/common';
 import _ from 'lodash'
+import { constants } from '@/config/config';
 
 // Các biến lưu đường dẫn
 const noteaddImg = require("@/assets/img/icon-noteadd.svg");
 const notebackImg = require("@/assets/img/icon-noteback.svg");
 const addImg = require("@/assets/img/icon-add.svg");
+const addFile = require("@/assets/img/add-file.svg");
+const removeImg = require("@/assets/img/remove-img.svg");
 
 const props = defineProps({
     data: null, //Data câu hỏi
@@ -169,6 +201,8 @@ const showFormQuestion = computed(() => store.state.question.showFormQuestion); 
 const exerciseID = computed(() => store.state.exercise.exerciseID); // ID bản ghi bài tập mới thêm
 const formModeQuestion = computed(() => store.state.question.formModeQuestion); // ID bản ghi câu hỏi mới thêm
 const question = computed(() => store.state.question.dataQuestion); // data bản ghi câu hỏi mới thêm
+const formModeUpload = computed(() => store.state.app.formModeUpload); // data bản ghi câu hỏi mới thêm
+const showFormImage = computed(() => store.state.question.showFormImage);
 // Tính toán số thứ tự câu
 const numberQuestion = computed(() => {
     if (props.data.length > 0) {
@@ -177,11 +211,16 @@ const numberQuestion = computed(() => {
     } 
     return "1";
 })
+// Mảng đường dẫn các ảnh câu hỏi
 
 const typeQuestion = ref(); // Kiểu câu hỏi
 const showNoteQuestion = ref(true); // Show form chú thích
 const saveData = ref(true); // Dấu hiệu lấy data truyền cho component con
 const indexRemove = ref(); // index của đáp án cần xóa tick
+const indexAnswer = ref(0);  // index của câu hỏi
+const file = ref("file");
+const dataImageQuestion = ref();
+let arrayImageUrl = ref([]);
 
 const main = ref("main");
 // Dữ liệu câu hỏi
@@ -253,6 +292,23 @@ const closeForm = () => {
 }
 
 /**
+ * Hiển thị form chọn ảnh
+ * VMHieu 13/06/2023
+ */
+ const openFormImage = (value) => {
+    store.dispatch("showFormImage", true);
+    store.dispatch("uploadFormModeUpload", Enum.FormModeUpload.Answer);
+    indexAnswer.value = value;
+}
+/**
+ * Mở form upload image câu hỏi
+ */
+const openUploadImage = () => {
+    store.dispatch("showFormImage", true);
+    store.dispatch("uploadFormModeUpload", Enum.FormModeUpload.Question);
+}
+
+/**
  * Thêm đáp án
  * VMHieu 02/06/2023
  */
@@ -307,11 +363,24 @@ const removeTick = (index) => {
 }
 
 /**
+ * Xóa ảnh
+ * @param {} index 
+ */
+const removeImage = (index) => {
+    arrayImageUrl.value.splice(index, 1);
+}
+
+/**
  * Kiểm tra thông tin câu hỏi và đáp án
  * VMHieu 02/06/2023
  */
 const validateQuestion = () => {
     let isValid = true;
+
+    if (arrayImageUrl.value.length > 0) {
+        dataQuestion.QuestionImage = arrayImageUrl.value.join(";");
+        dataQuestion.QuestionContent = "";
+    }
     
     // Validate chung cho các câu hỏi
     if (!dataQuestion.QuestionContent && !dataQuestion.QuestionImage) {
@@ -630,6 +699,8 @@ const resetForm = () => {
             SortOder: "1"
         }
     ])
+
+    arrayImageUrl.value = [];
 }
 
 /**
@@ -712,9 +783,23 @@ watch((showFormQuestion), () => {
         }
     } 
 
+    if (dataQuestion.QuestionImage) {
+        arrayImageUrl.value = dataQuestion.QuestionImage.split(";");
+    } else {
+        arrayImageUrl.value = [];
+    }
+
     if (!showFormQuestion.value) {
         resetForm();
     }
+})
+
+/**
+ * Thêm đường dẫn ảnh vào mảng khi có ảnh được thêm
+ * VMHieu 14/06/2023
+ */
+watch((dataImageQuestion), () => {
+    arrayImageUrl.value.push(dataImageQuestion.value);
 })
 
 </script>
@@ -765,6 +850,7 @@ watch((showFormQuestion), () => {
     height: auto;
     background-color: #fff2ab;
     border-radius: 10px 10px 0 0;
+    position: relative;
 }
 
 .form-body__main>div{
@@ -833,7 +919,8 @@ watch((showFormQuestion), () => {
 }
 
 .fullscreen{
-    height: 100%;
+    height: auto;
+    min-height: 100%;
 }
 
 .fullscreen>.question-content{
@@ -924,4 +1011,84 @@ watch((showFormQuestion), () => {
     margin-right: 12px;
 }
 
+.upload-image{
+    width: 30px;
+    height: 30px !important;
+    background-color: #000;
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    cursor: pointer;
+    z-index: 9999;
+    opacity: 0;
+}
+
+#upload-file{
+    display: none;
+    bottom: 0.75rem;
+    right: 0.75rem;
+    position: absolute;
+    z-index: 10;
+}
+
+.image-box{
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    height: 86px !important;
+}
+
+.image-list{
+    height: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.image-list>div{
+    margin-right: 12px;
+}
+
+.image-list img{
+    width: 144px;
+    height: 86px;
+}
+
+.image-add{
+    background-color: #f1f2f7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 144px;
+    height: 86px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.add-text{
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 20px;
+    margin-top: .25rem;
+    color: rgba(138,107,246,1);
+}
+
+.icon-remove{
+    position: absolute;
+    right: -4px;
+    top: -4px;
+    width: 20px;
+    z-index: 100;
+    text-align: center;
+    cursor: pointer;
+}
+
+.icon-remove img{
+    width: 20px;
+    height: 20px;
+}
+
+.box-img{
+    position: relative;
+}
 </style>

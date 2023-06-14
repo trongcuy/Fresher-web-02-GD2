@@ -79,5 +79,14 @@ namespace WEB02.EMIS.API.BL.Interfaces
         /// <returns></returns>
         /// CreatedBy VMHieu 11/06/2023
         public Guid Import(ExerciseData exerciseData);
+
+        /// <summary>
+        /// Upload ảnh
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="idImage"></param>
+        /// <returns></returns>
+        /// VMHieu 12/06/2023
+        public string UploadImage(IFormFile file, Guid idImage);
     }
 }

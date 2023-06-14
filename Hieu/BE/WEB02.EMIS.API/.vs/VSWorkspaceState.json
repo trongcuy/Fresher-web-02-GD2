@@ -3,13 +3,13 @@
     "",
     "\\WEB02.EMIS.API",
     "\\WEB02.EMIS.API.BL",
-    "\\WEB02.EMIS.API.BL\\Services",
+    "\\WEB02.EMIS.API.BL\\Interfaces",
     "\\WEB02.EMIS.API.Common",
-    "\\WEB02.EMIS.API.Common\\Resource",
+    "\\WEB02.EMIS.API.Common\\Entity",
     "\\WEB02.EMIS.API.DL",
+    "\\WEB02.EMIS.API.DL\\Interfaces",
     "\\WEB02.EMIS.API.DL\\Services",
-    "\\WEB02.EMIS.API\\Properties",
-    "\\WEB02.EMIS.API\\Uploads"
+    "\\WEB02.EMIS.API\\Controllers"
   ],
   "SelectedNode": "\\WEB02.EMIS.API.BL\\Services\\ExerciseBL.cs",
   "PreviewInSolutionExplorer": false

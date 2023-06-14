@@ -81,4 +81,11 @@ export const StatusDelete = {
     Question: 2
 }
 
+/**
+ * Mode của form upload image
+ */
+export const FormModeUpload = {
+    Answer: 1,
+    Question: 2
+}
 export default Enum;

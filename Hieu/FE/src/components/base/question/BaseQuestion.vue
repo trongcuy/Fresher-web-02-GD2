@@ -8,6 +8,11 @@
                 </div>
                 <div class="question-text" v-html="data.QuestionContent"></div>
             </div>
+            <div class="question-image" v-if="arrayUrlImage.length > 0">
+                <div v-for="(item, index) in arrayUrlImage" :key="index">
+                    <img :src="`${constants.API_URL}/${item}`" alt="" @click=viewImage(item)>
+                </div>
+            </div>
             <div class="question-line" v-if="props.data.TypeQuestion == Enum.FormQuestion.Essay"></div>
             <div class="question-answer">
                 <div class="question-answer__list">
@@ -21,7 +26,10 @@
                             >
                                 {{ String.fromCharCode(65 + index) }}
                             </div>
-                            <div class="answer-text flex" v-html="answer.AnswerContent">
+                            <div class="answer-text flex" v-html="answer.AnswerContent" v-if="!answer.AnswerImage">
+                            </div>
+                            <div class="answer-text flex popup-image" v-if="answer.AnswerImage" @click="viewImage(answer.AnswerImage)">
+                                <img :src="`${constants.API_URL}/${answer.AnswerImage}`" alt="">
                             </div>
                         </div>
                     </div>
@@ -50,15 +58,19 @@
             </div>
         </div>
     </div>
+    <BasePopupImage :url="urlImage" v-if="showPopupImage" @closePopup="closePopup"></BasePopupImage>
 </template>
 
 <script setup>
 import BaseButton from '../button/BaseButton.vue';
-import { defineProps, onMounted, computed } from 'vue';
+import { defineProps, onMounted, computed, watch, ref } from 'vue';
 import * as Enum from '@/common/enum/Enum';
 import * as Resource from '@/common/resource/Resource';
 import { useStore } from 'vuex';
-import { convertToText } from '@/common/common';
+import DOMPurify from 'dompurify';
+import { constants } from '@/config/config'
+import BasePopupImage from '../popup/BasePopupImage.vue';
+
 
 const props = defineProps({
     data: null, //Data câu hỏi
@@ -70,6 +82,25 @@ const props = defineProps({
 })
 
 const store = useStore();
+
+const arrayUrlImage = ref([]); // Mảng đường dẫn ảnh
+const showPopupImage = ref(false); // Hiện popup ảnh
+const urlImage = ref(""); // Url ảnh
+
+const sanitizedContent = computed(() => {
+    return DOMPurify.sanitize(props.data);
+})
+
+// Hiện popup ảnh
+const viewImage = (url) => {
+    urlImage.value = `${constants.API_URL}/${url}`;
+    showPopupImage.value = true;
+}
+
+// Đóng popup ảnh
+const closePopup = () => {
+    showPopupImage.value = false;
+}
 
 /**
  * Mở popup xóa
@@ -101,9 +132,23 @@ const openFormClone = () => {
     store.dispatch("updateFormModeQuestion", Enum.FormModeQuestion.Clone);
     store.dispatch("updateDataQuestion", props.data);
 }
+/**
+ * Xem sự thay đổi của data để gán lại giá trị cho sanitizedContent
+ * VMHieu 12/06/2023
+ */
+watch(() => props.data, () => {
+    sanitizedContent.value = DOMPurify.sanitize(props.data);
+        // Lấy đường dẫn ảnh
+        if (props.data.QuestionImage) {
+        arrayUrlImage.value = props.data.QuestionImage.split(';');
+    }
+});
 
 onMounted(() => {
-    const a = props.data;
+    // Lấy đường dẫn ảnh
+    if (props.data.QuestionImage) {
+        arrayUrlImage.value = props.data.QuestionImage.split(';');
+    }
 })
 
 // Các biến lưu đường dẫn
@@ -160,6 +205,7 @@ const trashImg = require("@/assets/img/trash.svg");
 
 .answer-item{
     display: flex;
+    align-items: center;
 }
 
 .answer-char{
@@ -174,11 +220,20 @@ const trashImg = require("@/assets/img/trash.svg");
     background-color: #b6b9ce;
     margin-right: 8px;
     font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .answer-text{
     word-wrap: break-word;
     width: 100%;
+    height: 100%;
+}
+
+.answer-text img{
+    width: 80%;
+    height: 80%;
 }
 
 .answer-correct{
@@ -207,5 +262,21 @@ const trashImg = require("@/assets/img/trash.svg");
 
 .answer-false {
     background-color: #b6b9ce;
+}
+
+.question-image{
+    margin-top: 16px;
+    margin-bottom: 16px;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    display: flex;
+}
+
+.question-image img{
+    width: 300px;
+    height: 100%;
+    -o-object-fit: contain;
+    object-fit: contain;
+    cursor: pointer;
 }
 </style>

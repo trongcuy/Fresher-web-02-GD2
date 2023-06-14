@@ -1,7 +1,8 @@
 <template>
     <div class="exercise-container"  @click="openExercise(props.data.ExerciseID)">
         <div class="exercise-img">
-            <img :src="subjectImg" alt="">
+            <img :src="`${constants.API_URL}/${imageUrl}`" v-if="imageUrl" alt="">
+            <img :src="subjectImg" v-if="!imageUrl" alt="">
             <div class="img-content center">{{ props.data.GradeName || "Khối 1" }} - {{ props.data.SubjectName || "Toán" }}</div>
         </div>
         <div class="exercise-content">
@@ -37,6 +38,7 @@ import { useRouter } from 'vue-router';
 import * as Enum from '@/common/enum/Enum';
 import * as Resource from '@/common/resource/Resource';
 import { changeBreakpoint } from '@/common/common';
+import { constants } from '@/config/config';
 
 const props = defineProps({
   data: [], // data của bài tập biding vào component
@@ -59,6 +61,10 @@ const ExerciseName = computed(() => {
         return "Bài nháp " + props.data.SubjectName + " " + props.data.GradeName;
     }
     return props.data.ExerciseName;
+})
+
+const imageUrl = computed(() => {
+  return props.data.ExerciseImage;
 })
 
 /**

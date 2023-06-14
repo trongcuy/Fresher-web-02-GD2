@@ -6,7 +6,9 @@
           <TheContent></TheContent>
         </div>
       </div>
-      <router-view name="create"></router-view>
+      <keep-alive>
+        <router-view name="create"></router-view>
+      </keep-alive>
       <ToastMessage></ToastMessage>
       <LoadingOver></LoadingOver>
     </div>

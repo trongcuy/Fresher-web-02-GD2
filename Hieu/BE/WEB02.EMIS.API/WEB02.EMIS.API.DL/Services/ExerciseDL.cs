@@ -190,7 +190,7 @@ namespace WEB02.EMIS.API.DL.Services
 
                             // Thực hiện gọi vào db để chạy câu lệnh 
                             var resultExercise = mySqlConnection.Execute(updateCommand, param: parameters,
-                                transaction: transaction, commandType: System.Data.CommandType.StoredProcedure);
+                                transaction: transaction, commandType: CommandType.StoredProcedure);
                             if (resultExercise == null)
                             {
                                 transaction.Rollback();

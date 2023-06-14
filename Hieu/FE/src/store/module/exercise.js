@@ -413,6 +413,8 @@ const actions = {
         } catch (error) {
             // Hiện toast thất bại
             handleShowToast(context, Resource.ToastFail.CheckFail, Enum.ToastStatus.Fail);
+        } finally {
+            context.commit("showImport", true);
         }
     },
 
@@ -441,7 +443,7 @@ const actions = {
             const res = await axios.post(`${constants.API_URL}/api/${constants.API_VERSION}/exercise/import`, data);
             if (res) {
                 context.commit("importExcel", res.data);
-                handleShowToast(context, Resource.ToastSuccess.AddSuccess, Enum.ToastStatus.Success);
+                handleShowToast(context, Resource.ToastSuccess.ImportSuccess, Enum.ToastStatus.Success);
                 context.commit("showLoading", true);
             }  else {
                 // Hiện toast thất bại
@@ -450,6 +452,8 @@ const actions = {
         } catch (error) {
             // Hiện toast thất bại
             handleShowToast(context, Resource.ToastFail.ImportFail, Enum.ToastStatus.Fail);
+        } finally {
+            context.commit("showLoading", false);
         }
     },
 

@@ -25,7 +25,7 @@ namespace WEB02.EMIS.API.Common.Entity
         /// <summary>
         /// Đường dẫn ảnh
         /// </summary>
-        public Guid? AnswerImage { get; set; }
+        public string? AnswerImage { get; set; }
         /// <summary>
         /// Trạng thai của đáp án
         /// </summary>

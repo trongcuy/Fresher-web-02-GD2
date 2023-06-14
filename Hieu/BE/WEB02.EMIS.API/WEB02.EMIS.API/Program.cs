@@ -1,4 +1,5 @@
 
+using Microsoft.Extensions.FileProviders;
 using WEB02.EMIS.API.BL.Interfaces;
 using WEB02.EMIS.API.BL.Services;
 using WEB02.EMIS.API.DL.Interfaces;
@@ -63,5 +64,12 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+           Path.Combine(Directory.GetCurrentDirectory(), "Uploads")),
+    RequestPath = "/Uploads"
+});
 
 app.Run();

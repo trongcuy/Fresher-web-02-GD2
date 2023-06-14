@@ -156,6 +156,10 @@ strong{
     animation: spin 2s linear infinite;
 }
 
+.popup-image{
+    cursor: pointer;
+}
+
 ::-webkit-scrollbar {
     width: 6px;
     height: 6px;

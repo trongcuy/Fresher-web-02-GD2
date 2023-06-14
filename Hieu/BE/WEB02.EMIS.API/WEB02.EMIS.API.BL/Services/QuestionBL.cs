@@ -27,7 +27,7 @@ namespace WEB02.EMIS.API.BL.Services
             errorList.Clear();
             // Xử lý nghiệp vụ
             // Câu hỏi phải có nội dung hoặc hình ảnh
-            if (string.IsNullOrEmpty(question.QuestionContent) && (question.QuestionImage == null || question.QuestionImage == Guid.Empty))
+            if (string.IsNullOrEmpty(question.QuestionContent) && string.IsNullOrEmpty(question.QuestionImage))
             {
                 errorList.Add(Resources.ResourceManager.GetString(name: "InvalidQuestionContent"));
             }

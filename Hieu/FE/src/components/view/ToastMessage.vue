@@ -1,5 +1,5 @@
 <template>
-    <div class="toast-container" :class="classToast" v-show="showToast">
+    <div class="toast-container" :class="classToast" v-if="showToast">
         <BaseToastMessage toastClass="icon icon-success" lineClass="success" v-if="toastStatus == Enum.ToastStatus.Success">
             <div>{{ toastMsg }}</div>
         </BaseToastMessage>

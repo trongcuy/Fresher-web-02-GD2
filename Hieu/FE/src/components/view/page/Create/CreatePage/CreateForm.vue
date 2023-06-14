@@ -22,7 +22,7 @@
                     <BaseButton class="ms-button btn-active btn-upload" text="Tải lên file bài tập" @click.stop="" @click="chooseFile"></BaseButton>
                     <BaseButton class="ms-button btn-active btn-green" text="Tải file Excel mẫu" @click="downloadFileExample"></BaseButton>
                 </div>
-                <input type="file" id="upload-file" ref="upload" @input="handleUploadFile" accept=".xls, .xlsx"/>
+                <input type="file" id="upload-file" ref="upload" @change="handleUploadFile" accept=".xls, .xlsx"/>
             </div>
         </div>
         <div class="form-create">
@@ -127,7 +127,8 @@ const handleUploadFile = async () => {
         formData.append("excelFile", files);
 
         store.dispatch("checkFile", formData);
-        store.dispatch("showImport", true);
+        //store.dispatch("showImport", true);
+        upload.value.value = "";
     }
 }
 /**

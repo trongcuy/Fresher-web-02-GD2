@@ -10,7 +10,8 @@ const state = {
     questionID: null, // ID câu hỏi vừa được thêm,
     idDelete: null, // ID câu hỏi chuẩn bị xóa,
     formModeQuestion: null, // Mode của form câu hỏi
-    dataQuestion: null, // Data của câu hỏi đang được chọn
+    dataQuestion: null, // Data của câu hỏi đang được chọn,
+    showFormImage: false, // Hiển thị form thêm ảnh
 }
 
 const mutations = {
@@ -70,6 +71,14 @@ const mutations = {
      */
     updateDataQuestion(state, payload) {
         state.dataQuestion = payload;
+    },
+
+    /**
+     * Hiển thị form thêm ảnh
+     * VMHieu 13/06/2023
+     */
+    showFormImage(state, payload) {
+        state.showFormImage = payload;
     }
 }
 
@@ -164,6 +173,14 @@ const actions = {
      */
     updateDataQuestion(context, data) {
         context.commit("updateDataQuestion", data);
+    },
+
+    /**
+     * Hiển thị form thêm ảnh
+     * VMHieu 13/06/2023
+     */
+    showFormImage(context, data) {
+        context.commit("showFormImage", data);
     }
 }
 

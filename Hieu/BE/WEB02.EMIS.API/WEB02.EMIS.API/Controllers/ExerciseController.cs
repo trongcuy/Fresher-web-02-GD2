@@ -188,30 +188,26 @@ namespace WEB02.EMIS.API.Controllers
                 return HandleException(e);
             }
         }
-
+        /// <summary>
+        /// Upload ảnh
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="idImage"></param>
+        /// <returns></returns>
+        /// VMHieu 12/06/2023
         [HttpPost("image")]
-        public IActionResult UploadImage(IFormFile file)
+        public IActionResult UploadImage(IFormFile file, Guid idImage)
         {
-            if (file != null && file.Length > 0)
+            try
             {
-                try
-                {
-                    string imageId = Guid.NewGuid().ToString();
+                var response = _exerciseBL.UploadImage(file, idImage);
 
-                    string filePath = Path.Combine("Uploads", $"{imageId}.jpg");
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        file.CopyTo(stream);
-                    }
-
-                    return Ok(new { ImageId = imageId });
-                }
-                catch (Exception ex)
-                {
-                    return StatusCode(500, ex.Message);
-                }
+                return Ok(response);
             }
-            return BadRequest("No image file was uploaded.");
+            catch (Exception e)
+            {
+                return HandleException(e);
+            }
         }
     }
 }

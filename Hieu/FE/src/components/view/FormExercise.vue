@@ -16,7 +16,8 @@
                             Ảnh đại diện
                         </label>
                         <div class="img-avatar">
-                            <img :src="imageUrl || avatarImg" alt="">
+                            <img :src="`${constants.API_URL}/${imageUrl}`" v-if="imageUrl" alt="">
+                            <img :src="avatarImg" v-if="!imageUrl" alt="">
                             <div class="upload-file">
                                 <label class="label-input" @click="openUploadFile">
                                     <img :src="uploadImg" alt="">
@@ -126,7 +127,9 @@ import BaseInput from "../base/input/BaseInput.vue";
 import * as Resource from "@/common/resource/Resource";
 import * as Enum from "@/common/enum/Enum";
 import _ from 'lodash'
-import { FormModeExercise } from "@/common/enum/Enum";
+import { uploadImage } from "@/utils/image";
+import { constants } from "@/config/config";
+import { generateUUID } from "@/common/common";
 // Các biến lưu đường dẫn
 const avatarImg = require("@/assets/subjects-avatar/toan.png");
 const uploadImg = require("@/assets/img/upload-image.svg");
@@ -227,20 +230,23 @@ const openUploadFile = () => {
  * Ấn tải file lên
  * @param {*} event 
  */
-const handleFileUpload = (event) => {
+const handleFileUpload = async (event) => {
     const file = event.target.files[0];
-    const reader = new FileReader();
+    // const reader = new FileReader();
 
-    reader.onload = (e) => {
-        imageUrl.value = e.target.result;
-    };
+    // reader.onload = (e) => {
+    //     imageUrl.value = e.target.result;
+    // };
 
-    reader.readAsDataURL(file);
+    // reader.readAsDataURL(file);
+    const id = generateUUID();
+    const urlImage = await uploadImage(file, id);
+
+    if (urlImage) {
+        dataExerciseClone.ExerciseImage = urlImage;
+        imageUrl.value = urlImage;
+    }
 };
-
-const chooseFileImg = () => {
-    console.log(file.value.files[0]);
-}
 
 onBeforeMount(() => {
     const id = route.query.id;
@@ -256,6 +262,9 @@ onBeforeMount(() => {
  * VMHieu 31.05.2023
  */
 watch((exercise), () => {
+    if (exercise.value.ExerciseImage) {
+        imageUrl.value = exercise.value.ExerciseImage;
+    }
     dataExercise.value = exercise.value;
     let dataGradeSubject = {
         gradeID: dataExercise.value.GradeID,

@@ -79,6 +79,15 @@ namespace WEB02.EMIS.API.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Lỗi file ảnh.
+        /// </summary>
+        public static string ErrorFileImage {
+            get {
+                return ResourceManager.GetString("ErrorFileImage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Xóa dữ liệu không thành công.
         /// </summary>
         public static string ExceptionDelete {

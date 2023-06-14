@@ -8,7 +8,7 @@
                 <div class="icon-trash" v-show="showFormQuestion == Enum.FormQuestion.Select" @click="removeAnswer">
                     <img :src="trashImg" alt="" />
                 </div>
-                <div class="icon-img" v-show="showFormQuestion == Enum.FormQuestion.Select">
+                <div class="icon-img" v-show="showFormQuestion == Enum.FormQuestion.Select" @click="openFormImage">
                     <img :src="imgImg" alt="" />
                 </div>
                 <div class="icon-tick" @click="answerTrue" tick="false" ref="btnTrue">
@@ -17,16 +17,22 @@
             </div>
         </div>
         <div class="answer-main focus" v-clickOutside="closeCKEditor" ref="answerMain" @click="openCKEditor">
-            <div class="default-content" >
+            <div class="default-content" v-if="!dataAnswer.AnswerImage && !dataAnswer.AnswerContent">
                 <div>Nhập đáp án...</div>
             </div>
-            <div ref="ckeditBox">
+            <div ref="ckeditBox" v-if="!dataAnswer.AnswerImage">
                 <CKEditorAnswer 
                     v-model="dataAnswer.AnswerContent" 
                     :dataEditor="dataAnswer.AnswerContent" 
                     ref="ckedit"
                     :focusEditor="focusEditor"
                 ></CKEditorAnswer>
+            </div>
+            <div class="answer-image" v-if="dataAnswer.AnswerImage">
+                <img :src="`${constants.API_URL}/${dataAnswer.AnswerImage}`" alt="">
+                <div class="remove-img" @click="removeImg" v-tooltip="'Xóa'">
+                    <icon class="icon icon-exit"></icon>
+                </div>
             </div>
         </div>
     </div>
@@ -36,7 +42,9 @@
 import { computed, ref, watch, defineProps, defineEmits, toRef, reactive, isReactive, nextTick, onMounted } from 'vue';
 import { useStore } from 'vuex';
 import CKEditorAnswer from '@/components/base/ckeditor/CKEditorAnswer.vue';
+import FormImage from '@/components/view/FormImage.vue';
 import * as Enum from '@/common/enum/Enum';
+import { constants } from '@/config/config';
 
 const props = defineProps({
     // Data truyền từ cha
@@ -55,7 +63,7 @@ const props = defineProps({
 const removeTick = toRef(props, 'indexRemove');
 const propData = toRef(props, 'data');
 
-const emit = defineEmits(['removeAnswer', 'saveAnswer', 'removeTick', 'update:modelValue']);
+const emit = defineEmits(['removeAnswer', 'saveAnswer', 'removeTick', 'update:modelValue', 'openFormImage']);
 
 const store = useStore();
 // Biến xét đóng mở form question
@@ -105,11 +113,26 @@ const closeCKEditor = () => {
 };
 
 /**
+ * Xóa ảnh
+ * VMHieu 13/06/2023
+ */
+const removeImg = () => {
+    dataAnswer.AnswerImage = "";
+}
+
+/**
  * Xóa thùng rác ở vị trí index
  * VMHieu 02/06/2023
  */
 const removeAnswer = () => {
     emit('removeAnswer');
+}
+/**
+ * Hiển thị form chọn ảnh
+ * VMHieu 13/06/2023
+ */
+const openFormImage = () => {
+    emit('openFormImage', props.index);
 }
 
 /**
@@ -283,7 +306,7 @@ onMounted(() => {
 .default-content{
     position: absolute;
     top: 0;
-    width: 150px;
+    width: 0;
     text-align: center;
     left: 50%;
     cursor: text;
@@ -313,4 +336,24 @@ onMounted(() => {
     background-color: #00c542;
 }
 
+.answer-image{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    position: relative;
+}
+
+.answer-image img{
+    padding-bottom: 12px;
+    width: 80%;
+    height: 80%;
+}
+
+.remove-img{
+    position: absolute;
+    top: 0;
+    right: 4px;
+}
 </style>

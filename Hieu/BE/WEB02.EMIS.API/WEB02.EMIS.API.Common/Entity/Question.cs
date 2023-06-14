@@ -21,7 +21,7 @@ namespace WEB02.EMIS.API.Common.Entity
         /// <summary>
         /// Nội dung câu hỏi
         /// </summary>
-        public string QuestionContent { get; set; }
+        public string? QuestionContent { get; set; }
         /// <summary>
         /// Nội dung chú thích
         /// </summary>
@@ -29,7 +29,7 @@ namespace WEB02.EMIS.API.Common.Entity
         /// <summary>
         /// Ảnh câu hỏi
         /// </summary>
-        public Guid? QuestionImage { get; set; }
+        public string? QuestionImage { get; set; }
         /// <summary>
         /// ID bài tập
         /// </summary>

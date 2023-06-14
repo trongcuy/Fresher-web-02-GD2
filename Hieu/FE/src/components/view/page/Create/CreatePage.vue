@@ -10,7 +10,8 @@
                     <img :src="btnBackImg" alt="">
                 </div>
                 <div class="header-top__avatar">
-                    <img :src="createImg" alt="">
+                    <img :src="createImg" alt="" v-if="!dataExercise.ExerciseImage">
+                    <img :src="`${constants.API_URL}/${dataExercise.ExerciseImage}`" v-if="dataExercise.ExerciseImage" alt="">
                 </div>
                 <div class="header-top__context">
                     <input type="text" class="exercise-name__input" v-model="dataExercise.ExerciseName" placeholder="Nhập tên bài tập...">
@@ -88,6 +89,7 @@ import { useStore } from 'vuex';
 import { computed, reactive, onBeforeMount, watch, ref, defineProps, onMounted } from 'vue'; 
 import * as Enum from '@/common/enum/Enum.js';
 import * as Resource from '@/common/resource/Resource.js';
+import { constants } from '@/config/config';
 
 // Các biến lưu đường dẫn
 const btnBackImg = require("@/assets/img/btn-back.svg");
@@ -115,7 +117,8 @@ const formModeExercise = computed(() => store.state.exercise.formModeExercise); 
 const refresh = computed(() => store.state.exercise.refresh); // Refresh lại trang
 // Object data bài tập
 const dataExercise = ref({
-    ExerciseName: ""
+    ExerciseName: "", 
+    ExerciseImage: "",
 });
 // Object data câu hỏi
 const dataQuestion = ref({});
@@ -194,7 +197,7 @@ const saveExercise = async () => {
             await store.dispatch("postExercise", dataExercise.value);
         }
 
-        if (dataExercise.value.Topics) {
+        if (dataExercise.value.Topics.length > 0) {
             let dataTopic = {
                 ExerciseID: dataExercise.value.ExerciseID || exerciseID.value,
                 Topics: Object.values(dataExercise.value.Topics)
@@ -202,6 +205,8 @@ const saveExercise = async () => {
             // Thêm chủ đề
             await store.dispatch("postTopicMultiple", dataTopic);
         }
+        router.push("/storage/mine");
+        store.dispatch("updateHideMainPage", false);
     } else {
         store.dispatch("showFormExercise", true);
     }

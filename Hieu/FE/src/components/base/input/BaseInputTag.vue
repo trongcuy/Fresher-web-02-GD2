@@ -91,7 +91,7 @@ watch((showFormQuestion), () => {
  * VMHieu 05/06/2023
  */
 watch((dataInputSpan), () => {
-    let str = dataInputSpan.join(";");
+    let str = dataInputSpan.join("; ");
     emit("update:modelValue", str);
 })
 

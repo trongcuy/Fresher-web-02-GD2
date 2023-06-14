@@ -81,10 +81,11 @@ export const TextWeb = {
  * CreatedBy VMHieu 30/05/2023
  */
 export const ToastSuccess = {
-    AddSuccess: "Thêm thành công",
-    EditSuccess: "Sửa thành công",
-    DeleteSuccess: "Xóa thành công",
+    AddSuccess: "Thêm dữ liệu thành công",
+    EditSuccess: "Sửa dữ liệu thành công",
+    DeleteSuccess: "Xóa dữ liệu thành công",
     LoadSuccess: "Tải dữ liệu thành công",
+    ImportSuccess: "Nhập khẩu dữ liệu thành công",
 }
 
 /**
