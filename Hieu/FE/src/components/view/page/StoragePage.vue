@@ -13,8 +13,8 @@
                 </router-link>
             </div>
             <div class="header-right flex">
-                <BaseButton class="ms-button btn-margin__right btn-white btn-active" @click="showToastSuccess" text="Chia sẻ"></BaseButton>
-                <BaseButton class="ms-button btn-margin__right btn-blue btn-active" @click="showToastFail" text="Tạo trò chơi"></BaseButton>
+                <BaseButton class="ms-button btn-margin__right btn-white btn-active" text="Chia sẻ"></BaseButton>
+                <BaseButton class="ms-button btn-margin__right btn-blue btn-active" text="Tạo trò chơi"></BaseButton>
                 <BaseButton class="ms-button btn-blue btn-active" text="Soạn bài" @click="createExercise"></BaseButton>
             </div>
         </div>
@@ -47,22 +47,7 @@ const createExercise = () => {
     store.dispatch("updateHideMainPage", true);
     router.push("/storage/create");
 }
-/**
- * Mở toast thành công (test)
- */
-const showToastSuccess = () => {
-    store.dispatch("updateToastStatus", Enum.ToastStatus.Success);
-    store.dispatch("updateToastMsg", "Thao tác thành công");
-    store.dispatch("showToast", true);
-}
-/**
- * Mở toast thất bại (test)
- */
-const showToastFail = () => {
-    store.dispatch("updateToastStatus", Enum.ToastStatus.Fail);
-    store.dispatch("updateToastMsg", "Thao tác thất bại");
-    store.dispatch("showToast", true);
-}
+
 </script>
 
 <style scoped>
