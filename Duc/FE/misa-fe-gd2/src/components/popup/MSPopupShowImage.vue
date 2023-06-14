@@ -2,15 +2,37 @@
     <div class="overlay">
         <div class="div-image">
             <div class="header">
-                <img src="../../assets/img/x.jpg"/>
+                <div class="div-center" @click="onClosePopupImage">
+                    <img src="../../assets/img/x.jpg" />
+                </div>
+            </div>
+            <div class="body div-center">
+                <img :src="urlImage" />
             </div>
         </div>
     </div>
 </template>
   
 <script>
+import { mapMutations } from 'vuex'
 export default {
     name: 'MSPopupShowImage',
+    props: {
+        urlImage: {
+            Type: String,
+            default: ""
+        }
+    },
+    methods: {
+        ...mapMutations(['setUrlImageShow']),
+        /**
+         * hàm đóng popup
+         * CreatedBy: Trịnh Huỳnh Đức (14-6-2023)
+         */
+        onClosePopupImage() {
+            this.setUrlImageShow("")
+        }
+    }
 };
 </script>
   
@@ -22,7 +44,8 @@ export default {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
-    z-index: 101;
+    z-index: 200;
+
     .div-image {
         position: absolute;
         transform: translate(-50%, -50%);
@@ -34,15 +57,33 @@ export default {
         margin: 0 auto 50px;
         background: #fff;
         box-sizing: border-box;
+
         .header {
             padding: 20px;
             position: relative;
-            img {
-                width: 20px;
-                height: 20px;
-                top: 16px;
-                right: 16px;
+            height: 48px;
+            div {
+                width: 48px;
+                height: 48px;
+                top: 0;
+                right: 0px;
                 position: absolute;
+                cursor: pointer;
+                img {
+                    width: 16px;
+                    height: 16px;
+                }
+            }
+        }
+
+        .body {
+            margin: 0 24px 24px;
+            height: 500px;
+            background-color: #f1f2f7;
+            img {
+                height: 400px;
+                width: auto;
+                max-width: 100%;
             }
         }
     }

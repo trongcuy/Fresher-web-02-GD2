@@ -4,12 +4,12 @@
             :class="{ 'div-answer-false': answer.answerState == enums.AnswerState.False }">{{
                 this.indexToLetter(index) }}</div>
         <div v-if="answer.answerContent" ><p v-html="answer.answerContent"></p></div>
-        <div ><img class="image-answer" v-if="this.urlAnswer!=''" :src="this.urlAnswer"/></div>
+        <div ><img class="image-answer" v-if="this.urlAnswer" :src="this.urlAnswer" @click="onShowImage(this.urlAnswer)"/></div>
     </div>
 </template>
 
 <script>
-import {mapActions} from 'vuex'
+import { mapMutations } from 'vuex'
 export default {
     name: "MSAnswerItem",
     props: {
@@ -34,7 +34,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions([]),
+        ...mapMutations(['setUrlImageShow']),
         /**
          * hàm chuyển từ index sang chữ cái tương ứng
          * CreatedBy: Trịnh Huỳnh Đức (3-6-2023)
@@ -44,6 +44,13 @@ export default {
             const letterCode = 65 + index;
             return String.fromCharCode(letterCode);
         },
+        /**
+         * hàm bắt sự kiện click vào ảnh
+         * CreatedBy: Trịnh Huỳnh Đức (14-6-2023)
+         */
+        onShowImage(urlImage) {
+            this.setUrlImageShow(urlImage)
+        }
     },
 }
 </script>

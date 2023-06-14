@@ -35,7 +35,8 @@
                     :question="item"
                     @onRemoveQuestion="onRemoveQuestion(item.questionID)"
                     @onEditQuestion="onEditQuestion"
-                    @onCopyQuestion="onCopyQuestion"/>
+                    @onCopyQuestion="onCopyQuestion"
+                />
             </div>
             <MSQuestionToolbar mode="vertical" @onClickNewQuesion="onClickNewQuesion"/>
         </div>
@@ -65,7 +66,8 @@
         @onClickContinue="insertFileToDB"
         :validRecord="this.validRecord"
         :invalidRecord="this.invalidRecord"/>
-    <MSPopupShowImage/>
+    <MSPopupShowImage v-if="urlImageShow" :urlImage="urlImageShow"/>
+
 </template>
 
 <script>
@@ -135,7 +137,8 @@ export default {
             'exerciseIDSelected',
             'exerciseSelected',
             'imageExercise',
-            'imageIdExercise'
+            'imageIdExercise',
+            'urlImageShow'
         ])
     },
     methods: {
@@ -520,9 +523,8 @@ export default {
             this.onClosePopupImport()
             this.insertFileValid(this.exercise).then(res=> {
                 this.$router.push({ path: "/course/create", query: { exerciseID: res } })
-            })
-            
-        }
+            })           
+        },
     },
     created() {
         //lấy danh sách môn

@@ -153,4 +153,12 @@ export default {
     setUrlImageExercise(state, value) {
         state.urlImageExercise = value
     },
+
+    /*
+    * set urlImageShow
+    * CreatedBy: Trịnh Huỳnh Đức (1-6-2023)
+    */
+    setUrlImageShow(state, value) {
+        state.urlImageShow = value
+    },
 }

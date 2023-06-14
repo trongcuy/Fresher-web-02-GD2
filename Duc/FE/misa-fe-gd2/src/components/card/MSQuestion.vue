@@ -7,13 +7,14 @@
             </div>
             <div class="div-body">
                 <!-- ảnh câu hỏi nếu có -->
-                <div class="img-question" v-if="imgQuestion"><img :src="imgQuestion"/></div>
+                <div class="img-question" v-if="imgQuestion"><img :src="imgQuestion" @click="onShowImage(imgQuestion)" />
+                </div>
                 <!-- câu trả lời tự luận -->
                 <div v-if="isEssay" class="answer-essay"></div>
 
                 <!-- Câu trả lời chọn, đúng sai, điền đáp án -->
                 <div v-if="isSelect || isTrueFalse || isFill" class="answer-grid">
-                    <MSAnswerItem v-for="(item, index) in answers" :answer="item" :index="index"/>
+                    <MSAnswerItem v-for="(item, index) in answers" :answer="item" :index="index" />
                 </div>
 
                 <!-- Lời giải -->
@@ -25,7 +26,8 @@
             <!-- Thanh button -->
             <div class="div-button-question">
                 <MSButton title="Chỉnh sửa" @click="onEditQuestion" />
-                <div class="div-button-img" v-tooltip:top="'Sao chép câu hỏi'" @click="onCopyQuestion"><img src="../../assets/img/ic_dublicate.svg" />
+                <div class="div-button-img" v-tooltip:top="'Sao chép câu hỏi'" @click="onCopyQuestion"><img
+                        src="../../assets/img/ic_dublicate.svg" />
                 </div>
                 <div class="div-button-img" v-tooltip:top="'Xóa câu hỏi'" @click="() => { this.$emit('onRemoveQuestion') }">
                     <img src="../../assets/img/icon_delete.9097d258.svg" />
@@ -38,7 +40,7 @@
 <script>
 import MSButton from '../button/MSButton.vue'
 import MSAnswerItem from './MSAnswerItem.vue'
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapMutations } from 'vuex'
 export default {
     name: 'MSQuestion',
     props: {
@@ -89,7 +91,7 @@ export default {
         ...mapActions([
             'getAnswers',
         ]),
-        
+        ...mapMutations(['setUrlImageShow']),
         /**
          * hàm bắt sự kiện chỉnh sửa câu hỏi
          * CreatedBy: Trịnh Huỳnh Đức (3-6-2023)
@@ -98,25 +100,31 @@ export default {
         onEditQuestion() {
             this.$emit('onEditQuestion', { answers: this.answers, question: this.question })
         },
-         /**
-         * hàm bắt sự kiện sao chép câu hỏi
-         * CreatedBy: Trịnh Huỳnh Đức (3-6-2023)
-         * @param {*} index 
-         */
+        /**
+        * hàm bắt sự kiện sao chép câu hỏi
+        * CreatedBy: Trịnh Huỳnh Đức (3-6-2023)
+        * @param {*} index 
+        */
         onCopyQuestion() {
             //tạo câu hỏi mới và xóa id
-            let newQuestion = {...this.question}
+            let newQuestion = { ...this.question }
             delete newQuestion.questionID
             this.$emit('onCopyQuestion', { answers: this.answers, question: newQuestion })
         },
-
+        /**
+         * hàm bắt sự kiện click vào ảnh
+         * CreatedBy: Trịnh Huỳnh Đức (14-6-2023)
+         */
+        onShowImage(imgQuestion) {
+            this.setUrlImageShow(imgQuestion)
+        }
     },
     created() {
         //nếu là câu hỏi có đáp án
         if (this.isSelect || this.isTrueFalse || this.isFill)
             this.getAnswers(this.question.questionID).then(res => {
                 this.answers = res
-            })  
+            })
     }
 }
 </script>
@@ -148,12 +156,15 @@ p {
     height: auto;
     margin-bottom: 20px;
 }
+
 .div-title p {
     display: flex;
 }
+
 .div-title span {
     margin-left: 4px;
 }
+
 .div-body {
     border-bottom: 1px solid #E6E6e6;
     margin-bottom: 20px;
@@ -211,16 +222,18 @@ p {
 .question-explane>div {
     height: 20px;
 }
+
 .question-explane span {
     margin-left: 4px;
 }
+
 .img-question {
     width: 300px;
     height: auto;
     margin-bottom: 20px;
 }
+
 .img-question img {
     width: 100%;
     height: auto;
-}
-</style>
+}</style>

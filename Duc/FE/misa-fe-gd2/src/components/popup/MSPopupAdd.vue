@@ -21,7 +21,7 @@
             
                 <!-- ảnh câu hỏi nếu có -->
             <div class="img-question" v-if="srcImgQuestion">
-                <img :src="srcImgQuestion"/>
+                <img :src="srcImgQuestion" @click="onShowImage(srcImgQuestion)"/>
                 <img src="../../assets/img/x_sign.svg" @click="onRemoveImageQuestion"/>                
             </div>
         </div>
@@ -142,7 +142,7 @@ export default {
     },
     
     methods: {
-        ...mapMutations(['setTypePopupAdd']),
+        ...mapMutations(['setTypePopupAdd', 'setUrlImageShow']),
         ...mapActions(['addQuestion', 'updateQuestion', 'addExercise', 'addAnswer', 'insertAll']),
         /**
          * hàm bắt sự kiện đóng popup
@@ -395,6 +395,13 @@ export default {
          */
         onRemoveImageQuestion() {
             this.question.questionImage = "00000000-0000-0000-0000-000000000000"
+        },
+        /**
+         * hàm bắt sự kiện click vào ảnh
+         * CreatedBy: Trịnh Huỳnh Đức (14-6-2023)
+         */
+        onShowImage(imgQuestion) {
+            this.setUrlImageShow(imgQuestion)
         }
     },
     created() {

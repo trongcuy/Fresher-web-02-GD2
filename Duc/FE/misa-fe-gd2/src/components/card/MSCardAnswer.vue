@@ -21,7 +21,7 @@
             </div>
             <!-- ảnh đáp án nếu có -->
             <div v-if="urlAnswer" class="img-answer div-center">
-                <img :src="urlAnswer"/>
+                <img :src="urlAnswer" @click="onShowImage(urlAnswer)"/>
                 <img src="../../assets/img/ic_close.svg" @click="onRemoveAnswerImage"/>
             </div>
         </div>
@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 export default {
     name: 'MSCardAnswer',
     props: {
@@ -90,7 +90,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions([]),
+        ...mapMutations(['setUrlImageShow']),
         /**
          * bắt sự kiện xóa câu hỏi
          * CreatedBy: Trịnh Huỳnh Đức (23-5-2023)
@@ -135,6 +135,13 @@ export default {
          */
         onRemoveAnswerImage() {
             this.$emit('onClickRemoveImage')
+        },
+        /**
+         * hàm bắt sự kiện click vào ảnh
+         * CreatedBy: Trịnh Huỳnh Đức (14-6-2023)
+         */
+        onShowImage(imgQuestion) {
+            this.setUrlImageShow(imgQuestion)
         }
     },
     created() {

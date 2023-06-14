@@ -21,4 +21,5 @@ export default {
     numQuestion: state => state.numQuestion,
     imageIdExercise: state => state.imageIdExercise,
     urlImageExercise: state => state.urlImageExercise,
+    urlImageShow: state => state.urlImageShow
 }

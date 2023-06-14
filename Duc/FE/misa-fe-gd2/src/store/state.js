@@ -25,4 +25,5 @@ export default {
     topicExercise: [],//lưu danh sách chủ đề của bài tập đang sửa
     imageIdExercise: '',//id ảnh bài tập
     urlImageExercise: 'https://sisapapp.misacdn.net/lms/img/tiengviet1.edd81b92.png',//url ảnh bài tập gọi từ api
+    urlImageShow: "",//url ảnh đang được show lên
 }
