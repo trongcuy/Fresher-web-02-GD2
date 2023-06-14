@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Microsoft.Extensions.Configuration;
 using MySqlConnector;
 using System;
 using System.Collections.Generic;
@@ -12,9 +13,17 @@ namespace EMIS.DL.BaseDL
     public class BaseDL<T> : IBaseDL<T>
     {
         #region fields
-        private readonly string _connectionString = "Server=127.0.0.1; User ID=root; Password=huynhduc; Database=emis.freshergd2_duc;";
+        private readonly string _connectionString;
         //lấy tên đối tượng
-        private readonly string nameEntity = typeof(T).Name;
+        private readonly string nameEntity;
+        #endregion
+
+        #region Constructor
+        public BaseDL(IConfiguration configuration)
+        {
+            _connectionString = configuration.GetConnectionString("dataBase");
+            nameEntity = typeof(T).Name;
+        } 
         #endregion
 
         #region Methods

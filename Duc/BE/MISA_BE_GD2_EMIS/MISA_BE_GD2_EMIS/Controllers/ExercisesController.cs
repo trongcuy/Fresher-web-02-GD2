@@ -5,6 +5,7 @@ using EMIS.Common.Entity;
 using EMIS.BL.BaseBL;
 using EMIS.BL.ExerciseBL;
 using EMIS.Common.DTO;
+using EMIS.DL.ExerciseDL;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace MISA_BE_GD2_EMIS.Controllers

@@ -1,8 +1,11 @@
+using Aspose.Cells.Charts;
 using EMIS.BL.BaseBL;
+using EMIS.BL.ExcelBL;
 using EMIS.BL.ExerciseBL;
 using EMIS.BL.QuestionBL;
 using EMIS.BL.TopicBL;
 using EMIS.DL.BaseDL;
+using EMIS.DL.ExcelDL;
 using EMIS.DL.ExerciseDL;
 using EMIS.DL.QuestionDL;
 using EMIS.DL.TopicDL;
@@ -23,8 +26,14 @@ builder.Services.AddScoped<IQuestionBL, QuestionBL>();
 builder.Services.AddScoped<IQuestionDL, QuestionDL>();
 builder.Services.AddScoped<ITopicBL, TopicBL>();
 builder.Services.AddScoped<ITopicDL, TopicDL>();
+builder.Services.AddScoped<IExcelBL, ExcelBL>();
+builder.Services.AddScoped<IExcelDL, ExcelDL>();
 builder.Services.AddScoped(typeof(IBaseBL<>), typeof(BaseBL<>));
 builder.Services.AddScoped(typeof(IBaseDL<>), typeof(BaseDL<>));
+
+//add cache memory
+builder.Services.AddMemoryCache();
+
 
 var app = builder.Build();
 

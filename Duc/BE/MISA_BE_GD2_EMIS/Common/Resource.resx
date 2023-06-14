@@ -120,6 +120,21 @@
   <data name="ErrorMessage" xml:space="preserve">
     <value>Đã có lỗi xảy ra vui lòng liên hệ MISA</value>
   </data>
+  <data name="ExcelAnswerTrueInvalid" xml:space="preserve">
+    <value>Đáp án đúng không hợp lệ</value>
+  </data>
+  <data name="ExcelAnswerTrueNull" xml:space="preserve">
+    <value>Chưa chọn đáp án đúng cho câu hỏi</value>
+  </data>
+  <data name="ExcelContenNull" xml:space="preserve">
+    <value>Thiếu nội dung câu hỏi</value>
+  </data>
+  <data name="ExcelNumAnswerInvalid" xml:space="preserve">
+    <value>Số lượng đáp án đúng không hợp lệ</value>
+  </data>
+  <data name="ExcelTypeNull" xml:space="preserve">
+    <value>Thiếu loại câu hỏi </value>
+  </data>
   <data name="InvalidAnswerContent" xml:space="preserve">
     <value>Nội dung đáp án không được để trống</value>
   </data>

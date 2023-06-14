@@ -4,6 +4,7 @@ using EMIS.Common.Entity;
 using EMIS.DL.BaseDL;
 using EMIS.DL.QuestionDL;
 using EMIS.DL.TopicDL;
+using Microsoft.Extensions.Configuration;
 using MySqlConnector;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,14 @@ namespace EMIS.DL.ExerciseDL
 {
     public class ExerciseDL : BaseDL<Exercise>, IExerciseDL
     {
+        #region Constructor
+        public ExerciseDL(IConfiguration configuration) : base(configuration)
+        {
+        }
+        #endregion
+
+        #region Methods
+
         /// <summary>
         /// lấy theo trang bài tập
         /// CreatedBy: Trịnh Huỳnh Đức (29-5-2023)
@@ -144,20 +153,20 @@ namespace EMIS.DL.ExerciseDL
         public string InsertAll(DataAll dataAll)
         {
             //tạo kết nối
-            var conn = OpenConnection(); 
+            var conn = OpenConnection();
             // Bat dau transaction
             var transaction = conn.BeginTransaction();
             try
-            {                  
-                
+            {
+
                 // thêm bài tập
                 // Chuẩn bị câu lệnh 
-                var insertCommand = "Proc_Exercise_Insert";                
+                var insertCommand = "Proc_Exercise_Insert";
                 // Chuẩn bị các tham số đầu vào
-                var parameters = new DynamicParameters(dataAll.exercise);               
+                var parameters = new DynamicParameters(dataAll.exercise);
                 // Thực hiện gọi vào db để chạy câu lệnh
                 var resultExercise = conn.ExecuteScalar<string>(insertCommand, param: parameters, transaction: transaction, commandType: System.Data.CommandType.StoredProcedure);
-                
+
                 // Kiem tra ket qua
                 if (resultExercise == "")
                 {
@@ -165,7 +174,7 @@ namespace EMIS.DL.ExerciseDL
                     transaction.Rollback();
                     return "";
                 }
-                
+
                 // thêm bài tập thành công
                 // thêm câu hỏi
                 // Chuẩn bị câu lệnh 
@@ -174,7 +183,7 @@ namespace EMIS.DL.ExerciseDL
                 dataAll.question.ExerciseID = Guid.Parse(resultExercise);
                 parameters = new DynamicParameters(dataAll.question);
                 // Thực hiện gọi vào db để chạy câu lệnh
-                var resultQuestion = conn.ExecuteScalar<string>(insertCommand, param: parameters, transaction: transaction, commandType: System.Data.CommandType.StoredProcedure);                  
+                var resultQuestion = conn.ExecuteScalar<string>(insertCommand, param: parameters, transaction: transaction, commandType: System.Data.CommandType.StoredProcedure);
                 // Kiem tra ket qua
                 if (resultQuestion == "")
                 {
@@ -182,10 +191,10 @@ namespace EMIS.DL.ExerciseDL
                     transaction.Rollback();
                     return "";
                 }
-         
+
                 //thêm câu hỏi thành công
                 // thêm đáp án
-                if(dataAll.answer.Count > 0)
+                if (dataAll.answer.Count > 0)
                 {
                     // Chuẩn bị câu lệnh
                     insertCommand = "Proc_Answer_Insert";
@@ -208,10 +217,10 @@ namespace EMIS.DL.ExerciseDL
                         return "";
                     }
                 }
-                
+
                 // thêm chủ đề          
                 if (dataAll.topicIDs != "")
-                { 
+                {
                     var resultTopic = 0;
                     // Chuẩn bị câu lệnh
                     var getAllCommand = "Proc_TopicExercise_Insert";
@@ -229,14 +238,14 @@ namespace EMIS.DL.ExerciseDL
                         return "";
                     }
                 }
-                
+
                 // Xác nhận thay đổi
                 transaction.Commit();
-                return resultExercise;             
+                return resultExercise;
             }
             catch (Exception)
             {
-                // Xác nhận thay đổi
+                // rollback
                 transaction.Rollback();
                 throw;
             }
@@ -244,6 +253,7 @@ namespace EMIS.DL.ExerciseDL
             {
                 conn.Close();
             }
-        }
+        } 
+        #endregion
     }
 }

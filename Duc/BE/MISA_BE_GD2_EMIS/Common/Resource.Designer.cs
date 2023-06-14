@@ -70,6 +70,51 @@ namespace EMIS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Đáp án đúng không hợp lệ.
+        /// </summary>
+        public static string ExcelAnswerTrueInvalid {
+            get {
+                return ResourceManager.GetString("ExcelAnswerTrueInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chưa chọn đáp án đúng cho câu hỏi.
+        /// </summary>
+        public static string ExcelAnswerTrueNull {
+            get {
+                return ResourceManager.GetString("ExcelAnswerTrueNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Thiếu nội dung câu hỏi.
+        /// </summary>
+        public static string ExcelContenNull {
+            get {
+                return ResourceManager.GetString("ExcelContenNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Số lượng đáp án đúng không hợp lệ.
+        /// </summary>
+        public static string ExcelNumAnswerInvalid {
+            get {
+                return ResourceManager.GetString("ExcelNumAnswerInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Thiếu loại câu hỏi .
+        /// </summary>
+        public static string ExcelTypeNull {
+            get {
+                return ResourceManager.GetString("ExcelTypeNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Nội dung đáp án không được để trống.
         /// </summary>
         public static string InvalidAnswerContent {

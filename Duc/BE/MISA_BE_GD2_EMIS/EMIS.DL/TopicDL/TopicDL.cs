@@ -2,6 +2,7 @@
 using EMIS.Common.Entity;
 using EMIS.DL.BaseDL;
 using EMIS.DL.QuestionDL;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,10 @@ namespace EMIS.DL.TopicDL
 {
     public class TopicDL : BaseDL<Topic>, ITopicDL
     {
+        public TopicDL(IConfiguration configuration) : base(configuration)
+        {
+        }
+
         /// <summary>
         /// lấy ra tất cả chủ đề theo id môn và khối
         /// CreatedBy: Trịnh Huỳnh Đức (29-5-2023)

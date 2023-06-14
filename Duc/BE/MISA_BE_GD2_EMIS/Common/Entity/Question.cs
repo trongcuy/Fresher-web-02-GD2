@@ -14,9 +14,11 @@ namespace EMIS.Common.Entity
         public string? QuestionExplane { get; set; }
         public string QuestionNumber { get; set; }
         public Guid ExerciseID { get; set; }
+        public Guid? QuestionImage { get; set; }
         public Question()
         {
             ExerciseID = Guid.NewGuid();
+            QuestionImage = Guid.Empty;
         }
     }
 }
