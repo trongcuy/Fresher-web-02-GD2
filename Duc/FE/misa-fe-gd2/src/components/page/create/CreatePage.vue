@@ -65,6 +65,7 @@
         @onClickContinue="insertFileToDB"
         :validRecord="this.validRecord"
         :invalidRecord="this.invalidRecord"/>
+    <MSPopupShowImage/>
 </template>
 
 <script>
@@ -79,6 +80,7 @@ import MSOverlay from '../../popup/MSOverlay.vue'
 import CreateHeader from './CreateHeader.vue'
 import MSQuestionToolbar from './MSQuestionToolbar.vue'
 import MSPopupImport from '../../popup/MSPopupImport.vue'
+import MSPopupShowImage from '../../popup/MSPopupShowImage.vue'
 import { mapGetters } from 'vuex'
 import { mapMutations } from 'vuex'
 import { mapActions } from 'vuex'
@@ -99,7 +101,8 @@ export default {
         MSQuestion,
         CreateHeader,
         MSQuestionToolbar,
-        MSPopupImport
+        MSPopupImport,
+        MSPopupShowImage
     },
     data() {
         const resource = window.Resource
