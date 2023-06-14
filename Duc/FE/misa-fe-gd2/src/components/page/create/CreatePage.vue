@@ -16,8 +16,9 @@
                         <br />File có định dạng xls, xlsx, doc, docx, pdf
                     </div>
                     <div class="btn-import">
-                        <MSButton title="Tải lên file bài tập" class="btn-dowload-file" />
-                        <MSButton title="Tải file Excel mẫu" class="btn-dowload-excel" />
+                        <MSButton title="Tải lên file bài tập" class="btn-dowload-file" @click="onClickUploadFile"/>
+                        <input ref="fileInput" hidden type="file" accept=".xls,.xlsx,.doc,.docx,.pdf" @change="onUploadFile" />
+                        <MSButton title="Tải file Excel mẫu" class="btn-dowload-excel" @click="onDowloadExcelSample"/>
                     </div>
                 </div>
             </div>
@@ -40,10 +41,10 @@
         </div>
 
         <!-- popup thêm câu hỏi -->
-        <MSPopupAdd v-if="showPopupAdd" @onClosePopup="onClosePopup" 
-            @onClickSaveQuestion="onClosePopup"
+        <MSPopupAdd v-if="showPopupAdd" @onClosePopup="onClosePopup" @onClosePopupAndNew="onClosePopupAndNew"
             @alertQuestionNull="alertQuestionNull" 
             @alertAnswerNull="alertAnswerNull"
+            @changeModePopup="()=>{this.modePage='edit'}"
             :data="this.questionSelected"
             :dataAnswers="this.answersSelected"
         />
@@ -59,6 +60,11 @@
         @onClickOk="onClickOkRemove" 
         @onClickCancel="onClickCancelRemove"/>
 	<MSOverlay v-if="showOverlay || showPopupAdd"/>
+    <MSPopupImport v-if="showPopupImport" @onClickClose="onClosePopupImport"
+        @onClickOtherFile="onClickOtherFile" 
+        @onClickContinue="insertFileToDB"
+        :validRecord="this.validRecord"
+        :invalidRecord="this.invalidRecord"/>
 </template>
 
 <script>
@@ -72,9 +78,13 @@ import MSDialog from '../../notify/MSDialog.vue'
 import MSOverlay from '../../popup/MSOverlay.vue'
 import CreateHeader from './CreateHeader.vue'
 import MSQuestionToolbar from './MSQuestionToolbar.vue'
+import MSPopupImport from '../../popup/MSPopupImport.vue'
 import { mapGetters } from 'vuex'
 import { mapMutations } from 'vuex'
 import { mapActions } from 'vuex'
+import _ from 'lodash-es'
+
+
 export default {
     name: "CreatePage",
     props: [],
@@ -88,7 +98,8 @@ export default {
         MSPopupAddInfor,
         MSQuestion,
         CreateHeader,
-        MSQuestionToolbar
+        MSQuestionToolbar,
+        MSPopupImport
     },
     data() {
         const resource = window.Resource
@@ -105,6 +116,9 @@ export default {
             answersSelected: [],//đáp án của câu hỏi đang chọn
             contentDialog: '',//nội dung dialog
             typeDialog: '',//loại dialog
+            showPopupImport: false,//ẩn hiện popup import
+            validRecord: 0,//số bản ghi hơpj lệ
+            invalidRecord: 0,//số bản ghi ko hợp lệ
         }
     },
     computed: {
@@ -116,7 +130,9 @@ export default {
             'gradeOptions',
             'questionList',
             'exerciseIDSelected',
-            'exerciseSelected'
+            'exerciseSelected',
+            'imageExercise',
+            'imageIdExercise'
         ])
     },
     methods: {
@@ -129,7 +145,9 @@ export default {
             'setExerciseSubject',
             'setExerciseGrade',
             'setTopicExercise',
-            'setNumQuestion'
+            'setNumQuestion',
+            'setImageIdExercise',
+            'setUrlImageExercise'
         ]),
         ...mapActions([
             'getListSubject',
@@ -140,7 +158,11 @@ export default {
             'editExercise',
             'addTopic',
             'getTopicExercise',
-            'deleteQuestionById'
+            'deleteQuestionById',
+            'uploadImage',
+            'dowloadExcelSample',
+            'uploadExcel',
+            'insertFileValid'
         ]),
         /**
          * click back về trang chủ
@@ -171,6 +193,9 @@ export default {
             //nếu tên chưa nhập thì lấy giá trị mặc định
             if(!this.exercise.exerciseName) 
                 this.exercise.exerciseName = "Bài nháp "+this.exercise.subjectName+" - "+this.exercise.gradeName
+             //lấy ảnh 
+            if(this.imageIdExercise)
+                this.exercise.exerciseImage = this.imageIdExercise  
             //set exercise truoc khi mo popup
             this.setExerciseSelected(this.exercise)
             //set loại popup 
@@ -191,6 +216,19 @@ export default {
             this.answersSelected = []
         },
 
+        /**
+         * sự kiện đóng popup và thêm câu hỏi mới
+         * CreatedBy: Trịnh Huỳnh Đức (9-6-2023)
+         * @param {*} type 
+         */
+        onClosePopupAndNew(type){
+            this.onClosePopup()
+            // Đợi Vue hoàn tất cập nhật DOM
+            this.$nextTick(() => {
+                // Gửi sự kiện để thêm mới câu hỏi
+                this.onClickNewQuesion(type)
+            });          
+        },
         /**
          * bắt sự kiện click nút bổ sung thêm thông tin
          * CreatedBy: Trịnh Huỳnh Đức (22-5-2023)
@@ -284,22 +322,23 @@ export default {
                     this.exercise.gradeID = this.gradeList[key].gradeID
                 }
             }
-            if(this.modePage == "add"){
+            //lấy ảnh 
+            if(this.imageIdExercise)
+            this.exercise.exerciseImage = this.imageIdExercise  
+            if(this.modePage == "add"){                          
                 //gọi api thêm
                 await this.addExercise(this.exercise)
                 //thêm chủ đề 
-                await this.addTopic()                                 
-                //back về trang chủ
-                this.onClickBack()             
+                await this.addTopic()                                            
             }
             else {
                 //gọi api sửa bài tập
                 this.editExercise(this.exercise)
                 //gọi api thêm chủ đề
-                this.addTopic()
-                //back về trang chủ
-                this.onClickBack()
-            }             
+                this.addTopic()              
+            }        
+            //back về trang chủ
+            this.onClickBack()     
         },
         /**
          * bắt sự kiện ấn lưu popup thêm thông tin
@@ -336,7 +375,6 @@ export default {
             this.typeDialog = ''
             this.contentDialog = this.resource.DialogContent.removeQuestion
             //hiện dialog xác nhận xóa
-            this.showOverlay = true
             this.showDialog = true
             this.idQuestionSelected = idQuestion
         },
@@ -366,7 +404,7 @@ export default {
          */
         onEditQuestion(data){
             this.questionSelected = data.question
-            this.answersSelected = data.answers
+            this.answersSelected = _.cloneDeep(data.answers)
             //set loại câu hỏi           
             this.setTypePopupAdd(this.resource.TypeQuestion[data.question.questionType])
             this.showOverlay = true
@@ -377,9 +415,9 @@ export default {
          * CreatedBy: Trịnh Huỳnh Đức (7-6-2023)
          * @param {*} idQuestion 
          */
-         onCopyQuestion(data){
+        onCopyQuestion(data){
             this.questionSelected = data.question
-            this.answersSelected = data.answers
+            this.answersSelected = _.cloneDeep(data.answers)
             //set loại câu hỏi           
             this.setTypePopupAdd(this.resource.TypeQuestion[data.question.questionType])
             this.showOverlay = true
@@ -404,6 +442,83 @@ export default {
             this.typeDialog = 'alert'
             this.showOverlay = true
             this.showDialog = true
+        },
+        /**
+        * bắt sự kiện ấn tải file lên
+        * CreatedBy: Trịnh Huỳnh Đức (7-6-2023)
+        */
+        onClickUploadFile(){
+            this.$refs.fileInput.click()
+        },
+        /**
+        * bắt sự kiện tải file lên và kiểm tra số bản ghi hợp lệ
+        * CreatedBy: Trịnh Huỳnh Đức (7-6-2023)
+        */
+        onUploadFile(event) {
+            const file = event.target.files[0]
+            const formData = new FormData()
+            formData.append('file', file)
+            this.uploadExcel(formData).then(data => {
+                this.validRecord = data.validCount
+                this.invalidRecord = data.invalidCount
+                this.showPopupImport = true
+                this.showOverlay = true
+            })      
+            event.target.value = ""
+        },
+        /**
+        * bắt sự kiện đóng popup import
+        * CreatedBy: Trịnh Huỳnh Đức (7-6-2023)
+        */
+        onClosePopupImport(){
+            this.showPopupImport = false
+            this.showOverlay = false
+        },
+
+        /**
+         * bắt sự kiện tải file excel mẫu
+         * CreatedBy: Trịnh Huỳnh Đức (10-6-2023)
+         */
+        onDowloadExcelSample() {
+            this.dowloadExcelSample()
+        },
+        /**
+         * bắt sự kiện chọn file excel khác
+         * CreatedBy: Trịnh Huỳnh Đức (13-6-2023)
+         */
+        onClickOtherFile() {
+            this.onClosePopupImport()
+            this.onClickUploadFile()
+        },
+        /**
+         * bắt sự kiện lưu các bản ghi hợp lệ vào database
+         * CreatedBy: Trịnh Huỳnh Đức (14-6-2023)
+         */
+        insertFileToDB() {
+            //lấy các thông tin bài tập
+            //lấy id môn học
+            for (const key in this.subjectList) {
+                if (this.subjectList[key].subjectName == this.exercise.subjectName) {
+                    this.exercise.subjectID = this.subjectList[key].subjectID
+                }
+            }
+            //lấy id khối
+            for (const key in this.gradeList) {
+                if (this.gradeList[key].gradeName == this.exercise.gradeName) {
+                    this.exercise.gradeID = this.gradeList[key].gradeID
+                }
+            }
+            //gán state 
+            this.exercise.exerciseState = 1
+            //nếu tên chưa nhập thì lấy giá trị mặc định
+            if(!this.exercise.exerciseName) 
+                this.exercise.exerciseName = "Bài nháp "+this.exercise.subjectName+" - "+this.exercise.gradeName
+            
+            this.onClosePopupImport()
+            this.insertFileValid(this.exercise).then(res=> {
+                this.$router.push({ path: "/course/create", query: { exerciseID: res } })
+            })
+            
         }
     },
     created() {
@@ -418,6 +533,10 @@ export default {
             //lấy bài tập đó
             this.getExerciseById(exerciseID).then(data => {
                 this.exercise = data
+                //lấy ảnh
+                const urlImage = this.buildImage(this.exercise.exerciseImage)
+                if(urlImage) 
+                this.setUrlImageExercise(urlImage)
             })
             //lấy câu hỏi
             this.getListQuestion(exerciseID)
@@ -440,6 +559,8 @@ export default {
         this.setQuestionList([])
         this.setTopicExercise([])
         this.setExerciseIDSelected('')
+        this.setImageIdExercise('')
+        this.setUrlImageExercise('https://sisapapp.misacdn.net/lms/img/tiengviet1.edd81b92.png')
     }
 }
 </script>

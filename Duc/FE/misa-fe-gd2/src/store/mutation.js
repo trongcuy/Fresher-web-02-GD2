@@ -139,4 +139,18 @@ export default {
     setNumQuestion(state, value) {
         state.numQuestion = value
     },
+    /*
+    * set imageIdExercise
+    * CreatedBy: Trịnh Huỳnh Đức (1-6-2023)
+    */
+    setImageIdExercise(state, value) {
+        state.imageIdExercise = value
+    },
+    /*
+    * set urlImageExercise
+    * CreatedBy: Trịnh Huỳnh Đức (1-6-2023)
+    */
+    setUrlImageExercise(state, value) {
+        state.urlImageExercise = value
+    },
 }

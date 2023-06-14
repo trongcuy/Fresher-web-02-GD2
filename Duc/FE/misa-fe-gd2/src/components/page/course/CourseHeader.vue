@@ -29,6 +29,10 @@ export default {
 		}
     },
     methods: {
+        /**
+         * click chuyển sang trang soạn bài
+         * CreatedBy: Trịnh Huỳnh Đức (18-5-2023)
+         */
         onClickCreate(){
             this.$router.push("/course/create")
         }

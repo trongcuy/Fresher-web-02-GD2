@@ -23,8 +23,7 @@
         </div>
         <!-- div chứa các card -->
         <div class="div-card" :class="{'card-hidden-btn': exerciseList.length!=pageSize}">
-            <MSCard v-for="(item, index) in exerciseList" :grade="item.gradeName" :subject="item.subjectName"
-                :title="item.exerciseName" :state="item.exerciseState" :numQuestion="item.numQuestion"
+            <MSCard v-for="(item, index) in exerciseList" :exercise="item"
                 @click="onClickCardExercise(item.exerciseID)" 
                 @onClickRemove="onClickRemove(item)"
                 @onClickOpen="onClickCardExercise(item.exerciseID)"/>
@@ -43,7 +42,7 @@
         :data="this.exerciseSelected.exerciseName"
         @onClickOk="onClickOkRemove" 
         @onClickCancel="onClickCancelRemove"/>
-	<MSOverlay v-if="showOverlay"/>
+	<!-- <MSOverlay v-if="showOverlay"/> -->
 </template>
 
 <script>

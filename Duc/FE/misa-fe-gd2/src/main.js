@@ -46,4 +46,8 @@ app.directive('tooltip', tooltipDirective)
 app.directive("click-outside", clickOutside)
 app.directive("esc", esc)
 
+//khai báo thư viện các hàm tự tạo
+import { myLibrary  } from './helper/myLibrary'
+app.mixin(myLibrary)
+
 app.mount('#app')

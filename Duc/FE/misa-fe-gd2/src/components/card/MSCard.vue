@@ -1,23 +1,25 @@
 <template>
-    <div class="card" >
-        <div class="grade">{{ grade + ' - ' + subject }}</div>
-        <img src="../../assets/img/toan.png" />
+    <div class="card">
+        <div class="grade">{{ exercise.gradeName + ' - ' + exercise.subjectName }}</div>
+        <img :src="urlExercise" />
         <div class="div-info">
-            <div class="div-title" >
-                <p>{{ title }}</p>
-                <div class="icon" @click="() => { showMenu = !showMenu }" @click.stop=""><img
+            <div class="div-title">
+                <p>{{ exercise.exerciseName }}</p>
+                <div class="icon" @click="showOption" @click.stop=""><img
                         src="https://sisapapp.misacdn.net/lms/img/icon_option.90d8b4a5.svg" /></div>
-                <div class="div-menu" v-if="showMenu" @click.stop="">
+                <div class="div-menu" v-if="showMenu" @click.stop="" v-click-outside="showOption">
                     <p v-for="(item, index) in listMenu" @click="onClickOptionMenu(item)">{{ item }}</p>
                 </div>
             </div>
             <div class="div-state">
-                <div class="div-num-question" v-if="numQuestion > 0">
+                <div class="div-num-question" v-if="exercise.numQuestion > 0">
                     <img src="https://sisapapp.misacdn.net/lms/img/ic_number_aswer.e4999537.svg" />
-                    <p>{{ numQuestion + ' Câu' }}</p>
+                    <p>{{ exercise.numQuestion + ' Câu' }}</p>
                 </div>
-                <div class="state" :class="{ 'state-share': state == '2', 'state-editing': state == '1' }" v-if="state">{{
-                    resource.StateExercise[state] }}</div>
+                <div class="state"
+                    :class="{ 'state-share': exercise.exerciseState == '2', 'state-editing': exercise.exerciseState == '1' }"
+                    v-if="exercise.exerciseState">{{
+                        resource.StateExercise[exercise.exerciseState] }}</div>
             </div>
             <div class="div-state">
                 <img src="https://sisapapp.misacdn.net/lms/img/ic_User_16.2bc4d930.svg" />
@@ -29,35 +31,15 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { mapActions } from 'vuex'
 export default {
     name: 'MSCard',
     props: {
-        //khối
-        grade: {
-            type: String,
-            default: ''
+        //bài tập
+        exercise: {
+            type: Object,
+            default: {}
         },
-        //môn
-        subject: {
-            type: String,
-            default: ''
-        },
-        src: {
-            type: String,
-            default: ''
-        },
-        title: {
-            type: String,
-            default: ''
-        },
-        numQuestion: {
-            type: Number,
-            default: 0
-        },
-        state: {
-            type: String,
-            default: ''
-        }
     },
     data() {
         const resource = window.Resource
@@ -68,20 +50,31 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['username'])
+        ...mapGetters(['username']),
+        urlExercise() {
+            return this.buildImage(this.exercise.exerciseImage)?this.buildImage(this.exercise.exerciseImage):'https://sisapapp.misacdn.net/lms/img/tiengviet1.edd81b92.png'
+        }
     },
     methods: {
+        ...mapActions([]),
         /**
          * bắt sự kiện click menu
          * CreatedBy: Trịnh Huỳnh Đức (31-5-2023)
          * @param {*} value 
          */
-        onClickOptionMenu(value){
-            this.showMenu=false
-            if(value=="Xóa")
-            this.$emit('onClickRemove')
-            if(value=="Xem")
-            this.$emit('onClickOpen')
+        onClickOptionMenu(value) {
+            this.showMenu = false
+            if (value == "Xóa")
+                this.$emit('onClickRemove')
+            if (value == "Xem")
+                this.$emit('onClickOpen')
+        },
+        /**
+         * bắt sự kiện click menu
+         * CreatedBy: Trịnh Huỳnh Đức (31-5-2023)
+         */
+        showOption() {
+            this.showMenu = !this.showMenu 
         }
     }
 }

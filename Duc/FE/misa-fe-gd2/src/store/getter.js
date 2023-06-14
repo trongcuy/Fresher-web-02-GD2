@@ -18,5 +18,7 @@ export default {
     exerciseSelected: state => state.exerciseSelected,
     questionList: state => state.questionList,
     topicExercise: state => state.topicExercise,
-    numQuestion: state => state.numQuestion
+    numQuestion: state => state.numQuestion,
+    imageIdExercise: state => state.imageIdExercise,
+    urlImageExercise: state => state.urlImageExercise,
 }

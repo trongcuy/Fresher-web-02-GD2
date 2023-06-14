@@ -17,15 +17,16 @@
         </div>
         <!-- phần menu phải -->
         <div class="header-right">
-            <MSCombobox  
-                class="combobox" 
-                :listSelect="['Năm học 2022-2023', 'Năm học 2021-2022']"
-                defaultValue="Năm học 2022-2023" 
-                src="https://cegovapp.misacdn.net/cegov/img/ic_drop-down.fa70eead.svg"></MSCombobox>
-            <div class="div-icon"><img src="https://sisapapp.misacdn.net/lms/img/ic_Material.0dcea9c1.svg"/></div>
-            <div class="div-icon" v-tooltip="'Thiết lập'"><img src="https://sisapapp.misacdn.net/lms/img/ic_Setting_24.425ce083.svg"/></div>
-            <div class="div-icon" v-tooltip="'Trợ giúp'"><img src="https://sisapapp.misacdn.net/lms/img/ic_Help_20.fbed8b0e.svg"/></div>
-            <div class="div-icon" v-tooltip="'Thông báo'"><img src="https://sisapapp.misacdn.net/lms/img/ic_Noti_24.9f8729e8.svg"/></div>
+            <MSCombobox class="combobox" :listSelect="['Năm học 2022-2023', 'Năm học 2021-2022']"
+                defaultValue="Năm học 2022-2023" src="https://cegovapp.misacdn.net/cegov/img/ic_drop-down.fa70eead.svg">
+            </MSCombobox>
+            <div class="div-icon"><img src="https://sisapapp.misacdn.net/lms/img/ic_Material.0dcea9c1.svg" /></div>
+            <div class="div-icon" v-tooltip:bottom="'Thiết lập'"><img
+                    src="https://sisapapp.misacdn.net/lms/img/ic_Setting_24.425ce083.svg" /></div>
+            <div class="div-icon" v-tooltip:bottom="'Trợ giúp'"><img
+                    src="https://sisapapp.misacdn.net/lms/img/ic_Help_20.fbed8b0e.svg" /></div>
+            <div class="div-icon" v-tooltip:bottom="'Thông báo'"><img
+                    src="https://sisapapp.misacdn.net/lms/img/ic_Noti_24.9f8729e8.svg" /></div>
             <div class="div-avatar">
                 <p>Xin chào, <b>Đức</b></p>
                 <img src="../assets/img/avatar-default.png" />
@@ -65,6 +66,7 @@ export default {
     z-index: 100;
     background-color: #fff;
 }
+
 .div-nav {
     height: 64px;
     width: auto;
@@ -77,8 +79,9 @@ export default {
     width: auto;
     display: flex;
     align-items: center;
-    
+
 }
+
 .div-icon {
     position: relative;
     width: 40px;
@@ -87,22 +90,25 @@ export default {
     justify-content: center;
     align-items: center;
 }
+
 .combobox {
     width: 185px;
     margin-right: 12px;
 }
+
 .div-avatar {
     padding-right: 16px;
     display: flex;
     align-items: center;
 }
-.div-avatar > p {
+
+.div-avatar>p {
     padding-left: 8px;
     padding-right: 16px;
     color: #4e5b6a;
 }
-.div-avatar > img {
+
+.div-avatar>img {
     width: 47px;
     height: 47px;
-}
-</style>
+}</style>

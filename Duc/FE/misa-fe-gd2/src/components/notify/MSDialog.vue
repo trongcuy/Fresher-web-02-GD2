@@ -1,18 +1,20 @@
 <template>
-    <div class="div-dialog">
-        <div class="dialog-header">
-            EMIS ôn tập
-        </div>
-        <div class="dialog-body" v-if="content">
-            {{ content }}
-        </div>
-        <div class="dialog-body" v-if="!content">
-            {{ firstContent }}<b>{{data}}</b>{{ lastContent }}
-        </div>
-        <div class="dialog-footer">
-                <MSButton title="Đồng ý" @click="onClickCancel" v-if="type=='alert'"/>
-                <MSButton title="Hủy bỏ" @click="onClickCancel" v-if="type!='alert'"/>
-                <MSButton title="Xóa" class="btn-complete" @click="onClickOk" v-if="type!='alert'"/>
+    <div class="overlay">
+        <div class="div-dialog">
+            <div class="dialog-header">
+                EMIS ôn tập
+            </div>
+            <div class="dialog-body" v-if="content">
+                {{ content }}
+            </div>
+            <div class="dialog-body" v-if="!content">
+                {{ firstContent }}<b>{{ data }}</b>{{ lastContent }}
+            </div>
+            <div class="dialog-footer">
+                <MSButton title="Đồng ý" class="btn-complete" @click="onClickCancel" v-if="type == 'alert'" />
+                <MSButton title="Hủy bỏ" @click="onClickCancel" v-if="type != 'alert'" />
+                <MSButton title="Xóa" class="btn-complete" @click="onClickOk" v-if="type != 'alert'" />
+            </div>
         </div>
     </div>
 </template>
@@ -58,20 +60,29 @@ export default {
          * bắt sự kiện hủy
          * CreatedBy: Trịnh Huỳnh Đức (23-5-2023)
          */
-        onClickCancel(){
+        onClickCancel() {
             this.$emit('onClickCancel')
         },
         /**
          * bắt sự kiện đồng ý
          * CreatedBy: Trịnh Huỳnh Đức (23-5-2023)
          */
-        onClickOk(){
+        onClickOk() {
             this.$emit('onClickOk')
         }
     }
 }
 </script>
 <style scoped>
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 103;
+}
 .div-dialog {
     width: 414px;
     height: 177px;
@@ -106,8 +117,10 @@ export default {
     display: flex;
     justify-content: flex-end;
 }
+
 .btn-complete {
     margin-left: 12px;
     background-color: #8a6bf6;
     color: #fff;
-}</style>
+}
+</style>

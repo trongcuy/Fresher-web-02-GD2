@@ -8,10 +8,10 @@
         <div class="body">
             <div class="body-image">
                 <p>Ảnh đại diện</p>
-                <img src="../../assets/img/default.png" />
+                <img :src="this.urlImageExercise" id="img-avatar" />
                 <div class="load-image">
                     <img src="../../assets/img/ic_image.svg" @click="convertToInput" />
-                    <input ref="fileInput" type="file" accept=".png,.jpg,.jpeg,.bmp" />
+                    <input ref="fileInput" type="file" accept=".png,.jpg,.jpeg,.bmp" @change="onUploadImage" />
                 </div>
 
             </div>
@@ -32,7 +32,7 @@
         </div>
         <!-- nút button lấy bên popupAdd-->
         <div class="div-button">
-            <MSButton title="Hủy" @click="onClosePopup" />
+            <MSButton title="Đóng" @click="onClosePopup" />
             <MSButton title="Lưu" id="btn-save-new" @click="onClickSave" />
         </div>
     </div>
@@ -59,6 +59,7 @@ export default {
             newExercise: [],//lưu bài tập đang sửa
             topics: [],//danh sách chủ đề theo id lớp và môn
             topicSelecteds: [],//danh sách chủ đề đã chọn
+            temporaryImgId: '',//lưu id ảnh tạm thời upload lên
         }
     },
 
@@ -69,21 +70,27 @@ export default {
             'subjectOptions',
             'gradeOptions',
             'topicExercise',//ds chủ đề đã chọn lưu trong state
+            'imageExercise',
+            'urlImageExercise'
         ])
     },
     methods: {
         ...mapMutations([
-            'setTopicExercise'
+            'setTopicExercise',
+            'setImageIdExercise',
+            'setUrlImageExercise'
         ]),
         ...mapActions([
             'getTopic',
-            'getTopicExercise'
+            'getTopicExercise',
+            'uploadImage'
         ]),
         /**
          * bắt sự kiện đóng popup
          * CreatedBy: Trịnh Huỳnh Đức (31-5-2023)
          */
         onClosePopup() {
+            this.setImageIdExercise('')
             this.$emit('onClosePopup')
         },
         /**
@@ -141,11 +148,16 @@ export default {
             //nếu chưa nhập tên thì ko cho lưu
             if (!this.newExercise.exerciseName)
                 return
+            //lưu id ảnh 
+            this.setImageIdExercise(this.temporaryImgId)
+            //lấy lại ảnh về
+            const urlImage = this.buildImage(this.temporaryImgId)
+                this.setUrlImageExercise(urlImage)
             //lưu thông tin bài tập
             this.$emit('onSaveInfor', this.newExercise)
             //lưu thông tin chủ đề
             this.setTopicExercise(this.topicSelecteds)
-            this.onClosePopup()
+            this.$emit('onClosePopup')
         },
         /**
          * bat su kien set value input exercise name
@@ -163,6 +175,29 @@ export default {
         convertToInput() {
             this.$refs.fileInput.click()
         },
+        /**
+         * bắt sự kiện load ảnh lên
+         * CreatedBy: Trịnh Huỳnh Đức (7-6-2023)
+         */
+        onUploadImage(event) {
+            var input = event.target
+            var img = document.getElementById('img-avatar')
+            //gán ảnh mới tải lên vào thẻ img
+            if (input.files && input.files[0]) {
+                var reader = new FileReader()
+                reader.onload = function (e) {
+                    img.src = e.target.result
+                };
+                reader.readAsDataURL(input.files[0])
+            }
+            //gán ảnh vào state
+            const formData = new FormData()
+            formData.append('image', input.files[0])
+            //lưu ảnh rồi lấy id lưu tạm, khi click lưu mới lưu ảnh vào bài tập
+            this.uploadImage(formData).then(data=> {
+                this.temporaryImgId = data
+            })
+        }
     },
     created() {
         this.newExercise = { ...this.exercise }
@@ -241,8 +276,8 @@ export default {
                 font-weight: 500;
             }
 
-            img {
-                height: auto;
+            &>img {
+                height: 156px;
                 width: 100%;
             }
 
@@ -252,6 +287,11 @@ export default {
                 position: absolute;
                 right: 12px;
                 bottom: 20px;
+
+                img {
+                    height: 40px;
+                    width: 40px;
+                }
 
                 input {
                     display: none;

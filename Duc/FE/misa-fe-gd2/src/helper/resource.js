@@ -24,7 +24,8 @@ const Resource = {
             exception: "Đã có lỗi xảy ra vui lòng liên hệ MISA!",
             errorRemove: "Xóa không thành công!",
             error: "Thêm không thành công!",
-            success: "Bạn đã xóa thành công!",           
+            success: "Bạn đã xóa thành công!", 
+            successImport: "Bạn đã nhập khẩu thành công!"          
         },
         DialogContent: {
             removeQuestion: "Bạn có chắc muốn xóa câu hỏi không?",

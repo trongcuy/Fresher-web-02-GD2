@@ -1,9 +1,9 @@
 <template>
     <div class="div-notify div-flex-row">
         <div class="div-flex-row">
-            <div class="div-line" :class="{'div-line-error': this.showNotify!='success'}"></div>
-            <img src='../../assets/img/icon-success.jpg' class="icon-success" v-if="this.showNotify=='success'"/>
-            <img src='../../assets/img/ic_error.svg' class="icon-error" v-if="this.showNotify!='success'"/>
+            <div class="div-line" :class="{'div-line-error': this.showNotify!='success' && this.showNotify!='successImport'}"></div>
+            <img src='../../assets/img/icon-success.jpg' class="icon-success" v-if="this.showNotify=='success' || this.showNotify=='successImport'"/>
+            <img src='../../assets/img/ic_error.svg' class="icon-error" v-if="this.showNotify!='success' && this.showNotify!='successImport'"/>
             {{ this.content }}
         </div>
         <img src="../../assets/img/ic_close_notify.jpg" class="icon-close" @click="onClickClose" />

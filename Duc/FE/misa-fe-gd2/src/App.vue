@@ -45,5 +45,6 @@ export default {
 </script>
 
 <style>
-@import url('./css/general.css')
+@import url('./css/general.css');
+@import url('./css/ckeditor.css');
 </style>

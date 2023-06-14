@@ -6,17 +6,14 @@
                 <p><b>{{ question.questionNumber }}.</b> <span v-html="question.questionContent"></span></p>
             </div>
             <div class="div-body">
+                <!-- ảnh câu hỏi nếu có -->
+                <div class="img-question" v-if="imgQuestion"><img :src="imgQuestion"/></div>
                 <!-- câu trả lời tự luận -->
                 <div v-if="isEssay" class="answer-essay"></div>
 
                 <!-- Câu trả lời chọn, đúng sai, điền đáp án -->
                 <div v-if="isSelect || isTrueFalse || isFill" class="answer-grid">
-                    <div class="div-answer-item div-flex-row" v-for="(item, index) in answers">
-                        <div class="div-center div-answer-true"
-                            :class="{ 'div-answer-false': item.answerState == enums.AnswerState.False }">{{
-                                this.indexToLetter(index) }}</div>
-                        <div>{{ this.convertHtmlToText(item.answerContent) }}</div>
-                    </div>
+                    <MSAnswerItem v-for="(item, index) in answers" :answer="item" :index="index"/>
                 </div>
 
                 <!-- Lời giải -->
@@ -28,9 +25,9 @@
             <!-- Thanh button -->
             <div class="div-button-question">
                 <MSButton title="Chỉnh sửa" @click="onEditQuestion" />
-                <div class="div-button-img" v-tooltip="'Sao chép câu hỏi'" @click="onCopyQuestion"><img src="../../assets/img/ic_dublicate.svg" />
+                <div class="div-button-img" v-tooltip:top="'Sao chép câu hỏi'" @click="onCopyQuestion"><img src="../../assets/img/ic_dublicate.svg" />
                 </div>
-                <div class="div-button-img" v-tooltip="'Xóa câu hỏi'" @click="() => { this.$emit('onRemoveQuestion') }">
+                <div class="div-button-img" v-tooltip:top="'Xóa câu hỏi'" @click="() => { this.$emit('onRemoveQuestion') }">
                     <img src="../../assets/img/icon_delete.9097d258.svg" />
                 </div>
             </div>
@@ -40,6 +37,7 @@
 
 <script>
 import MSButton from '../button/MSButton.vue'
+import MSAnswerItem from './MSAnswerItem.vue'
 import { mapActions, mapGetters } from 'vuex'
 export default {
     name: 'MSQuestion',
@@ -50,7 +48,8 @@ export default {
         },
     },
     components: {
-        MSButton
+        MSButton,
+        MSAnswerItem
     },
     watch: {
         question: function () {
@@ -66,7 +65,7 @@ export default {
         return {
             resource,
             enums,
-            answers: []
+            answers: [],
         }
     },
     computed: {
@@ -81,21 +80,16 @@ export default {
         },
         isEssay() {
             return this.resource.TypeQuestion[this.question.questionType] == 'essay'
+        },
+        imgQuestion() {
+            return this.buildImage(this.question.questionImage)
         }
     },
     methods: {
         ...mapActions([
-            'getAnswers'
+            'getAnswers',
         ]),
-        /**
-         * hàm chuyển từ index sang chữ cái tương ứng
-         * CreatedBy: Trịnh Huỳnh Đức (3-6-2023)
-         * @param {*} index 
-         */
-        indexToLetter(index) {
-            const letterCode = 65 + index;
-            return String.fromCharCode(letterCode);
-        },
+        
         /**
          * hàm bắt sự kiện chỉnh sửa câu hỏi
          * CreatedBy: Trịnh Huỳnh Đức (3-6-2023)
@@ -115,22 +109,14 @@ export default {
             delete newQuestion.questionID
             this.$emit('onCopyQuestion', { answers: this.answers, question: newQuestion })
         },
-        /**
-         * đổi html sang text
-         * @param {*} html 
-         */
-        convertHtmlToText(html) {
-            let element = document.createElement("div");
-            element.innerHTML = html;
-            return element.innerText;
-        }
+
     },
     created() {
-        //nếu là form 
+        //nếu là câu hỏi có đáp án
         if (this.isSelect || this.isTrueFalse || this.isFill)
             this.getAnswers(this.question.questionID).then(res => {
                 this.answers = res
-            })
+            })  
     }
 }
 </script>
@@ -165,29 +151,12 @@ p {
 .div-title p {
     display: flex;
 }
+.div-title span {
+    margin-left: 4px;
+}
 .div-body {
     border-bottom: 1px solid #E6E6e6;
     margin-bottom: 20px;
-}
-
-.div-answer-item {
-    height: 24px;
-}
-
-.div-answer-item div:first-child {
-    margin-right: 4px;
-    width: 24px;
-    height: 24px;
-    border-radius: 50px;
-    color: white;
-}
-
-.div-answer-true {
-    background-color: #00C542;
-}
-
-.div-answer-false {
-    background-color: #B6B9CE;
 }
 
 .div-button-question {
@@ -241,5 +210,17 @@ p {
 
 .question-explane>div {
     height: 20px;
+}
+.question-explane span {
+    margin-left: 4px;
+}
+.img-question {
+    width: 300px;
+    height: auto;
+    margin-bottom: 20px;
+}
+.img-question img {
+    width: 100%;
+    height: auto;
 }
 </style>

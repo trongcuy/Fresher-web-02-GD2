@@ -6,24 +6,30 @@
                 <div class="zoom-div" v-if="typePopupAdd == 'select'" @click="onClickRemove"><img
                         src="../../assets/img/icon_delete.9097d258.svg" />
                 </div>
-                <div class="zoom-div" v-if="typePopupAdd == 'select'"><img src="../../assets/img/icon_image.svg" /></div>
-                <div class="zoom-div" @click="onClickChangeState" :class="{'answer-true': stateAnswer}">
-                    <img v-if="!stateAnswer" src="../../assets/img/ic_uncheck.ceabec80.svg"/>
-                    <img v-if="stateAnswer" src="../../assets/img/ic_check.true.svg"/>
+                <div class="zoom-div" v-if="typePopupAdd == 'select'" @click="onClickAddImage"><img
+                        src="../../assets/img/icon_image.svg" /></div>
+                <div class="zoom-div" @click="onClickChangeState" :class="{ 'answer-true': stateAnswer }">
+                    <img v-if="!stateAnswer" src="../../assets/img/ic_uncheck.ceabec80.svg" />
+                    <img v-if="stateAnswer" src="../../assets/img/ic_check.true.svg" />
                 </div>
             </div>
         </div>
-        <div class="body" :class="{ 'body-boder': isEditting, 'remove-decor': !isEditting}" v-click-outside="onBlurEditor">
-            <textarea v-show="!isEditting&& !editorData" @click="onClickEdit">{{ placeholder }}</textarea>
-            <div v-if="(typePopupAdd == 'select' && isEditting)||editorData" style="width: 100%" @click="onClickEdit">
-                <ckeditor :editor="editor" v-model="editorData" :config="editorConfig"></ckeditor>
+        <div class="body" :class="{ 'body-boder': isEditting, 'remove-decor': !isEditting }" v-click-outside="onBlurEditor">
+            <textarea v-show="!isEditting && !editorData" @click="onClickEdit" @focus="onClickEdit">{{ placeholder }}</textarea>
+            <div class="div-editor" v-if="(typePopupAdd == 'select' && isEditting) || editorData" @click="onClickEdit">
+                <ckeditor ref="editorRef" :editor="editor" v-model="editorData" :config="editorConfig" ></ckeditor>
+            </div>
+            <!-- ảnh đáp án nếu có -->
+            <div v-if="urlAnswer" class="img-answer div-center">
+                <img :src="urlAnswer"/>
+                <img src="../../assets/img/ic_close.svg" @click="onRemoveAnswerImage"/>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 export default {
     name: 'MSCardAnswer',
     props: {
@@ -42,6 +48,10 @@ export default {
         state: {
             type: String,
             default: '2'
+        },
+        image: {
+            type: String,
+            default: ''
         }
     },
     watch: {
@@ -49,16 +59,15 @@ export default {
             this.$emit('setValueAnswer', newValue)
         },
         stateAnswer(newValue) {
-            if (this.typePopupAdd == 'select'){
-                const value = newValue?1:2
+            if (this.typePopupAdd == 'select') {
+                const value = newValue ? 1 : 2
                 this.$emit('onClickChangeState', value)
             }
         },
         state() {
-            if (this.typePopupAdd == 'truefalse'){
-                this.stateAnswer = this.state==this.enums.AnswerState.True
+            if (this.typePopupAdd == 'truefalse') {
+                this.stateAnswer = this.state == this.enums.AnswerState.True
             }
-            
         },
     },
     data() {
@@ -75,9 +84,13 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['typePopupAdd'])
+        ...mapGetters(['typePopupAdd']),
+        urlAnswer() {
+            return this.buildImage(this.image)
+        }
     },
     methods: {
+        ...mapActions([]),
         /**
          * bắt sự kiện xóa câu hỏi
          * CreatedBy: Trịnh Huỳnh Đức (23-5-2023)
@@ -104,14 +117,29 @@ export default {
          * thay đổi trạng thái đáp án
          * CreatedBy: Trịnh Huỳnh Đức (4-6-2023)
          */
-        onClickChangeState(){
-           this.stateAnswer=!this.stateAnswer
-           this.$emit('onClickChangeState')
+        onClickChangeState() {
+            this.stateAnswer = !this.stateAnswer
+            this.$emit('onClickChangeState')
+        },
+        /**
+         * bắt sự kiện thêm ảnh
+         * CreatedBy: Trịnh Huỳnh Đức (10-6-2023)
+         */
+        onClickAddImage() {
+            this.$emit('onClickAddImage')
+        },
+
+        /**
+         * bắt sự kiện xóa ảnh
+         * CreatedBy: Trịnh Huỳnh Đức (12-6-2023)
+         */
+        onRemoveAnswerImage() {
+            this.$emit('onClickRemoveImage')
         }
     },
-    created(){
+    created() {
         this.editorData = this.title
-        this.stateAnswer = this.state==this.enums.AnswerState.True
+        this.stateAnswer = this.state == this.enums.AnswerState.True
     }
 }
 </script>
@@ -120,6 +148,7 @@ export default {
 .zoom-div {
     cursor: pointer;
 }
+
 .card {
     width: 100%;
     height: 180px;
@@ -135,6 +164,7 @@ export default {
 }
 
 .card-rightwrong textarea {
+    padding-top: 4px;
     font-size: 24px;
     color: #4e5b6a;
 }
@@ -197,6 +227,7 @@ img {
 
 .body-boder {
     border: 3px solid #ec8bc8;
+    box-sizing: border-box;
 }
 
 textarea {
@@ -211,9 +242,35 @@ textarea {
     background-color: inherit;
     font-weight: 700;
     font-size: 18px;
-    margin-top: 20px;
-} 
+    margin-top: 25px;
+}
+
 .answer-true {
     background-color: #00C542 !important;
+}
+.img-answer {
+    height: 95%;
+    width: 100%;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background-color: #fff;
+    border-radius: 6px;
+}
+.img-answer img:first-child {
+    width: 80%;
+    height: 70%;
+}
+
+.img-answer img:nth-child(2) {
+    width: 12px;
+    height: 12px;
+    position: absolute;
+    top: 2px;
+    right: 4px;
+}
+.div-editor {
+    width: 100%;
+    box-sizing: border-box;
 }
 </style>

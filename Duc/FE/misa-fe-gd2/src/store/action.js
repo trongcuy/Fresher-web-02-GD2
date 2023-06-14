@@ -1,6 +1,6 @@
 //import axious
-import axios from 'axios';
-axios.defaults.baseURL = 'https://localhost:44393/api/v1';
+import axios from 'axios'
+axios.defaults.baseURL = 'https://localhost:44393/api/v1'
 export default {
     /**
      * lấy danh sách bài tập theo trang
@@ -138,6 +138,7 @@ export default {
             var jsondata = {
                 "exerciseName": data.exerciseName,
                 "exerciseState": data.exerciseState,
+                "exerciseImage": data.exerciseImage ? data.exerciseImage : '00000000-0000-0000-0000-000000000000',
                 "subjectID": data.subjectID,
                 "gradeID": data.gradeID
             }
@@ -189,7 +190,7 @@ export default {
             .then(response => {
                 commit('setShowLoading', false)
                 dispatch('getListExercise')
-                commit('setShowNotify', "success") 
+                commit('setShowNotify', "success")
             })
             .catch(error => {
                 console.log(error)
@@ -249,7 +250,8 @@ export default {
                 "questionType": data.questionType,
                 "questionExplane": data.questionExplane,
                 "questionNumber": data.questionNumber.toString(),
-                "exerciseID": data.exerciseID
+                "exerciseID": data.exerciseID,
+                "questionImage": data.questionImage
             }
             //gọi api thêm câu hỏi
             const response = await axios.post('/Questions', JSON.stringify(jsondata), {
@@ -260,7 +262,7 @@ export default {
             dispatch('getListQuestion', state.exerciseIDSelected)
             commit('setShowLoading', false)
             return response.data
-            
+
         }
         catch (error) {
             console.log(error)
@@ -277,7 +279,7 @@ export default {
             .then(response => {
                 commit('setShowLoading', false)
                 dispatch('getListQuestion', state.exerciseIDSelected)
-                commit('setShowNotify', "success") 
+                commit('setShowNotify', "success")
             })
             .catch(error => {
                 console.log(error)
@@ -298,7 +300,8 @@ export default {
                 "questionType": data.questionType,
                 "questionExplane": data.questionExplane,
                 "questionNumber": data.questionNumber.toString(),
-                "exerciseID": data.exerciseID
+                "exerciseID": data.exerciseID,
+                "questionImage": data.questionImage
             }
             //gọi api thêm câu hỏi
             const response = await axios.put('/Questions', JSON.stringify(jsondata), {
@@ -324,7 +327,6 @@ export default {
             const response = await axios.get(`/Questions/${questionID}/Answer`)
             commit('setShowLoading', false)//ẩn màn hình loading
             return response.data
-
         }
         catch (error) {
             console.log(error)
@@ -360,7 +362,6 @@ export default {
      */
     async insertAll({ commit, dispatch, state }, data) {
         try {
-            debugger
             commit('setShowLoading', true)
             //gọi api thêm bài tập
             const response = await axios.post('/Exercises/All', JSON.stringify(data), {
@@ -378,6 +379,121 @@ export default {
             handleException(error.response, { commit })
         }
     },
+
+    /**
+     * upload ảnh 
+     * CreatedBy: Trịnh Huỳnh Đức (8-6-2023)
+     * @param {*} param0 
+     * @param {*} formData 
+     */
+    async uploadImage({ commit }, formData) {
+        try {
+            const response = await axios.post('/Images', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            commit('setImageIdExercise', response.data)
+            return response.data
+        } catch (error) {
+            console.log(error)
+            handleException(error.response, { commit })
+        }
+    },
+
+    /**
+     * tải file excel mẫu
+     * CreatedBy: Trịnh Huỳnh Đức (10-6-2023)
+     * @param {*} param0 
+     */
+    dowloadExcelSample({ commit }) {
+        commit('setShowLoading', true)
+        axios.get('/Excels/Sample', { responseType: 'blob' })
+            .then(response => {
+                const url = window.URL.createObjectURL(new Blob([response.data]))
+                const link = document.createElement('a')
+                link.href = url
+                link.setAttribute('download', 'Mau_nhap_khau_cau_hoi_loai_1.xlsx')
+                document.body.appendChild(link)
+                link.click()
+            })
+            .catch(error => {
+                console.error(error);
+                handleException(error.response, { commit });
+            });
+
+        commit('setShowLoading', false)
+    },
+
+    /**
+     * upload file excel
+     * CreatedBy: Trịnh Huỳnh Đức (13-6-2023)
+     * @param {*} param0 
+     * @param {*} formData 
+     */
+    async uploadExcel({ commit }, formData) {
+        commit('setShowLoading', true)
+        try {
+            const response = await axios.post('/Excels', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            commit('setShowLoading', false)
+            return response.data
+        } catch (error) {
+            console.log(error)
+            handleException(error.response, { commit })
+        }
+    },
+
+    /**
+     * tải file excel lỗi
+     * CreatedBy: Trịnh Huỳnh Đức (13-6-2023)
+     * @param {*} param0 
+     */
+    dowloadFileInvalid({ commit }) {
+        commit('setShowLoading', true)
+        axios.get('/Excels/FileInvalid', { responseType: 'blob' })
+            .then(response => {
+                const url = window.URL.createObjectURL(new Blob([response.data]))
+                const link = document.createElement('a')
+                link.href = url
+                link.setAttribute('download', 'Loi_nhau_khau_cau_hoi_loai_1.xlsx')
+                document.body.appendChild(link)
+                link.click()
+            })
+            .catch(error => {
+                console.error(error);
+                handleException(error.response, { commit });
+            })
+        commit('setShowLoading', false)
+    },
+
+    /**
+     * insert bản ghi hợp lệ vào db
+     * CreatedBy: Trịnh Huỳnh Đức (14-6-2023)
+     * @param {*} param0 
+     */
+    async insertFileValid({ commit, dispatch }, exercise) {
+        commit('setShowLoading', true)
+        try {
+            const response = await axios.post('/Excels/FileValid', JSON.stringify(exercise), {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            commit('setShowNotify', 'successImport')
+            commit('setExerciseIDSelected', response.data)
+            dispatch('getListQuestion', response.data)
+            return response.data
+        }
+        catch (error) {
+            console.error(error);
+            handleException(error.response, { commit });
+        }
+        commit('setShowLoading', false)
+    },
 }
 
 /**
@@ -391,16 +507,16 @@ export const handleException = (response, { commit }) => {
         case 500:
             //commit('addListException', response.data.userMsg)
             //hiển thị thông báo
-            commit('setShowNotify', "exception") 
+            commit('setShowNotify', "exception")
             break;
         case 400: {
             //hiển thị thông báo
-            commit('setShowNotify', 'error')                  
+            commit('setShowNotify', 'error')
             break;
         }
-        default:{ 
+        default: {
             //hiển thị thông báo
-            commit('setShowNotify', "exception") 
+            commit('setShowNotify', "exception")
             break;
         }
     }

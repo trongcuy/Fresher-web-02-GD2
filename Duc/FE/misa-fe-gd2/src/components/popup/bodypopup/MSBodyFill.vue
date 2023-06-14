@@ -29,15 +29,6 @@ export default {
         MSInputTag,
     },
     watch: {
-        answers: {
-            deep: true,
-            handler: function (newVal, oldVal) {
-                if (newVal.length !== oldVal.length) {
-                    // Sự thay đổi về độ dài của mảng đã xảy ra
-                    alert("kk");
-                }
-            }
-        }
     },
     data() {
         return {

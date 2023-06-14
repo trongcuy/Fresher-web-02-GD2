@@ -23,4 +23,6 @@ export default {
     questionList: [],//lưu danh sách câu hỏi của bai tap
     numQuestion: 0,//lưu số câu hỏi của bài tập
     topicExercise: [],//lưu danh sách chủ đề của bài tập đang sửa
+    imageIdExercise: '',//id ảnh bài tập
+    urlImageExercise: 'https://sisapapp.misacdn.net/lms/img/tiengviet1.edd81b92.png',//url ảnh bài tập gọi từ api
 }

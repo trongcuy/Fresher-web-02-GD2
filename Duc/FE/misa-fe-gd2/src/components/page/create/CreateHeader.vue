@@ -5,7 +5,7 @@
             <!-- Thanh chứa tên -->
             <div class="div-name">
                 <img class="icon-back" src="../../../assets/img/icon_back.svg" @click="onClickBack" />
-                <img class="image" src="../../../assets/img/default.png" />
+                <img class="image" :src="this.urlImageExercise" />
                 <input type="text" placeholder="Nhập tên bài tập..." v-model="exercise.exerciseName" @input="onInput"/>
             </div>
             <!-- Thanh chứa các menu -->
@@ -20,7 +20,7 @@
                 </div>
 
                 <div class="menu-right">
-                    <div class="div-help"><img src="../../../assets/img/ic_help.svg" /></div>
+                    <div class="div-help" v-tooltip:top="'Hướng dẫn'"><img src="../../../assets/img/ic_help.svg"/></div>
                     <MSButton title="Làm thử" />
                     <MSButton title="Hoàn thành" class="btn-complete" @click="onClickComplete" />
                 </div>
@@ -53,6 +53,7 @@ export default {
         ...mapGetters([
             'subjectOptions',
             'gradeOptions',
+            'urlImageExercise'
         ])
     },
     methods: {
@@ -185,6 +186,7 @@ export default {
                     justify-content: center;
                     align-items: center;
                     cursor: pointer;
+                    position: relative;
                 }
             }
         }
