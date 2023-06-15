@@ -7,18 +7,23 @@
     </button>
 </template>
 
-<script>
-export default {
-    name: 'BaseButton',
-    props: {
-        text: String,
-        str: String,
-        disabled: {
-            type: Boolean,
-            default: false
-        }
+<script setup>
+import { defineProps, defineExpose, ref } from 'vue';
+
+const btn = ref("btn");
+
+const props = defineProps({
+    text: String,   // Nội dung button
+    str: String,    // Class của button
+    // Trạng thái disable của button
+    disabled: {
+        type: Boolean,
+        default: false
     }
-}
+})
+
+defineExpose({btn});
+
 </script>
 
 <style scoped>

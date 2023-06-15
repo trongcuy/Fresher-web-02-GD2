@@ -2,26 +2,12 @@
     <div class="answer-fill__container">
         <div class="answer-fill__item flex">
             <div class="fill-number">
-                Ô trống 1
+                Ô trống {{ props.index + 1 }}
             </div>
-            <div class="fill-input">
-                <!-- <input type="text"> -->
-                <span class="default-span">Nhập đáp án rồi nhấn Enter...</span>
-            </div>
-            <div class="fill-remove">
-                <div class="remove-icon">
-                    <img src="@/assets/img/icon-remove.svg" alt="">
-                </div>
-            </div>
-        </div>
-        <div class="answer-fill__add flex">
-            <div class="fill-number"></div>
-            <div class="fill-add__button flex">
-                <div class="fill-add__img">
-                    <img src="@/assets/img/icon-add.svg" alt="">
-                </div>
-                <div class="fill-add__text">
-                    Thêm đáp án
+            <BaseInputTag :data="dataAnswer.AnswerContent" v-model="dataAnswer.AnswerContent"></BaseInputTag>
+            <div class="fill-remove" @click="removeAnswer">
+                <div class="remove-icon" >
+                    <img :src="removeImg" alt="">
                 </div>
             </div>
         </div>
@@ -29,6 +15,71 @@
 </template>
 
 <script setup>
+import BaseInputTag from "../input/BaseInputTag.vue";
+import { defineProps, defineEmits, reactive, watch, computed, toRef, onMounted } from 'vue';
+import { useStore } from "vuex";
+
+const props = defineProps({
+    data: {}, // Data nhận được từ cha
+    index: null,    // Index của đáp án
+})
+
+const propData = toRef(props, "data");
+
+const emit = defineEmits(['removeAnswer', 'update:modelValue']);
+
+const store = useStore();
+// Biến xét đóng mở form question
+const showFormQuestion = computed(() => store.state.question.showFormQuestion);
+
+// Các biến lưu đường dẫn
+const removeImg = require("@/assets/img/icon-remove.svg");
+
+let dataAnswer = reactive({
+    AnswerContent: "",
+    SortOder: props.index.toString()
+})
+
+/**
+ * Xóa đáp án
+ * VMHieu 05/06/2023
+ */
+const removeAnswer = () => {
+    emit('removeAnswer');
+}
+
+/**
+ * Xem sự thay đổi của dữ liệu đáp án để đẩy lên component cha
+ * VMHieu 05/06/2023 
+ */
+watch((dataAnswer) , () => {
+    dataAnswer.SortOder = props.index;
+    if (typeof dataAnswer.SortOder !== 'string') {
+        dataAnswer.SortOder = dataAnswer.SortOder.toString();
+    }
+    emit('update:modelValue', dataAnswer);
+})
+
+// watch((showFormQuestion) , () => {
+//     console.log(props.data);
+// })
+
+/**
+ * Xem sự thay đổi của data để render lại
+ * VMHieu 08/06/2023
+ */
+watch((propData), () => {
+    if (props.data) {
+        for (let i in props.data) {
+            dataAnswer[i] = props.data[i];
+        }
+    }
+})
+
+onMounted(() => {
+    dataAnswer.AnswerContent = props.data.AnswerContent;
+    dataAnswer.SortOder = props.data.SortOder;
+})
 
 </script>
 
@@ -49,22 +100,6 @@
     margin-right: .5rem;
 }
 
-.fill-input{
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    padding-right: 46px;
-    border: 1px solid rgb(182, 185, 206);
-    padding: 0 4px 0px;
-    border-radius: 10px;
-    min-height: 42px;
-    width: 100%;
-}
-
-.default-span{
-    opacity: 0.6;
-}
-
 .fill-remove{
     cursor: pointer;
     top: 0px;
@@ -76,25 +111,10 @@
     align-items: center;
     justify-content: center;
     border-left: 1px solid rgb(182, 185, 206);
+    z-index: 99;
 }
 
-.fill-add__button{
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 1px dashed rgb(182, 185, 206);
-    border-radius: 10px;
-    background-color: rgb(241, 242, 247);
-    cursor: pointer;
-    color: rgba(78, 91, 106, 0.7);
+.ip-tag{
     width: 100%;
-    font-size: 16px;
-    line-height: 24px;
-    font-weight: 700;
-}
-
-.fill-add__img{
-    margin-right: 12px;
 }
 </style>

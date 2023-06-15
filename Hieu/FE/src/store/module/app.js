@@ -1,11 +1,14 @@
 const state = {
-    showPopup: false,
-    showToast: false,
-    toastMsg: "",
+    showPopup: false,   // Show popup
+    showToast: false,   // Show toast
+    toastMsg: "",       
     popupMsg: "",
     popupStatus: 0,
-    hideMainPage: false,
-    showOver: false,
+    toastStatus: 0,
+    hideMainPage: false, // Show page chính
+    statusDelete: 0,    // Trạng thái xóa
+    showLoading: false, // Hiển thị loading ,
+    formModeUpload: 0,
 }
 
 const mutations = {
@@ -35,6 +38,15 @@ const mutations = {
      */
     updateToastMsg(state, payload) {
         state.toastMsg = payload;
+    },
+    /**
+     * Update trạng thái toast
+     * @param {*} context 
+     * @param {*} data 
+     * CreatedBy VMHieu 23/05/2023 
+     */
+    updateToastStatus(state, payload) {
+        state.toastStatus = payload;
     },
     /**
      * Update trạng thái popup
@@ -72,6 +84,38 @@ const mutations = {
      */
     showOver(state, payload) {
         state.showOver = payload;
+    },
+
+    /**
+     * Update trạng thái xóa của popup
+     * @param {*} context 
+     * @param {*} data 
+     * VMHieu 04/06/2023
+     */
+    updateStatusDelete(state, payload) {
+        state.statusDelete = payload;
+    },
+
+    /**
+     * Ẩn hiện loading
+     * @param {*} context 
+     * @param {*} data
+     * VMHieu 05/06/2023 
+     */
+    showLoading(state, payload) {
+        state.showLoading = payload;
+        setTimeout(() => {
+            state.showLoading = false;
+        }, 3000);
+    },
+
+    /**
+     * Upload mode của form upload ảnh
+     * @param {*} context 
+     * @param {*} data 
+     */
+    uploadFormModeUpload(state, payload) {
+        state.formModeUpload = payload;
     }
 }
 
@@ -103,6 +147,16 @@ const actions = {
     updateToastMsg(context, data) {
         context.commit('updateToastMsg', data);
     },
+
+    /**
+     * Update trạng thái toast
+     * @param {*} context 
+     * @param {*} data 
+     * CreatedBy VMHieu 23/05/2023 
+     */
+    updateToastStatus(context, data) {
+        context.commit('updateToastStatus', data);
+    },
     /**
      * Update trạng thái popup
      * @param {*} context 
@@ -131,14 +185,34 @@ const actions = {
     updateHideMainPage(context, data) {
         context.commit('updateHideMainPage', data);
     },
+
     /**
-     * Ẩn hiện over màn hình
+     * Update trạng thái xóa của popup
      * @param {*} context 
      * @param {*} data 
-     * CreatedBy VMHieu 21/05/2023
+     * VMHieu 04/06/2023
      */
-    showOver(context, data) {
-        context.commit('showOver', data);
+    updateStatusDelete(context, data) {
+        context.commit('updateStatusDelete', data);
+    },
+
+    /**
+     * Ẩn hiện loading
+     * @param {*} context 
+     * @param {*} data
+     * VMHieu 05/06/2023 
+     */
+    showLoading(context, data) {
+        context.commit('showLoading', data);
+    },
+
+    /**
+     * Upload mode của form upload ảnh
+     * @param {*} context 
+     * @param {*} data 
+     */
+    uploadFormModeUpload(context, data) {
+        context.commit('uploadFormModeUpload', data);
     }
 }
 

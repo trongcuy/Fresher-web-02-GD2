@@ -4,56 +4,53 @@
             <router-link to="/dashboard" active-class="active">
                 <div class="menu-item flex">
                     <div class="menu-item__icon">
-                        <img src="@/assets/img/tongquan.svg" alt="" />
+                        <img :src="tqImg" alt="" />
                     </div>
-                    <div class="menu-item__text">Tổng quan</div>
+                    <div class="menu-item__text" tabindex="0">{{ Resource.TextWeb.Header.Overview }}</div>
                 </div>
             </router-link>
             <router-link to="/classroom" active-class="active">
                 <div class="menu-item flex">
                     <div class="menu-item__icon">
-                        <img src="@/assets/img/lophoc.svg" alt="" />
+                        <img :src="lhImg" alt="" />
                     </div>
-                    <div class="menu-item__text">Lớp học</div>
+                    <div class="menu-item__text" tabindex="0">{{ Resource.TextWeb.Header.Grade }}</div>
                 </div>
             </router-link>
             <router-link to="/storage" active-class="active">
                 <div class="menu-item flex">
                     <div class="menu-item__icon">
-                        <img src="@/assets/img/hoclieu.svg" alt="" />
+                        <img :src="hlImg" alt="" />
                     </div>
-                    <div class="menu-item__text">Học liệu</div>
+                    <div class="menu-item__text" tabindex="0">{{ Resource.TextWeb.Header.Courseware }}</div>
                 </div>
             </router-link>
             <router-link to="/training" active-class="active">
                 <div class="menu-item flex">
                     <div class="menu-item__icon">
-                        <img src="@/assets/img/hoclieu.svg" alt="" />
+                        <img :src="hlImg" alt="" />
                     </div>
-                    <div class="menu-item__text">Đào tạo MISA EMIS</div>
+                    <div class="menu-item__text" tabindex="0">{{ Resource.TextWeb.Header.Traning }}</div>
                 </div>
             </router-link>  
         </div>
         <div class="header-right flex">
-            <div class="combobox-year">
-                <BaseCombobox></BaseCombobox>
+            <div class="menu-icon">
+                <img :src="tcImg" alt="" />
             </div>
             <div class="menu-icon">
-                <img src="@/assets/img/tuychon.svg" alt="" />
+                <img :src="tlImg" alt="" />
             </div>
             <div class="menu-icon">
-                <img src="@/assets/img/thietlap.svg" alt="" />
+                <img :src="tgImg" alt="" width="24" height="24"/>
             </div>
             <div class="menu-icon">
-                <img src="@/assets/img/trogiup.svg" alt="" width="24" height="24"/>
-            </div>
-            <div class="menu-icon">
-                <img src="@/assets/img/thongbao.svg" alt="" />
+                <img :src="tbImg" alt="" />
             </div>
             <div class="avatar flex">
-                <div class="avatar-context">Xin chào, <strong>Hiếu</strong></div>
+                <div class="avatar-context">{{ Resource.TextWeb.Header.Greeting }} <strong>Hiếu</strong></div>
                 <div class="avatar-img">
-                    <img src="@/assets/img/getavatar.png" alt="" />
+                    <img :src="avatarImg" alt="" />
                 </div>
             </div>
         </div>
@@ -61,10 +58,20 @@
 </template>
 
 <script setup>
-import BaseCombobox from '../base/combobox/BaseCombobox.vue';
+import * as Resource from "@/common/resource/Resource";
+
+// Các biến lưu đường dẫn
+const tqImg = require("@/assets/img/tongquan.svg");
+const lhImg = require("@/assets/img/lophoc.svg");
+const hlImg = require("@/assets/img/hoclieu.svg");
+const tcImg = require("@/assets/img/tuychon.svg");
+const tlImg = require("@/assets/img/thietlap.svg");
+const tgImg = require("@/assets/img/trogiup.svg");
+const tbImg = require("@/assets/img/thongbao.svg");
+const avatarImg = require("@/assets/img/getavatar.png");
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .header-container {
     height: 64px;
     min-height: 64px;
@@ -74,16 +81,20 @@ import BaseCombobox from '../base/combobox/BaseCombobox.vue';
     top: 0;
     justify-content: space-between;
     background: #fff;
-}
 
-.header-left, .header-right {
+  .header-left,
+  .header-right {
     height: 100%;
     width: auto;
     display: flex;
     align-items: center;
-}
+  }
 
-.menu-item {
+  .header-right {
+    padding: 16px;
+  }
+
+  .menu-item {
     font-size: 16px;
     color: var(--color-text);
     height: 100%;
@@ -91,33 +102,33 @@ import BaseCombobox from '../base/combobox/BaseCombobox.vue';
     margin: 0 12px;
     cursor: pointer;
     text-decoration: none;
-}
 
-.menu-item img{
-    margin-right: 8px;
-    filter: invert(32%) sepia(26%) saturate(344%) hue-rotate(171deg) brightness(100%) contrast(91%);
-}
+    img {
+      margin-right: 8px;
+      filter: invert(32%) sepia(26%) saturate(344%) hue-rotate(171deg) brightness(100%) contrast(91%);
+    }
+  }
 
-.combobox-year{
+  .combobox-year {
     width: 185px;
     margin-right: 0.75rem;
-}
+  }
 
-.menu-icon{
+  .menu-icon {
     height: 40px;
     padding: 0 8px;
     display: flex;
     align-items: center;
     cursor: pointer;
-}
+  }
 
-.avatar-context{
+  .avatar-context {
     color: var(--color-text);
     font-size: 16px;
     margin: auto 16px auto 8px;
-}
+  }
 
-.avatar-img img{
+  .avatar-img img {
     height: 47px;
     width: 47px;
     background-size: 100%;
@@ -127,21 +138,22 @@ import BaseCombobox from '../base/combobox/BaseCombobox.vue';
     border-radius: 50%;
     cursor: pointer;
     overflow: hidden;
-}
+  }
 
-.active{
+  .active {
     border-bottom: 2px solid #8a6bf6;
     font-weight: 700;
     color: #8a6bf6;
     height: 100%;
-}
 
-.active img{
-    filter: invert(69%) sepia(72%) saturate(6261%) hue-rotate(227deg) brightness(99%) contrast(94%);
-}
+    img {
+      filter: invert(69%) sepia(72%) saturate(6261%) hue-rotate(227deg) brightness(99%) contrast(94%);
+    }
 
-.active .menu-item__text{
-    font-weight: 700;
-    color: #8a6bf6;
+    .menu-item__text {
+      font-weight: 700;
+      color: #8a6bf6;
+    }
+  }
 }
 </style>

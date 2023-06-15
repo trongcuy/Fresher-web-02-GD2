@@ -1,10 +1,10 @@
 <template>
-    <div class="form-question" v-show="showFormQuestion != 0">
+    <div class="form-question" v-if="showFormQuestion != 0">
         <div class="form-container" v-show="showNoteQuestion">
             <div class="form-body">
                 <div class="form-body__header flex">
                     <div class="choose-question-type flex">
-                        <div class="form-question__number">Câu 1 - </div>
+                        <div class="form-question__number"> Câu {{ dataQuestion.SortOder || numberQuestion }} - </div>
                         <BaseCombobox 
                             cbbClass="combobox-question"
                             :data=Resource.FormQuestionType
@@ -12,48 +12,102 @@
                             propText="Data"
                             v-model="typeQuestion"
                             :autoFocus=showFormQuestion
+                            :openClear="false"
                         ></BaseCombobox>
-                    </div>
-                    <div class="toolbar-item">
-
                     </div>
                 </div>
                 <div class="form-body__main" ref="main">
-                    <textarea class="question-content" placeholder="Nhập câu hỏi tại đây..."></textarea>
-                </div>
-                <div class="form-body__answer" v-show="showFormQuestion == 1">
-                    <div class="list-answer">
-                        <BaseAnswer></BaseAnswer>
-                        <BaseAnswer></BaseAnswer>
-                        <BaseAnswer></BaseAnswer>
-                        <BaseAnswer></BaseAnswer>
-                        <BaseAnswer></BaseAnswer>
-                        <BaseAnswer></BaseAnswer>
-                        <BaseAnswer></BaseAnswer>
+                    <CKEditor 
+                    class="question-ckeditor" 
+                    v-model="dataQuestion.QuestionContent"
+                    :dataEditor="dataQuestion.QuestionContent"
+                    ></CKEditor>
+                    <div class="upload-image" @click="openUploadImage">
+                        <input type="file" @input="chooseFileImg" 
+                        id="upload-file" ref="file" @change="handleFileUpload" accept=".png, .jpg, .jpeg"
+                        >
+                    </div>
+                    <div class="image-box flex" v-if="arrayImageUrl.length != 0">
+                        <div class="image-list">
+                            <div class="box-img" v-for="(item, index) in arrayImageUrl" :key="index">
+                                <img :src="`${constants.API_URL}/${item}`" alt="">
+                                <div class="icon-remove" @click="removeImage(index)">
+                                    <img :src="removeImg" alt="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="image-add"  @click="openUploadImage">
+                            <img :src="addFile" alt="">
+                            <div class="add-text">Thêm tệp đính kèm</div>
+                        </div>
                     </div>
                 </div>
-                <div class="form-body__answer" v-show="showFormQuestion == 2">
+                <div class="form-body__answer" v-if="showFormQuestion == Enum.FormQuestion.Select">
+                    <div class="list-answer" >
+                        <div v-for="(answer, index) in dataAnswerSelect" :key="index">
+                            <BaseAnswer 
+                                :data="answer" 
+                                :index="index" 
+                                @removeAnswer="removeAnswer(index)"
+                                v-model="dataAnswerSelect[index]"
+                                :saveData="saveData"
+                                @openFormImage="openFormImage"
+                            ></BaseAnswer>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-body__answer" v-if="showFormQuestion == Enum.FormQuestion.YesOrNo">
                     <div class="list-answer">
                         <div></div>
-                        <BaseAnswer></BaseAnswer>
-                        <BaseAnswer></BaseAnswer>
+                        <BaseAnswer 
+                            :data="dataAnswerYesNo[0]" 
+                            :index="Resource.AnswerYes.SortOder"
+                            v-model="dataAnswerYesNo[0]"
+                            @removeTick="removeTick(Resource.AnswerYes.SortOder)"
+                            :indexRemove="indexRemove"
+                        ></BaseAnswer>
+                        <BaseAnswer 
+                            :data="dataAnswerYesNo[1]"
+                            :index="Resource.AnswerNo.SortOder"
+                            v-model="dataAnswerYesNo[1]"
+                            @removeTick="removeTick(Resource.AnswerNo.SortOder)"
+                            :indexRemove="indexRemove"
+                        ></BaseAnswer>
                         <div></div>
                     </div>
                 </div>
-                <div class="form-body__answer" v-show="showFormQuestion == 3">
+                <div class="form-body__answer" v-if="showFormQuestion == Enum.FormQuestion.Fill">
                     <div class="answer-fill">
-                        <BaseAnswerFill></BaseAnswerFill>
+                        <div v-for="(answer, index) in dataAnswerFill" :key="index">
+                            <BaseAnswerFill
+                                :data="answer"
+                                :index="index"
+                                v-model="dataAnswerFill[index]"
+                                @removeAnswer="removeAnswer(index)"
+                            ></BaseAnswerFill>
+                        </div>
+                    </div>
+                    <div class="answer-fill__add flex">
+                        <div class="fill-number"></div>
+                        <div class="fill-add__button flex" @click="addAnswer">
+                            <div class="fill-add__img">
+                                <img :src="addImg" alt="">
+                            </div>
+                            <div class="fill-add__text" >
+                                Thêm đáp án
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="form-footer flex">
                 <div class="footer-left">
-                    <BaseButton class="ms-button btn-active btn-white" text="Thêm đáp án"></BaseButton>
+                    <BaseButton class="ms-button btn-active btn-white" v-if="showFormQuestion == Enum.FormQuestion.Select" text="Thêm đáp án" @click="addAnswer"></BaseButton>
                 </div>
                 <div class="footer-right">
                     <BaseButton class="ms-button btn-active btn-white" text="Hủy" @click="closeForm"></BaseButton>
-                    <BaseButton class="ms-button btn-active btn-white" text="Lưu và đóng"></BaseButton>
-                    <BaseButton class="ms-button btn-active btn-blue" text="Lưu và thêm câu"></BaseButton>
+                    <BaseButton class="ms-button btn-active btn-white" text="Lưu và đóng" @click="saveClose"></BaseButton>
+                    <BaseButton class="ms-button btn-active btn-blue" text="Lưu và thêm câu" @click="saveAdd"></BaseButton>
                 </div>
             </div>
         </div>
@@ -61,14 +115,15 @@
             <div class="form-body">
                 <div class="form-body__header flex">
                     <div class="choose-question-type flex">
-                        <div class="form-question__number">Câu 1</div>
-                    </div>
-                    <div class="toolbar-item">
-
+                        <div class="form-question__number">Câu {{ dataQuestion.SortOder || numberQuestion }} </div>
                     </div>
                 </div>
                 <div class="form-body__main fullscreen">
-                    <textarea class="question-content" placeholder="Nhập câu hỏi tại đây..."></textarea>
+                    <CKEditor 
+                    class="question-ckeditor" 
+                    v-model="dataQuestion.QuestionNote"
+                    :dataEditor="dataQuestion.QuestionNote"
+                    ></CKEditor>
                 </div>
             </div>
             <div class="form-footer flex">
@@ -80,47 +135,595 @@
         </div>
         <div class="add-note flex" v-show="showNoteQuestion" @click="showNoteQuestion = false">
             <div class="note-img">
-                <img src="@/assets/img/icon-noteadd.svg" alt="">
+                <img :src="noteaddImg" alt="">
             </div>
-            <div class="note-text">
+            <div class="note-text" >
                 Thêm lời giải
             </div>
         </div>
         <div class="close-note flex" v-show="!showNoteQuestion" @click="showNoteQuestion = true">
             <div class="note-img">
-                <img src="@/assets/img/icon-noteback.svg" alt="">
+                <img :src="notebackImg" alt="">
             </div>
             <div class="note-text">
                 Quay lại câu hỏi
             </div>
         </div>
     </div>
+    <PopupMessage></PopupMessage>
+    <FormImage 
+        v-if="showFormImage && formModeUpload == Enum.FormModeUpload.Answer"
+        v-model="dataAnswerSelect[indexAnswer].AnswerImage"
+    ></FormImage>
+    <FormImage 
+        v-if="showFormImage && formModeUpload == Enum.FormModeUpload.Question"
+        v-model="dataImageQuestion"
+    ></FormImage>
 </template>
 
 <script setup>
 import BaseCombobox from '../base/combobox/BaseCombobox.vue';
 import BaseButton from '../base/button/BaseButton.vue';
 import BaseAnswer from '../base/answer/BaseAnswer.vue';
+import PopupMessage from './PopupMessage.vue';
+import ToastMessage from './ToastMessage.vue';
+import FormImage from '@/components/view/FormImage'
+import BaseAnswerFill from '../base/answer/BaseAnswerFill.vue';
+import CKEditor from '@/components/base/ckeditor/CKEditor.vue';
 import { useStore } from 'vuex';
-import { computed, reactive, ref, watch } from 'vue'; 
+import { useRoute, useRouter } from 'vue-router';
+import { computed, ref, watch, reactive, defineProps, defineEmits, nextTick, onMounted, isReactive } from 'vue'; 
 import * as Resource from '@/common/resource/Resource';
 import * as Enum from '@/common/enum/Enum';
-import BaseAnswerFill from '../base/answer/BaseAnswerFill.vue';
+import { handleShowToast } from '@/common/common';
+import _ from 'lodash'
+import { constants } from '@/config/config';
+
+// Các biến lưu đường dẫn
+const noteaddImg = require("@/assets/img/icon-noteadd.svg");
+const notebackImg = require("@/assets/img/icon-noteback.svg");
+const addImg = require("@/assets/img/icon-add.svg");
+const addFile = require("@/assets/img/add-file.svg");
+const removeImg = require("@/assets/img/remove-img.svg");
+
+const props = defineProps({
+    data: null, //Data câu hỏi
+    dataExercise: null, // Data bài tập
+})
+
+const emit = defineEmits(['saveQuestion', 'getValueExercise']);
 
 const store = useStore();
+const route = useRoute();
+const router = useRouter();
 
-const showFormQuestion = computed(() => store.state.question.showFormQuestion);
+const showFormQuestion = computed(() => store.state.question.showFormQuestion); // Mở form câu hỏi
+const exerciseID = computed(() => store.state.exercise.exerciseID); // ID bản ghi bài tập mới thêm
+const formModeQuestion = computed(() => store.state.question.formModeQuestion); // ID bản ghi câu hỏi mới thêm
+const question = computed(() => store.state.question.dataQuestion); // data bản ghi câu hỏi mới thêm
+const formModeUpload = computed(() => store.state.app.formModeUpload); // data bản ghi câu hỏi mới thêm
+const showFormImage = computed(() => store.state.question.showFormImage);
+// Tính toán số thứ tự câu
+const numberQuestion = computed(() => {
+    if (props.data.length > 0) {
+        let num = props.data.length;
+        return `${(num + 1)}`;
+    } 
+    return "1";
+})
+// Mảng đường dẫn các ảnh câu hỏi
 
-const typeQuestion = ref();
-const showNoteQuestion = ref(true);
+const typeQuestion = ref(); // Kiểu câu hỏi
+const showNoteQuestion = ref(true); // Show form chú thích
+const saveData = ref(true); // Dấu hiệu lấy data truyền cho component con
+const indexRemove = ref(); // index của đáp án cần xóa tick
+const indexAnswer = ref(0);  // index của câu hỏi
+const file = ref("file");
+const dataImageQuestion = ref();
+let arrayImageUrl = ref([]);
+
 const main = ref("main");
-/**
+// Dữ liệu câu hỏi
+let dataQuestion = reactive({
+    QuestionContent: "",
+    QuestionNote: "",
+    QuestionImage: "",
+    SortOder: "",
+    TypeQuestion: ""
+});
+// Dữ liệu đáp án chọn
+let dataAnswerSelect = reactive([
+   {
+        AnswerContent: "",
+        AnswerImage: "",
+        AnswerStatus: "",
+        SortOder: "1"
+   },
+   {
+        AnswerContent: "",
+        AnswerImage: "",
+        AnswerStatus: "",
+        SortOder: "2"
+   },
+   {
+        AnswerContent: "",
+        AnswerImage: "",
+        AnswerStatus: "",
+        SortOder: "3"
+   },
+   {
+        AnswerContent: "",
+        AnswerImage: "",
+        AnswerStatus: "",
+        SortOder: "4"
+   }
+])
+
+// Dữ liệu đáp án chọn
+let dataAnswerYesNo = reactive([
+   {
+        AnswerContent: "Đúng",
+        AnswerImage: "",
+        AnswerStatus: "",
+        SortOder: "1"
+   },
+   {
+        AnswerContent: "Sai",
+        AnswerImage: "",
+        AnswerStatus: "",
+        SortOder: "2"
+   }
+])
+
+// Dữ liệu đáp án điền vào ô trống
+let dataAnswerFill = reactive([
+    {
+        AnswerContent: "",
+        SortOder: "1"
+    }
+])
+/** 
  * Đóng form
  * CreatedBy VMHieu 21/05/2023
  */
 const closeForm = () => {
-    store.dispatch("showFormQuestion", false);
+    store.dispatch("showFormQuestion", 0);
     showNoteQuestion.value = true;
+}
+
+/**
+ * Hiển thị form chọn ảnh
+ * VMHieu 13/06/2023
+ */
+ const openFormImage = (value) => {
+    store.dispatch("showFormImage", true);
+    store.dispatch("uploadFormModeUpload", Enum.FormModeUpload.Answer);
+    indexAnswer.value = value;
+}
+/**
+ * Mở form upload image câu hỏi
+ */
+const openUploadImage = () => {
+    store.dispatch("showFormImage", true);
+    store.dispatch("uploadFormModeUpload", Enum.FormModeUpload.Question);
+}
+
+/**
+ * Thêm đáp án
+ * VMHieu 02/06/2023
+ */
+const addAnswer = () => {
+    if (showFormQuestion.value == Enum.FormQuestion.Select) {
+        if (dataAnswerSelect.length > 20) {
+            showToastWarning(Resource.ToastWarning.LimitAnswer);
+        } else {
+            let bonusAnswer = {
+                AnswerContent: "",
+                AnswerImage: "",
+                AnswerStatus: "",
+                SortOder: ""
+            }
+            dataAnswerSelect.push(bonusAnswer);
+        }
+    } else if (showFormQuestion.value == Enum.FormQuestion.Fill) {
+        let bonusAnswer = {
+            AnswerContent: "",
+            SortOder: ""
+        }
+        dataAnswerFill.push(bonusAnswer);
+    }
+}
+/**
+ * Xóa đáp án
+ * VMHieu 02/06/2023
+ */
+const removeAnswer = (index) => {
+    if (showFormQuestion.value == Enum.FormQuestion.Select) {
+        if (dataAnswerSelect.length == 1) {
+            showToastWarning(Resource.ToastWarning.LeastAnswer);
+        } else {
+            dataAnswerSelect.splice(index, 1);
+        }
+    } else if (showFormQuestion.value == Enum.FormQuestion.Fill) {
+        if (dataAnswerFill.length == 1) {
+            showToastWarning(Resource.ToastWarning.LeastAnswer);
+        } else {
+            dataAnswerFill.splice(index, 1);
+        }
+    }
+}
+
+/**
+ * Xóa tick đáp án đúng
+ * @param {*} index 
+ * VMHieu 05/06/2023
+ */
+const removeTick = (index) => {
+    indexRemove.value = index;
+}
+
+/**
+ * Xóa ảnh
+ * @param {} index 
+ */
+const removeImage = (index) => {
+    arrayImageUrl.value.splice(index, 1);
+}
+
+/**
+ * Kiểm tra thông tin câu hỏi và đáp án
+ * VMHieu 02/06/2023
+ */
+const validateQuestion = () => {
+    let isValid = true;
+
+    if (arrayImageUrl.value.length > 0) {
+        dataQuestion.QuestionImage = arrayImageUrl.value.join(";");
+        dataQuestion.QuestionContent = "";
+    }
+    
+    // Validate chung cho các câu hỏi
+    if (!dataQuestion.QuestionContent && !dataQuestion.QuestionImage) {
+        isValid = false;
+        openPopupError(Resource.PopupMessage.NotQuestion);
+    }
+
+    // Validate riêng từng form câu hỏi
+    var checkSelect = false;
+    var checkFill = true;
+    var arrError = [];
+    switch (Number(typeQuestion.value)) {
+        case Enum.FormQuestion.Select:
+            for (let i = 0; i < dataAnswerSelect.length; i++) {
+                if ((dataAnswerSelect[i].AnswerContent || dataAnswerSelect[i].AnswerImage )
+                    && dataAnswerSelect[i].AnswerStatus == Enum.AnswerStatus.True) {
+                        checkSelect = true;
+                } else if (!dataAnswerSelect[i].AnswerContent && !dataAnswerSelect[i].AnswerImage ) {
+                    arrError.push(i);
+                }
+            }
+
+            if (!checkSelect) {
+                openPopupError(Resource.PopupMessage.NotAnswerCheck);
+                isValid = false;
+            } else {
+                for (let i = 0; i < arrError.length; i++) {
+                    delete dataAnswerSelect[arrError[i]];
+                }
+            }
+            break;
+        case Enum.FormQuestion.YesOrNo: 
+            if (dataAnswerYesNo[0].AnswerContent && dataAnswerYesNo[1].AnswerContent) {
+                if (dataAnswerYesNo[0].AnswerStatus == Enum.AnswerStatus.False &&
+                    dataAnswerYesNo[1].AnswerStatus == Enum.AnswerStatus.False) {
+                        isValid = false;
+                        openPopupError(Resource.PopupMessage.NotAnswerCheck);
+                    }
+            } else {
+                openPopupError(Resource.PopupMessage.NotAnswerCheck);
+                isValid = false;
+            }
+
+            break;
+        case Enum.FormQuestion.Fill: 
+            for (let i = 0; i < dataAnswerFill.length; i++) {
+                if (!dataAnswerFill[i].AnswerContent) {
+                        checkFill = false;
+                        break;
+                } 
+            }
+            if (!checkFill) {
+                openPopupError(Resource.PopupMessage.NotAnswerFill);
+                isValid = false;
+            }
+            break;
+        case Enum.FormQuestion.Essay: 
+            break;
+        default:
+            break;
+    }
+
+    return isValid;
+}
+
+/**
+ * Thêm câu hỏi và đóng form
+ */
+const saveClose = async () => {
+    let dataAll = {
+        Exercise: {},
+        Question: {},
+        Answers: [],
+        TopicIDs: []
+    }
+    let id = route.query.id;
+    if (validateQuestion()) {
+        // Thêm các trường còn thiếu cho câu hỏi
+        dataQuestion = {...dataQuestion, TypeQuestion: Number(typeQuestion.value)};
+        dataQuestion = {...dataQuestion, SortOder: numberQuestion.value};
+
+        // Thêm bài tập nếu ở form thêm
+        if (!id) {
+            dataQuestion = {...dataQuestion, ExerciseID: exerciseID.value};
+            for (let prop in dataQuestion) {
+                if (!dataQuestion[prop]) {
+                    delete dataQuestion[prop];
+                }
+            }
+        } else {
+            for (let prop in dataQuestion) {
+                if (!dataQuestion[prop]) {
+                    delete dataQuestion[prop];
+                }
+            }
+        }
+        // Thêm đáp án cho câu hỏi
+        if (dataQuestion.TypeQuestion != Enum.FormQuestion.Essay) {
+            let arrayAnswer = [];
+            switch (dataQuestion.TypeQuestion) {
+                // Câu hỏi chọn đáp án
+                case Enum.FormQuestion.Select:
+                    for (let prop in dataAnswerSelect) {
+                        for (let i in dataAnswerSelect[prop]) {
+                            if (!dataAnswerSelect[prop][i]) {
+                                delete dataAnswerSelect[prop][i];
+                            }
+                        }
+                        arrayAnswer.push(dataAnswerSelect[prop]);
+                    }
+                    break;
+                case Enum.FormQuestion.YesOrNo:
+                    // Câu hỏi đúng sai
+                    for (let prop in dataAnswerYesNo) {
+                        for (let i in dataAnswerYesNo[prop]) {
+                            if (!dataAnswerYesNo[prop][i]) {
+                                delete dataAnswerYesNo[prop][i];
+                            }
+                        }
+                        arrayAnswer.push(dataAnswerYesNo[prop]);
+                    }
+                    break;
+                case Enum.FormQuestion.Fill: 
+                    // Câu hỏi điền vào ô trống
+                    for (let prop in dataAnswerFill) {
+                        arrayAnswer.push(dataAnswerFill[prop]);
+                    }
+                    break;
+                default:
+                    break;
+            }
+            if (arrayAnswer) {
+                dataAll.Answers = arrayAnswer;
+            }
+        }
+
+        dataAll.Exercise = props.dataExercise;
+        dataAll.Question = dataQuestion;
+        if (props.dataExercise.Topics) {
+            dataAll.TopicIDs = Object.values(props.dataExercise.Topics);
+        }
+        
+        if (formModeQuestion.value == Enum.FormModeQuestion.Edit) {
+            await store.dispatch("putMultipleData", dataAll);
+            store.dispatch("getAllByID", id);
+        } else if (formModeQuestion.value == Enum.FormModeQuestion.Add || formModeQuestion.value == Enum.FormModeQuestion.Clone) {
+            await store.dispatch("postMultipleData", dataAll);
+            if (!id){
+                id = exerciseID.value;
+                store.dispatch("getAllByID", exerciseID.value);
+            } else {
+                store.dispatch("getAllByID", id);
+            }
+            // Đổi route về form bài tập đã có câu hỏi
+            router.push({ path: "/storage/create", query: {id} });
+        }
+        // Đóng form
+        store.dispatch("showFormQuestion", false);
+    }
+}
+
+/**
+ * Thêm câu hỏi và đóng form
+ */
+ const saveAdd = async () => {
+    let dataAll = {
+        Exercise: {},
+        Question: {},
+        Answers: [],
+        TopicIDs: []
+    }
+    let id = route.query.id;
+    if (validateQuestion()) {
+        // Thêm các trường còn thiếu cho câu hỏi
+        dataQuestion = {...dataQuestion, TypeQuestion: Number(typeQuestion.value)};
+        dataQuestion = {...dataQuestion, SortOder: numberQuestion.value};
+
+        // Thêm bài tập nếu ở form thêm
+        if (!id) {
+            dataQuestion = {...dataQuestion, ExerciseID: exerciseID.value};
+            for (let prop in dataQuestion) {
+                if (!dataQuestion[prop]) {
+                    delete dataQuestion[prop];
+                }
+            }
+        } else {
+            for (let prop in dataQuestion) {
+                if (!dataQuestion[prop]) {
+                    delete dataQuestion[prop];
+                }
+            }
+        }
+        // Thêm đáp án cho câu hỏi
+        if (dataQuestion.TypeQuestion != Enum.FormQuestion.Essay) {
+            let arrayAnswer = [];
+            switch (dataQuestion.TypeQuestion) {
+                // Câu hỏi chọn đáp án
+                case Enum.FormQuestion.Select:
+                    for (let prop in dataAnswerSelect) {
+                        for (let i in dataAnswerSelect[prop]) {
+                            if (!dataAnswerSelect[prop][i]) {
+                                delete dataAnswerSelect[prop][i];
+                            }
+                        }
+                        arrayAnswer.push(dataAnswerSelect[prop]);
+                    }
+                    break;
+                case Enum.FormQuestion.YesOrNo:
+                    // Câu hỏi đúng sai
+                    for (let prop in dataAnswerYesNo) {
+                        for (let i in dataAnswerYesNo[prop]) {
+                            if (!dataAnswerYesNo[prop][i]) {
+                                delete dataAnswerYesNo[prop][i];
+                            }
+                        }
+                        arrayAnswer.push(dataAnswerYesNo[prop]);
+                    }
+                    break;
+                case Enum.FormQuestion.Fill: 
+                    // Câu hỏi điền vào ô trống
+                    for (let prop in dataAnswerFill) {
+                        arrayAnswer.push(dataAnswerFill[prop]);
+                    }
+                    break;
+                default:
+                    break;
+            }
+            if (arrayAnswer) {
+                dataAll.Answers = arrayAnswer;
+            }
+        }
+
+        dataAll.Exercise = props.dataExercise;
+        dataAll.Question = dataQuestion;
+        if (props.dataExercise.Topics) {
+            dataAll.TopicIDs = Object.values(props.dataExercise.Topics);
+        }
+        
+        if (formModeQuestion.value == Enum.FormModeQuestion.Edit) {
+            await store.dispatch("putMultipleData", dataAll);
+            store.dispatch("getAllByID", id);
+        } else if (formModeQuestion.value == Enum.FormModeQuestion.Add || formModeQuestion.value == Enum.FormModeQuestion.Clone) {
+            await store.dispatch("postMultipleData", dataAll);
+            if (!id){
+                id = exerciseID.value;
+                store.dispatch("getAllByID", exerciseID.value);
+            } else {
+                store.dispatch("getAllByID", id);
+            }
+            // Đổi route về form bài tập đã có câu hỏi
+            router.push({ path: "/storage/create", query: {id} });
+        }
+        resetForm();
+    }
+}
+
+/**
+ * Reset lại form 
+ * VMHieu 07/06/2023
+ */
+const resetForm = () => {
+    dataQuestion = reactive({
+        QuestionContent: "",
+        QuestionNote: "",
+        QuestionImage: "",
+        SortOder: "",
+        TypeQuestion: ""
+    });
+
+    dataAnswerSelect = reactive([
+    {
+            AnswerContent: "",
+            AnswerImage: "",
+            AnswerStatus: "",
+            SortOder: "1"
+    },
+    {
+            AnswerContent: "",
+            AnswerImage: "",
+            AnswerStatus: "",
+            SortOder: "2"
+    },
+    {
+            AnswerContent: "",
+            AnswerImage: "",
+            AnswerStatus: "",
+            SortOder: "3"
+    },
+    {
+            AnswerContent: "",
+            AnswerImage: "",
+            AnswerStatus: "",
+            SortOder: "4"
+    }
+    ])
+
+
+    dataAnswerYesNo = reactive([
+    {
+            AnswerContent: "Đúng",
+            AnswerImage: "",
+            AnswerStatus: "",
+            SortOder: "1"
+    },
+    {
+            AnswerContent: "Sai",
+            AnswerImage: "",
+            AnswerStatus: "",
+            SortOder: "2"
+    }
+    ])
+
+    dataAnswerFill = reactive([
+        {
+            AnswerContent: "",
+            SortOder: "1"
+        }
+    ])
+
+    arrayImageUrl.value = [];
+}
+
+/**
+ * Mở popup lỗi khi validate
+ * VMHieu 02/06/2023
+ */
+const openPopupError = (msg) => {
+    store.dispatch("showPopup", true);
+    store.dispatch("updatePopupStatus", Enum.PopupStatus.Error);
+    store.dispatch("updatePopupMsg", msg);
+}
+
+/**
+ * Hiển thị toast
+ */
+const showToastWarning = (msg) => {
+    store.dispatch("showToast", true);
+    store.dispatch("updateToastStatus", Enum.ToastStatus.Warning);
+    store.dispatch("updateToastMsg", msg);
+
+    setTimeout(() => {
+        store.dispatch("showToast", false);
+    }, 2000);
 }
 
 /** 
@@ -134,18 +737,71 @@ watch((typeQuestion), () => {
         main.value.classList.remove("fullscreen");
     }
     store.dispatch("showFormQuestion", typeQuestion.value);
+    dataQuestion = {...dataQuestion, QuestionNote: ""};
 })
 /** 
  * Xem sự thay đổi đóng mở form
  * CreatedBy VMHieu 22/05/2023
  */
 watch((showFormQuestion), () => {
-    if (showFormQuestion.value == Enum.FormQuestion.Essay) {
-        main.value.classList.add("fullscreen");
+    nextTick(() => {
+        if (showFormQuestion.value == Enum.FormQuestion.Essay) {
+            main.value.classList.add("fullscreen");
+        } else if (showFormQuestion.value != 0){
+            main.value.classList.remove("fullscreen");
+        }
+    })
+
+    // Gán giá trị cho data câu hỏi và đáp án nếu ở form sửa
+    if (showFormQuestion.value && formModeQuestion.value == Enum.FormModeQuestion.Edit || formModeQuestion.value == Enum.FormModeQuestion.Clone) {
+        Object.assign(dataQuestion, question.value);
+        if (formModeQuestion.value == Enum.FormModeQuestion.Clone) {
+            dataQuestion.SortOder = numberQuestion.value;
+        }
+
+        switch (question.value.TypeQuestion) {
+            case Enum.FormQuestion.Select:
+                dataAnswerSelect.length = 0;
+                for (let i = 0; i < question.value.Answer.length; i++) {
+                    dataAnswerSelect.push(question.value.Answer[i]);
+                }
+                break;
+            case Enum.FormQuestion.YesOrNo:
+                dataAnswerYesNo.length = 0;
+                for (let i = 0; i < question.value.Answer.length; i++) {
+                    dataAnswerYesNo.push(question.value.Answer[i]);
+                }
+                break;
+            case Enum.FormQuestion.Fill:
+                dataAnswerFill.length = 0;
+                for (let i = 0; i < question.value.Answer.length; i++) {
+                    dataAnswerFill.push(question.value.Answer[i]);
+                }
+                break;
+            default:
+                break;
+        }
+    } 
+
+    if (dataQuestion.QuestionImage) {
+        arrayImageUrl.value = dataQuestion.QuestionImage.split(";");
     } else {
-        main.value.classList.remove("fullscreen");
+        arrayImageUrl.value = [];
+    }
+
+    if (!showFormQuestion.value) {
+        resetForm();
     }
 })
+
+/**
+ * Thêm đường dẫn ảnh vào mảng khi có ảnh được thêm
+ * VMHieu 14/06/2023
+ */
+watch((dataImageQuestion), () => {
+    arrayImageUrl.value.push(dataImageQuestion.value);
+})
+
 </script>
 
 <style scoped>
@@ -191,9 +847,14 @@ watch((showFormQuestion), () => {
 }
 
 .form-body__main{
-    height: 45%;
+    height: auto;
     background-color: #fff2ab;
     border-radius: 10px 10px 0 0;
+    position: relative;
+}
+
+.form-body__main>div{
+    height: 100%;
 }
 
 .question-content{
@@ -258,7 +919,8 @@ watch((showFormQuestion), () => {
 }
 
 .fullscreen{
-    height: 100%;
+    height: auto;
+    min-height: 100%;
 }
 
 .fullscreen>.question-content{
@@ -321,5 +983,112 @@ watch((showFormQuestion), () => {
 
 .form-note .form-footer{
     justify-content: flex-end;
+}
+
+.fill-number{
+    width: 5rem;
+    margin-right: .5rem;
+}
+
+
+.fill-add__button{
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px dashed rgb(182, 185, 206);
+    border-radius: 10px;
+    background-color: rgb(241, 242, 247);
+    cursor: pointer;
+    color: rgba(78, 91, 106, 0.7);
+    width: 100%;
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 700;
+}
+
+.fill-add__img{
+    margin-right: 12px;
+}
+
+.upload-image{
+    width: 30px;
+    height: 30px !important;
+    background-color: #000;
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    cursor: pointer;
+    z-index: 9999;
+    opacity: 0;
+}
+
+#upload-file{
+    display: none;
+    bottom: 0.75rem;
+    right: 0.75rem;
+    position: absolute;
+    z-index: 10;
+}
+
+.image-box{
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    height: 86px !important;
+}
+
+.image-list{
+    height: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.image-list>div{
+    margin-right: 12px;
+}
+
+.image-list img{
+    width: 144px;
+    height: 86px;
+}
+
+.image-add{
+    background-color: #f1f2f7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 144px;
+    height: 86px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.add-text{
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 20px;
+    margin-top: .25rem;
+    color: rgba(138,107,246,1);
+}
+
+.icon-remove{
+    position: absolute;
+    right: -4px;
+    top: -4px;
+    width: 20px;
+    z-index: 100;
+    text-align: center;
+    cursor: pointer;
+}
+
+.icon-remove img{
+    width: 20px;
+    height: 20px;
+}
+
+.box-img{
+    position: relative;
 }
 </style>

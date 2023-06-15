@@ -19,21 +19,31 @@
             </div>
         </div>
         <div class="mine-controller">
-            <router-view name="mineview"></router-view>
+            <keep-alive>
+                <router-view name="mineview"></router-view>
+            </keep-alive>
         </div>
     </div>
-    
 </template>
 
 <script setup>
 import BaseButton from '@/components/base/button/BaseButton.vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
+import * as Resource from '@/common/resource/Resource';
+import * as Enum from '@/common/enum/Enum';
+import ToastMessage from '@/components/view/ToastMessage.vue';
 
 const router = useRouter();
 const store = useStore();
 
+/**
+ * Mở page tạo bài tập
+ * CreatedBy VMHieu 23/05/2023
+ */
 const createExercise = () => {
+    store.dispatch("updateFormModeExercise", Enum.FormModeExercise.Add);
+    store.dispatch("showListQuestion", false);
     store.dispatch("updateHideMainPage", true);
     router.push("/storage/create");
 }

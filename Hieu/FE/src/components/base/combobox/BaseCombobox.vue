@@ -1,6 +1,6 @@
 <template>
     <div>
-      <div class="combobox" :autoFocus="autoFocus" :class="cbbClass" v-clickOutside="hideListData" @click="btnSelectDataOnClick" ref="combobox">
+      <div class="combobox" :autoFocus="autoFocus" :class="cbbClass" v-clickOutside="hideListData" ref="combobox">
         <input
           :id="id"
           type="text"
@@ -10,16 +10,19 @@
           @input="inputOnChange"
           @keydown="selecItemUpDown"
           @mouseover="handleMouse"
-          :tabindex="tabidx"
+          @click="btnSelectDataOnClick"
+          :tabindex="tabindex"
           :placeholder="placeholder"
           :resetValue="resetValue"
           :bidingValue="bidingValue"
           autocomplete="off"
         />
-        <div class="combobox-icon">
+        <div class="combobox-icon" @click="btnSelectDataOnClick" v-if="!clearIp">
             <img src="@/assets/img/icon_arrow.svg" alt="">
         </div>
-        
+        <div class="combobox-icon icon-clear" @click="clearInput" v-if="clearIp && openClear">
+            <img src="@/assets/img/clear-input.jpg" alt="">
+        </div>
         <div
           v-if="isShowListData"
           class="combobox__data"
@@ -55,7 +58,6 @@
     </div>
 </template>
 <script>
-  
 /* eslint-disable */
 
 function removeVietnameseTones(str) {
@@ -103,74 +105,101 @@ const keyCode = {
 export default {
     name: "MSCombobox",
     props: {
-    cbbClass: null,
-    valueDefault: null,
-    resetValue: true,
-    url: String,
-    propValue: String,
-    propText: String,
-    isLoadData: {
-        type: Boolean,
-        default: true,
-    },
-    placeholder: {
+    openClear: true,
+    getValue: null,
+    cbbClass: null,     // Class bố sung của combobox
+    valueCombobox: null,     // Giá trị biding vào
+    resetValue: true,   // Reset lại value của cbb
+    propValue: String,  // prop để lấy value
+    propText: String,   // prop để lấy text hiển thị
+    placeholder: {      // giá trị placeholder
         type: String,
         default: ""
     },
-    data: [],
-    refInput: {
-        type: String,
-        default: ""
-    },
-    isPositionTop: {
+    data: [],           // dữ liệu combobox
+    isPositionTop: {    // Vị trí positiop top
         type: Boolean,
         default: false
-    },
-    errorMsg: {
+    },                  
+    errorMsg: {         // Msg lỗi
         type: String,
         default: ""
-    },
-    timer: {
-        type: Number,
-        default: 300
-    },
-    id: {
+    },                  
+    id: {               // id của cbb
         type: String,
         default: ""
-    },
-    tabidx: {
+    },                  // tabindex
+    tabindex: {
         type: Number,
         default: -1
-    },
+    },                  // Focus vào vị trí nào lúc ban đầu
     autoFocus: {
         type: Number,
         default: null
     }
     },
     watch: {
-        resetValue: function() {
-            this.indexItemSelected = null;
-            this.indexItemFocus = null;
-            this.textInput = null;
-            this.showError = false;
-        }, 
-
-        showError: function() {
-            if (this.showError) {
-            this.$refs.combobox.classList.add("combobox__error");
-            this.indexItemSelected = null;
-            this.indexItemFocus = null;
-            this.$emit("getValueCombobox");
-            } else {
-            this.$refs.combobox.classList.remove("combobox__error");
+        getValue: function() {
+            this.textInput = "";
+        },
+        /**
+         * Thực hiện 1 số thao tác khi data thay đổi
+         * VMHieu 31/05/2023
+         */
+        data: function() {
+            if (this.autoFocus) {
+                let index = 0;
+                for (let i = 0; i < this.data.length; i++) {
+                    if (this.autoFocus == this.data[i][this.propValue]) {
+                        index = i;
+                        break;
+                    }
+                }
+                let value = this.data[index][this.propValue];
+                this.$refs.input.placeholder = this.data[index][propText];
+                this.$emit("update:modelValue", value);
+            }
+            // Nếu không lựa chọn thì auto chọn dòng đầu
+            if (!this.indexItemSelected && !this.placeholder && !this.valueCombobox) {
+                this.indexItemFocus = 0;
+                this.indexItemSelected = 0;
+                let value = this.data[0][this.propValue];
+                this.$refs.input.placeholder = this.data[0][this.propText];
+                this.$emit("update:modelValue", value);
             }
         },
-
+        /**
+         * Mặc định focus ban đầu váo ô có vị trí autoFocus
+         * CreatedBy VMHieu 20/05/2023
+         */
         autoFocus: function() {
             if (this.autoFocus) {
-                let value = this.data[this.autoFocus - 1][this.propValue];
-                this.textInput = this.data[this.autoFocus - 1].Data;
+                let index = 0;
+                for (let i = 0; i < this.data.length; i++) {
+                    if (this.autoFocus == this.data[i][this.propValue]) {
+                        index = i;
+                        break;
+                    }
+                }
+                let value = this.data[index][this.propValue];
+                this.$refs.input.placeholder = this.data[index].Data;
                 this.$emit("update:modelValue", value);
+            }
+        },
+        valueCombobox: function() {
+            if (this.valueCombobox) {
+                let index = 0;
+                for (let i = 0; i < this.data.length; i++) {
+                    if (this.valueCombobox == this.data[i][this.propValue]) {
+                        index = i;
+                        break;
+                    }
+                }
+                let value = this.data[index][this.propValue];
+                this.$refs.input.placeholder = this.data[index][this.propText];
+                this.$emit("update:modelValue", value);
+                this.indexItemFocus = index;
+                this.indexItemSelected = index;
             }
         }
     },
@@ -220,14 +249,30 @@ export default {
     itemOnSelect(item, index) {
         const text = item[this.propText];
         const value = item[this.propValue];
-        this.textInput = text; // Hiển thị text lên input.
+        this.textInput = "";
+        this.$refs.input.placeholder = text; 
         this.indexItemSelected = index;
         this.indexItemFocus = index;
         this.isShowListData = false;
-        this.showError = false;
-        this.$refs.combobox.classList.remove("combobox__error");
+        
+        if (this.openClear) {
+            this.clearIp = true;
+        }
 
         this.$emit("update:modelValue", value);
+        this.$emit("changeValue");
+    },
+    /**
+     * Ấn nút clear input và cập nhật lại value
+     * VMHieu 31/05/2023
+     */
+    clearInput() {
+        this.$refs.input.placeholder = this.placeholder; 
+        this.indexItemSelected = null;
+        this.indexItemFocus = null;
+        this.clearIp = false;
+
+        this.$emit("update:modelValue", "");
     },
     /**
      * Hàm check input để in ra lỗi
@@ -236,10 +281,10 @@ export default {
     handleChange() {
         let arrs = this.data;
         let flag = 0;
-        if (this.data && this.textInput && typeof(this.textInput) == "string") {
+        if (this.data && this.$refs.input.placeholder && typeof(this.$refs.input.placeholder) == "string") {
         for (const arr in arrs) {
             let str1 = removeVietnameseTones(arrs[arr][this.propText]).toLowerCase().replace(" ", "");
-            let str2 = removeVietnameseTones(this.textInput).toLowerCase().replace(" ", "");
+            let str2 = removeVietnameseTones(this.$refs.input.placeholder).toLowerCase().replace(" ", "");
             if (str1.includes(str2)){
             flag++;
             }
@@ -255,7 +300,7 @@ export default {
         this.showError = false;
         }
 
-        if (this.textInput == "") {
+        if (this.$refs.input.placeholder == "") {
         this.dataFilter = this.data;
         }
         
@@ -302,7 +347,7 @@ export default {
             break;
         case keyCode.ArrowDown:
             this.isShowListData = true;
-            if (!this.textInput || this.textInput.length == 0 || this.showError){
+            if (!this.$refs.input.placeholder || this.$refs.input.placeholder.length == 0 || this.showError){
             this.dataFilter = this.data;
             }
             elToFocus = this.$refs[`toFocus_${me.indexItemFocus + 1}`];
@@ -318,7 +363,7 @@ export default {
             break;
         case keyCode.ArrowUp:
             this.isShowListData = true;
-            if (!this.textInput || this.textInput.length == 0 || this.showError){
+            if (!this.$refs.input.placeholder || this.$refs.input.placeholder.length == 0 || this.showError){
                 this.dataFilter = this.data;
             }
             elToFocus = this.$refs[`toFocus_${me.indexItemFocus - 1}`];
@@ -334,7 +379,7 @@ export default {
             break;
         case keyCode.Enter:
             elToFocus = this.$refs[`toFocus_${me.indexItemFocus}`];
-            if (!this.textInput) {
+            if (!this.$refs.input.placeholder) {
             this.dataFilter = this.data;
             this.isShowListData = !this.isShowListData;
             } else {
@@ -356,29 +401,31 @@ export default {
 
     mounted() {
         this.dataFilter = this.data;
-        this.indexItemFocus = this.autoFocus - 1;
-        this.indexItemSelected = this.autoFocus - 1;
+
         if (this.autoFocus) {
-            let value = this.data[this.autoFocus - 1][this.propValue];
-            this.textInput = this.data[this.autoFocus - 1].Data;
+            let index = 0;
+            for (let i = 0; i < this.data.length; i++) {
+                if (this.autoFocus == this.data[i][this.propValue]) {
+                    index = i;
+                    break;
+                }
+            }
+            let value = this.data[index][this.propValue];
+            this.$refs.input.placeholder = this.data[index].Data;
             this.$emit("update:modelValue", value);
         }
     },
     beforeDestroy() {
-        this.textInput = "";
+        this.$refs.input.placeholder = "";
     },
     data() {
         return {
-            textInput: null,
+            textInput: null,    // Giá trị text của cbb
             dataFilter: [], // data đã được filter
             isShowListData: false, // Hiển thị list data hay không
             indexItemFocus: null, // Index của item focus hiện tại
             indexItemSelected: null, // Index của item được selected
-            tabindex: {
-            type: Number,
-            default: 0
-            },
-            showError: false,
+            clearIp: false,
         };
     },
 };
@@ -447,7 +494,7 @@ select {
     background-color: #fff;
     box-shadow: 0 0 16px rgba(23,27,42,.24);
     z-index: 999;
-    max-height: 198px;
+    /* max-height: 198px; */
     overflow: auto;
     width: -webkit-fill-available;
 }
@@ -536,8 +583,32 @@ select {
     top: 8px;
 }
 
-.combobox-question input{
+.combobox-question input::placeholder{
     font-weight: 700;
     font-size: 16px;
+    opacity: 1;
+    color: #000;
+}
+
+.combobox input::placeholder{
+    opacity: 1;
+    color: #000;
+}
+
+.icon-clear img{
+    width: 16px;
+    height: 16px;
+    opacity: 0.2;
+    display: flex;
+    align-items: center;
+}
+
+.icon-clear img:hover{
+    opacity: 0.4;
+}
+
+
+.icon-clear{
+    top: 12px;
 }
 </style>

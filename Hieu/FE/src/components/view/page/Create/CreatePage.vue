@@ -1,12 +1,17 @@
 <template>
     <div class="create-container">
         <div class="create-header">
-            <div class="header-top flex">
-                <div class="btn-back" @click="backMainPage">
-                    <img src="@/assets/img/btn-back.svg" alt="">
+            <div class="header-top flex" v-tooltip="{
+                        theme: {
+                            placement: 'right',
+                        },
+                    }">
+                <div class="btn-back" @click="backMainPage" v-tooltip="'Trở về trang trước'">
+                    <img :src="btnBackImg" alt="">
                 </div>
                 <div class="header-top__avatar">
-                    <img src="@/assets/img/create-default.webp" alt="">
+                    <img :src="createImg" alt="" v-if="!dataExercise.ExerciseImage">
+                    <img :src="`${constants.API_URL}/${dataExercise.ExerciseImage}`" v-if="dataExercise.ExerciseImage" alt="">
                 </div>
                 <div class="header-top__context">
                     <input type="text" class="exercise-name__input" v-model="dataExercise.ExerciseName" placeholder="Nhập tên bài tập...">
@@ -15,10 +20,26 @@
             <div class="header-bottom flex">
                 <div class="header-bottom__left flex">
                     <div class="combobox-subject">
-                        <BaseCombobox></BaseCombobox>
+                        <BaseCombobox
+                            :data="subjects"
+                            propText="SubjectName"
+                            propValue="SubjectID"
+                            v-model="dataExercise.SubjectID"
+                            :valueCombobox="dataExercise.SubjectID"
+                            :openClear="false"
+                            @changeValue="changeValue"
+                        ></BaseCombobox>
                     </div>
                     <div class="combobox-class">
-                        <BaseCombobox></BaseCombobox>
+                        <BaseCombobox
+                            :data="grades"
+                            propText="GradeName"
+                            propValue="GradeID"
+                            v-model="dataExercise.GradeID"
+                            :valueCombobox="dataExercise.GradeID"
+                            :openClear="false"
+                            @changeValue="changeValue"
+                        ></BaseCombobox>
                     </div>
                     <div class="btn-addinfo">
                         <BaseButton class="ms-button btn-white btn-active" text="Bổ sung thông tin" @click="openFormExercise"></BaseButton>
@@ -26,10 +47,10 @@
                 </div>
                 <div class="header-bottom__right flex">
                     <div class="btn-question">
-                        <BaseButton class="ms-button btn-white btn-active btn-onlyicon  btn-40">
+                        <BaseButton class="ms-button btn-white btn-active btn-onlyicon  btn-40" v-tooltip="'Trợ giúp'">
                             <template v-slot:icon>
                                 <div class="center">
-                                    <img src="@/assets/img/icon-question.svg" alt="">
+                                    <img :src="questionImg" alt="">
                                 </div>
                             </template>
                         </BaseButton>
@@ -38,160 +59,82 @@
                         <BaseButton class="ms-button btn-white btn-active" text="Làm thử"></BaseButton>
                     </div>
                     <div class="btn-submit">
-                        <BaseButton class="ms-button btn-blue btn-active" text="Hoàn thành"></BaseButton>
+                        <BaseButton class="ms-button btn-blue btn-active" text="Hoàn thành" @click="saveExercise"></BaseButton>
                     </div>
                 </div>
             </div>
         </div>
         <div class="create-main">
-            <div class="create-main__form" v-show="!showListQuestion">
-                <div class="form-import center">
-                    <div class="import-title">
-                        Tách câu hỏi tự động sử dụng công nghệ AI
-                    </div>
-                    <div class="import-box flex">
-                        <div class="import-box__avatar">
-                            <img src="@/assets/img/import-file.svg" alt="">
-                        </div>
-                        <div class="import-box__content">
-                            Nhấn để tải lên file bài tập hoặc kéo thả file vào đây. <br />
-                            File có định dạng xls, xlsx, doc, docx, pdf
-                        </div>
-                        <div class="import-box__btn flex">
-                            <BaseButton class="ms-button btn-active btn-upload" text="Tải lên file bài tập"></BaseButton>
-                            <BaseButton class="ms-button btn-active btn-green" text="Tải file Excel mẫu"></BaseButton>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-create">
-                    <div class="create-title">
-                        hoặc tự tạo câu hỏi mới
-                    </div>
-                    <div class="create-option">
-                        <div class="create-toolbar flex">
-                            <div class="question-library">
-                                <div class="question-avatar question-hover">
-                                    <img src="@/assets/img/library.svg" alt="">
-                                </div>
-                                <div class="question-text">Thư viện học liệu</div>
-                            </div>
-                            <div class="question-line">
-                                <div class="question-avatar">
-                                    <img src="@/assets/img/line.svg" alt="">
-                                </div>
-                            </div>
-                            <div class="question">
-                                <div class="question-select" @click="openFormQuestion(Enum.FormQuestion.Select)">
-                                    <div class="question-avatar question-hover">
-                                        <img src="@/assets/img/select.svg" alt="">
-                                    </div>
-                                    <div class="question-text">Chọn đáp án</div>
-                                </div>
-                                <div class="question-yesno" @click="openFormQuestion(Enum.FormQuestion.YesOrNo)">
-                                    <div class="question-avatar question-hover">
-                                        <img src="@/assets/img/yesorno.svg" alt="">
-                                    </div>
-                                    <div class="question-text">Đúng sai</div>
-                                </div>
-                                <div class="question-fill" @click="openFormQuestion(Enum.FormQuestion.Fill)">
-                                    <div class="question-avatar question-hover">
-                                        <img src="@/assets/img/fill.svg" alt="">
-                                    </div>
-                                    <div class="question-text">Điền vào chỗ trống</div>
-                                </div>
-                                <div class="question-essay" @click="openFormQuestion(Enum.FormQuestion.Essay)">
-                                    <div class="question-avatar question-hover">
-                                        <img src="@/assets/img/essay.svg" alt="">
-                                    </div>
-                                    <div class="question-text">Tự luận</div>
-                                </div>
-                                <div class="question-group" @click="openFormQuestion(Enum.FormQuestion.Group)">
-                                    <div class="question-avatar question-hover">
-                                        <img src="@/assets/img/group.svg" alt="">
-                                    </div>
-                                    <div class="question-text">Câu hỏi nhóm</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="create-main__list" v-show="showListQuestion">
-                <div class="question-list">
-                    <BaseQuestion></BaseQuestion>
-                    <BaseQuestion></BaseQuestion>
-                    <BaseQuestion></BaseQuestion>
-                    <BaseQuestion></BaseQuestion>
-                    <BaseQuestion></BaseQuestion>
-                    <BaseQuestion></BaseQuestion>
-                    <BaseQuestion></BaseQuestion>
-                </div>
-                <div class="create-option option-list">
-                    <div class="question-library">
-                        <div class="question-avatar question-hover">
-                            <img src="@/assets/img/library.svg" alt="">
-                        </div>
-                    </div>
-                    <div class="question-select" @click="openFormQuestion(Enum.FormQuestion.Select)">
-                        <div class="question-avatar question-hover">
-                            <img src="@/assets/img/select.svg" alt="">
-                        </div>
-                    </div>
-                    <div class="question-yesno" @click="openFormQuestion(Enum.FormQuestion.YesOrNo)">
-                        <div class="question-avatar question-hover">
-                            <img src="@/assets/img/yesorno.svg" alt="">
-                        </div>
-                    </div>
-                    <div class="question-fill" @click="openFormQuestion(Enum.FormQuestion.Fill)">
-                        <div class="question-avatar question-hover">
-                            <img src="@/assets/img/fill.svg" alt="">
-                        </div>
-                    </div>
-                    <div class="question-essay" @click="openFormQuestion(Enum.FormQuestion.Essay)">
-                        <div class="question-avatar question-hover">
-                            <img src="@/assets/img/essay.svg" alt="">
-                        </div>
-                    </div>
-                    <div class="question-group" @click="openFormQuestion(Enum.FormQuestion.Group)">
-                        <div class="question-avatar question-hover">
-                            <img src="@/assets/img/group.svg" alt="">
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <CreateForm v-show="!showListQuestion"></CreateForm>
+            <CreateList v-show="showListQuestion" :data="dataQuestion"></CreateList>
         </div>
+        <ToastMessage></ToastMessage>
     </div>
-    <FormQuestion ></FormQuestion>
-    <FormExercise ></FormExercise>
+    <FormQuestion :data="dataQuestion" :dataExercise="dataExercise"></FormQuestion>
+    <FormExercise :data="dataExercise" v-model="dataExerciseAdd" @saveForm="saveForm"></FormExercise>
+    <FormImport :dataExercise="dataExercise"></FormImport>
 </template>
 
 <script setup>
 import BaseCombobox from '@/components/base/combobox/BaseCombobox.vue';
 import BaseButton from '@/components/base/button/BaseButton.vue';
-import BaseQuestion from '@/components/base/question/BaseQuestion.vue';
 import FormQuestion from '@/components/view/FormQuestion.vue';
-import FormExercise from '../../FormExercise.vue';
-import { useRouter } from 'vue-router';
+import FormExercise from '@/components/view/FormExercise.vue';
+import FormImport from '@/components/view/FormImport.vue';
+import ToastMessage from '@/components/view/ToastMessage.vue';
+import CreateForm from '@/components/view/page/Create/CreatePage/CreateForm.vue'
+import CreateList from '@/components/view/page/Create/CreatePage/CreateList.vue'
+import { useRouter, useRoute } from 'vue-router';
 import { useStore } from 'vuex';
-import { computed, reactive } from 'vue'; 
+import { computed, reactive, onBeforeMount, watch, ref, defineProps, onMounted } from 'vue'; 
 import * as Enum from '@/common/enum/Enum.js';
+import * as Resource from '@/common/resource/Resource.js';
+import { constants } from '@/config/config';
+
+// Các biến lưu đường dẫn
+const btnBackImg = require("@/assets/img/btn-back.svg");
+const createImg = require("@/assets/img/create-default.webp");
+const questionImg = require("@/assets/img/icon-question.svg");
+const importImg = require("@/assets/img/import-file.svg");
+const libraryImg = require("@/assets/img/library.svg");
+const lineImg = require("@/assets/img/line.svg");
+const selectImg = require("@/assets/img/select.svg");
+const yesnoImg = require("@/assets/img/yesorno.svg");
+const fillImg = require("@/assets/img/fill.svg");
+const essayImg = require("@/assets/img/essay.svg");
+const groupImg = require("@/assets/img/group.svg");
 
 const store = useStore();
 const router = useRouter();
-
+const route = useRoute();
+// Show danh sách câu hỏi
 const showListQuestion = computed(() => store.state.question.showListQuestion);
-const showOver = computed(() => store.state.app.showOver);
+const grades = computed(() => store.state.grade.grades);    // Bản ghi khối
+const subjects = computed(() => store.state.subject.subjects); // Bản ghi môn học
+const exercise = computed(() => store.state.exercise.exercise); // Thông tin bài tập và câu hỏi, đán án của bt
+const exerciseID = computed(() => store.state.exercise.exerciseID); // ID bản ghi mới thêm
+const formModeExercise = computed(() => store.state.exercise.formModeExercise); // Thông tin bài tập và câu hỏi, đán án của bt
+const refresh = computed(() => store.state.exercise.refresh); // Refresh lại trang
+// Object data bài tập
+const dataExercise = ref({
+    ExerciseName: "", 
+    ExerciseImage: "",
+});
+// Object data câu hỏi
+const dataQuestion = ref({});
+// Object data đáp án
+const dataAnswer = ref({});
 
-const dataExercise = reactive({
-    ExerciseName: ""
-})
+const dataExerciseAdd = ref({});
+
+
 /**
  * Qua lại router trước
  * CreatedBy VMHieu 21/05/2023
  */
 const backMainPage = () => {
     store.dispatch("updateHideMainPage", false);
-    router.go(-1);
+    router.push("/storage/mine");
 }
 /**
  * Mở form question theo status truyền vào
@@ -200,6 +143,7 @@ const backMainPage = () => {
  */
 const openFormQuestion = (status) => {
     store.dispatch("showFormQuestion", status);
+    store.dispatch("updateFormModeQuestion", Enum.FormModeQuestion.Add);
 }
 /**
  * Mở form thông tin bài tập
@@ -208,6 +152,104 @@ const openFormQuestion = (status) => {
 const openFormExercise = () => {
     store.dispatch("showFormExercise", true);
 }
+/**
+ * Validate dữ liệu bài tập
+ * VMHieu 01/06/2023
+ */
+const validateExercise = () => {
+    let isValid = true;
+    if (!dataExercise.value.ExerciseName || !dataExercise.value.GradeID || !dataExercise.value.SubjectID) {
+        isValid = false;
+    } 
+    return isValid;
+}
+/**
+ * Sự kiện lưu form bài tập
+ * VMHieu 06/01/2023
+ */
+const saveForm = (data) => {
+    dataExercise.value = data;
+}
+
+/**
+ * Sự kiện khi thay đổi value combobox
+ * VMHieu 01/06/2023
+ */
+ const changeValue = () => {
+    let dataGradeSubject = {
+        gradeID: dataExercise.value.GradeID,
+        subjectID: dataExercise.value.SubjectID
+    }
+    store.dispatch("getTopicByGradeSubject", dataGradeSubject);
+}
+
+
+/**
+ * Thực hiện cập nhật bài tập
+ * VMHieu 01/06/2023
+ */
+const saveExercise = async () => {
+    const id = route.query.id;
+    if (validateExercise()) {
+        if (id) {
+            await store.dispatch("putExercise", dataExercise.value);
+        } else {
+            await store.dispatch("postExercise", dataExercise.value);
+        }
+
+        if (dataExercise.value.Topics.length > 0) {
+            let dataTopic = {
+                ExerciseID: dataExercise.value.ExerciseID || exerciseID.value,
+                Topics: Object.values(dataExercise.value.Topics)
+            }
+            // Thêm chủ đề
+            await store.dispatch("postTopicMultiple", dataTopic);
+        }
+        router.push("/storage/mine");
+        store.dispatch("updateHideMainPage", false);
+    } else {
+        store.dispatch("showFormExercise", true);
+    }
+}
+
+/**
+ * Thực hiện công việc trước khi component được mount
+ * VMHieu 31/05/2023
+ */
+onBeforeMount(() => {
+    store.dispatch("getAllSubject");
+    store.dispatch("getAllGrade");
+    const id = route.query.id;
+    if (id) { 
+        store.dispatch("getAllByID", id);
+    }
+})
+
+/**
+ * Theo dõi sự thay đổi của đối tượng bài tập
+ * VMHieu 31.05.2023
+ */
+watch((exercise), () => {
+    dataExercise.value = exercise.value;
+    dataQuestion.value = exercise.value.Question;
+    // Xét hiện câu hỏi nếu có
+    if (dataQuestion.value.length > 0) {
+        store.dispatch("showListQuestion", true);
+    } else {
+        store.dispatch("showListQuestion", false);
+    }
+})
+/**
+ * Bắt việc refresh lại trang và back về trang chủ
+ * VMHieu 06/01/2023 
+ */
+// watch((refresh), () => {
+//     store.dispatch("updateHideMainPage", false);
+//     router.push("/storage/mine");
+// })
+
+
+
 
 </script>
 
