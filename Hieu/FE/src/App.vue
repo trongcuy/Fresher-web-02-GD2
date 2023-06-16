@@ -1,6 +1,6 @@
 <template>
     <div class="app-container">
-      <div v-show="!hideMainPage">
+      <div v-if="!hideMainPage">
         <TheHeader></TheHeader>
         <div class="layout-main">
           <TheContent></TheContent>
@@ -21,8 +21,10 @@ import ToastMessage from '@/components/view/ToastMessage.vue';
 import LoadingOver from '@/components/view/LoadingOver.vue';
 import { computed, ref } from 'vue';
 import { useStore } from 'vuex';
+import { useRoute } from 'vue-router';
 
 const store = useStore();
+const route = useRoute();
 
 const hideMainPage = computed(() => store.state.app.hideMainPage);
 </script>

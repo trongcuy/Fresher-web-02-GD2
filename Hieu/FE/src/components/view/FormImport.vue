@@ -91,7 +91,19 @@ const changeFile = () => {
  * VMHieu 07/06/2023
  */
 const handleUploadFile = async () => {
-    const files = upload.value.files[0];
+    let files = "";
+    let file = upload.value.files[0];
+    var extension = file.name.split('.').pop().toLowerCase();
+    let fileSize = (file.size/1024/1024).toFixed(3);
+    if (!Resource.FileFormat.includes(extension)) {
+        showToast(Enum.ToastStatus.Warning, Resource.ToastWarning.ErrorFileExcel)
+    } 
+    else if (fileSize > 5) {
+        showToast(Enum.ToastStatus.Warning, Resource.ToastWarning.ErrorFileSize)
+    }
+    else {
+        files = upload.value.files[0];
+    }
 
     if (files) {
         var formData = new FormData();
@@ -99,6 +111,15 @@ const handleUploadFile = async () => {
 
         store.dispatch("checkFile", formData);
     }
+}
+/** 
+ * Hiển thị toast theo status và msg
+ * VMHieu 15/06/2023
+ */
+ const showToast = (status, msg) => {
+    store.dispatch("showToast", true);
+    store.dispatch("updateToastStatus", status);
+    store.dispatch("updateToastMsg", msg);
 }
 /**
  * Tải file lỗi

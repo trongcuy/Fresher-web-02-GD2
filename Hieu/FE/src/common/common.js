@@ -8,9 +8,10 @@ import * as Resource from "@/common/resource/Resource";
  * @param {*} code 
  * CreatedBy VMHieu 30/05/2023
  */
-export function handleError(context, errorMsg, code) {
+export function handleError(context, errorMsg, status) {
     context.commit('updatePopupMsg', errorMsg);
     context.commit('showPopup', true);
+    context.commit('updatePopupStatus', status);
 }
 
 /**
@@ -97,3 +98,18 @@ export function generateUUID() { // Public Domain/MIT
         return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
     });
 }
+
+/**
+ * Hiện toast thông báo
+ * @param {*} store 
+ * @param {*} msg 
+ * VMHieu 15/06/2023
+ */
+export function showToastWarning(store, msg){
+    store.dispatch("showToast", true);
+    store.dispatch("updateToastStatus", Enum.ToastStatus.Warning);
+    store.dispatch("updateToastMsg", msg);
+}
+
+
+

@@ -149,8 +149,10 @@
                 Quay lại câu hỏi
             </div>
         </div>
+        <ToastMessage></ToastMessage>
     </div>
     <PopupMessage></PopupMessage>
+
     <FormImage 
         v-if="showFormImage && formModeUpload == Enum.FormModeUpload.Answer"
         v-model="dataAnswerSelect[indexAnswer].AnswerImage"
@@ -538,7 +540,7 @@ const saveClose = async () => {
             router.push({ path: "/storage/create", query: {id} });
         }
         // Đóng form
-        store.dispatch("showFormQuestion", false);
+        // store.dispatch("showFormQuestion", false);
     }
 }
 
@@ -1036,6 +1038,7 @@ watch((dataImageQuestion), () => {
     bottom: 20px;
     left: 20px;
     height: 86px !important;
+    z-index: 1;
 }
 
 .image-list{

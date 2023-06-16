@@ -87,6 +87,7 @@ import { useStore } from 'vuex';
 import { computed, reactive, onBeforeMount, watch, ref, defineProps, onMounted } from 'vue'; 
 import * as Enum from '@/common/enum/Enum.js';
 import * as Resource from '@/common/resource/Resource.js';
+import { showToastWarning } from '@/common/common';
 
 // Các biến lưu đường dẫn
 const importImg = require("@/assets/img/import-file.svg");
@@ -123,13 +124,33 @@ const handleUploadFile = async () => {
     const files = upload.value.files[0];
 
     if (files) {
-        var formData = new FormData();
-        formData.append("excelFile", files);
+        var extension = files.name.split('.').pop().toLowerCase();
+        let fileSize = (files.size/1024/1024).toFixed(3);
+        if (!Resource.FileFormat.includes(extension)) {
+            showToast(Enum.ToastStatus.Warning, Resource.ToastWarning.ErrorFileExcel)
+        } 
+        else if (fileSize > 5) {
+            showToast(Enum.ToastStatus.Warning, Resource.ToastWarning.ErrorFileSize)
+        }
+        else {
+            var formData = new FormData();
+            formData.append("excelFile", files);
 
-        store.dispatch("checkFile", formData);
-        //store.dispatch("showImport", true);
-        upload.value.value = "";
+            store.dispatch("checkFile", formData);
+            //store.dispatch("showImport", true);
+            upload.value.value = "";
+        }
     }
+}
+
+/** 
+ * Hiển thị toast theo status và msg
+ * VMHieu 15/06/2023
+ */
+ const showToast = (status, msg) => {
+    store.dispatch("showToast", true);
+    store.dispatch("updateToastStatus", status);
+    store.dispatch("updateToastMsg", msg);
 }
 /**
  * Thực hiện tải file nhập khẩu mẫu

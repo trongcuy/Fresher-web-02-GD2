@@ -88,4 +88,12 @@ export const FormModeUpload = {
     Answer: 1,
     Question: 2
 }
+
+/**
+ * Dạng file gửi lên
+ */
+export const FileType = {
+    Image: 1,
+    Excel: 2
+}
 export default Enum;

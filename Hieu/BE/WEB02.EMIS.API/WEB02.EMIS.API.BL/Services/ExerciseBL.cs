@@ -53,6 +53,11 @@ namespace WEB02.EMIS.API.BL.Services
         {
             errorList.Clear();
             // Xử lý nghiệp vụ
+            // Tên bài tập khoogn vượt quá 255 kí tự
+            if (exercise.ExerciseName.Length > 255)
+            {
+                errorList.Add(Resources.ResourceManager.GetString(name: "ExerciseNameMaxLength"));
+            }
             // Môn bài tập không được để trống
             if (exercise.GradeID == null || exercise.GradeID == Guid.Empty)
             {
@@ -209,6 +214,15 @@ namespace WEB02.EMIS.API.BL.Services
                 }
             }
 
+            // Kiểm tra đáp án đúng sai chỉ có 1 đáp án đúng
+            if (question.TypeQuestion == TypeQuestion.YesOrNo)
+            {
+                if (answers[0].AnswerStatus == answers[1].AnswerStatus)
+                {
+                    errorList.Add(Resources.ResourceManager.GetString(name: "LimitAnswerCorrect"));
+                }
+            }
+
             // Kiểm tra số lượng đáp án
             switch (question.TypeQuestion)
             {
@@ -259,16 +273,19 @@ namespace WEB02.EMIS.API.BL.Services
         /// CreatedBY VMHieu 19/04/2023
         public ExcelCheckTotal ExcelCheck(IFormFile excelFile)
         {
+            errorList.Clear();
             // Kiểm tra định dạng của tệp (.xls, .xlsx):
             if (!Path.GetExtension(excelFile.FileName).Equals(".xlsx", StringComparison.OrdinalIgnoreCase))
             {
                 errorList.Add(Resources.ResourceManager.GetString("ErrorImportFile"));
+                throw new ErrorException(devmsg: Resources.ResourceManager.GetString(name: "InvalidData"), listErrors: errorList);
             }
 
             // Kiểm tra dung lượng của tệp:
             if (excelFile == null || excelFile.Length <= 0)
             {
                 errorList.Add(Resources.ResourceManager.GetString("ErrorImportSize"));
+                throw new ErrorException(devmsg: Resources.ResourceManager.GetString(name: "InvalidData"), listErrors: errorList);
             }
 
             // Tạo Dictionary cho loại câu hỏi
@@ -473,6 +490,7 @@ namespace WEB02.EMIS.API.BL.Services
                     result.Total = result.TotalFail + result.TotalSuccess;
                 }
                 _cache.Set("excelFile", stream.ToArray(), TimeSpan.FromMinutes(60));
+                workbook.Dispose();
             }
             _cache.Set("data", dataResult, TimeSpan.FromDays(1));
             _cache.Set("errorCell", errorCells, TimeSpan.FromMinutes(60));
@@ -531,7 +549,7 @@ namespace WEB02.EMIS.API.BL.Services
 
                 // Set the position of the MemoryStream to the beginning
                 ms.Seek(0, SeekOrigin.Begin);
-
+                workbook.Dispose();
                 return ms;
             }
         }
@@ -596,6 +614,15 @@ namespace WEB02.EMIS.API.BL.Services
                     break;
                 default:
                     break;
+            }
+
+            // Kiểm tra đáp án đúng sai chỉ có 1 đáp án đúng
+            if (question.TypeQuestion == TypeQuestion.YesOrNo)
+            {
+                if (answers[0].AnswerStatus == answers[1].AnswerStatus)
+                {
+                    errorList.Add(Resources.ResourceManager.GetString(name: "LimitAnswerCorrect"));
+                }
             }
             return errorList;
         }
@@ -685,7 +712,16 @@ namespace WEB02.EMIS.API.BL.Services
             /// Trả về lỗi nếu ảnh lớn hơn 5Mb
             if (file.Length > 5 * 1024 * 1024)
             {
-                throw new ErrorException(devmsg: Resources.ResourceManager.GetString(name: "ErrorFileImage"));
+                errorList.Add(Resources.ResourceManager.GetString("ErrorImportSize"));
+                throw new ErrorException(devmsg: Resources.ResourceManager.GetString(name: "InvalidData"), listErrors: errorList);
+            }
+
+            // Kiểm tra định dạng file
+            if (!Path.GetExtension(file.FileName).Equals(".png", StringComparison.OrdinalIgnoreCase) &&
+                !Path.GetExtension(file.FileName).Equals(".jpeg", StringComparison.OrdinalIgnoreCase))
+            {
+                errorList.Add(Resources.ResourceManager.GetString("ErrorImportFile"));
+                throw new ErrorException(devmsg: Resources.ResourceManager.GetString(name: "InvalidData"), listErrors: errorList);
             }
 
             // Tạp tên file chứa ảnh

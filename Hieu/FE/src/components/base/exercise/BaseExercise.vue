@@ -3,12 +3,21 @@
         <div class="exercise-img">
             <img :src="`${constants.API_URL}/${imageUrl}`" v-if="imageUrl" alt="">
             <img :src="subjectImg" v-if="!imageUrl" alt="">
-            <div class="img-content center">{{ props.data.GradeName || "Khối 1" }} - {{ props.data.SubjectName || "Toán" }}</div>
+            <div class="img-content center"
+              :class="{
+                'math': props.data.SubjectName == Resource.SubjectName.Math,
+                'english': props.data.SubjectName == Resource.SubjectName.English,
+                'literature': props.data.SubjectName == Resource.SubjectName.Literature,
+                'history': props.data.SubjectName == Resource.SubjectName.History,
+                'civic-education': props.data.SubjectName == Resource.SubjectName.CivicEducation,
+                'geography': props.data.SubjectName == Resource.SubjectName.Geography,
+              }"
+            >{{ props.data.GradeName || "Khối 1" }} - {{ props.data.SubjectName || "Toán" }}</div>
         </div>
         <div class="exercise-content">
             <div class="content-title flex">
                 <div>{{ ExerciseName  }}</div>
-                <div class="btn-more" @click="toggleOption" @click.stop=""  v-tooltip="'Tùy chọn'">
+                <div class="btn-more" @click="toggleOption" @click.stop="">
                     <img :src="optionImg" alt="">
                 </div>
             </div>
@@ -117,7 +126,7 @@ const handleOpenPopup = (name, id) => {
   position: relative;
   background-color: #fff;
   border-radius: 10px;
-  box-shadow: 0 3px 20px rgba(90, 125, 141, 0.16);
+  box-shadow: 0 3px 20px rgba(90, 125, 141, 0.2);
   height: 200px;
   width: 100%;
   display: block;
@@ -134,6 +143,7 @@ const handleOpenPopup = (name, id) => {
     background-size: cover;
     background: no-repeat 50%;
     background-color: #fff;
+    border-radius: 10px;
 
     img {
       width: 100%;
@@ -158,6 +168,30 @@ const handleOpenPopup = (name, id) => {
     border-top-left-radius: 10px;
     color: rgba(255, 255, 255, 1);
     background-color: rgba(138, 107, 246, 1);
+  }
+
+  .math{
+    background-color: #8a6bf6;
+  }
+
+  .english{
+    background-color: #00c542;
+  }
+
+  .literature {
+    background-color: #00a9ec;
+  }
+
+  .history {
+    background-color: rgb(255, 210, 0);
+  }
+
+  .civic-education {
+    background-color: rgb(255, 88, 140);
+  }
+
+  .geography {
+    background-color: #8a6bf6;
   }
 
   .exercise-content {

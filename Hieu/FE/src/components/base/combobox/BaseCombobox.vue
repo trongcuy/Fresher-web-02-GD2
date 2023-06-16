@@ -414,6 +414,21 @@ export default {
             this.$refs.input.placeholder = this.data[index].Data;
             this.$emit("update:modelValue", value);
         }
+
+        if (this.valueCombobox) {
+            let index = 0;
+            for (let i = 0; i < this.data.length; i++) {
+                if (this.valueCombobox == this.data[i][this.propValue]) {
+                    index = i;
+                    break;
+                }
+            }
+            let value = this.data[index][this.propValue];
+            this.$refs.input.placeholder = this.data[index][this.propText];
+            this.$emit("update:modelValue", value);
+            this.indexItemFocus = index;
+            this.indexItemSelected = index;
+        }
     },
     beforeDestroy() {
         this.$refs.input.placeholder = "";

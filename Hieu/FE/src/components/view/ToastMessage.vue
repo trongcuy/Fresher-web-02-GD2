@@ -40,6 +40,7 @@ const toastStatus = computed(() => store.state.app.toastStatus);
     left: 50%;
     z-index: 9999999;
     transform: translateX(-50%);
+    height: auto;
 
     &.toast-question {
         top: -80px;

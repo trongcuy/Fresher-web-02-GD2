@@ -1,6 +1,6 @@
 <template>
     <div class="input-container">
-        <input type="text" :tabindex="tabindex" :class="inputClass" :placeholder="placeholder" @input="changeInput" ref="input">
+        <input type="text"  autocomplete="off" :tabindex="tabindex" :class="inputClass" :placeholder="placeholder" @input="changeInput" ref="input">
         <div class="icon" v-if="showIcon">
             <img :src="searchImg" alt="" />
         </div>
@@ -12,7 +12,7 @@
 </template> 
 
 <script setup>
-import { defineProps, defineEmits, ref, watch, toRef, defineExpose } from "vue";
+import { defineProps, defineEmits, ref, watch, toRef, defineExpose, onMounted } from "vue";
 
 // Các biến lưu đường dẫn
 const searchImg = require("@/assets/img/icon-search.svg");
@@ -96,8 +96,23 @@ const clearInput = () => {
  * VMHieu 31.05.2023
  */
 watch((valueRef), () => {
+    if (props.valueInput) {
+        validInput.value = true;
+    } else {
+        validInput.value = false;
+    }
     input.value.value = props.valueInput;
-    validInput.value = true;
+    emit("update:modelValue", props.valueInput);
+})
+
+onMounted(() => {
+    if (props.valueInput) {
+        validInput.value = true;
+    } else {
+        validInput.value = false;
+    }
+    input.value.value = props.valueInput;
+
     emit("update:modelValue", props.valueInput);
 })
 
@@ -151,7 +166,7 @@ defineExpose({props, input, error})
 }
 
 .no-icon{
-    padding: 0 12px;
+    padding: 0 34px 0 12px;
 }
 
 .msg-error{

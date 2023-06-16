@@ -29,6 +29,9 @@ const mutations = {
      */
     showToast(state, payload) {
         state.showToast = payload;
+        setTimeout(() => {
+            state.showToast = false;
+        }, 3000);
     },
         /**
      * Update nội dung toast

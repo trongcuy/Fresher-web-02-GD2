@@ -73,7 +73,7 @@ export default {
 <style>
 .form-body__main .ck-editor .ck-editor__main .ck-content {
     border: none;
-    padding: 0px 24px;
+    padding: 0px 24px 120px 24px;
     font-size: 16px;
     background-color: rgb(255, 242, 171);
     height: 100%;

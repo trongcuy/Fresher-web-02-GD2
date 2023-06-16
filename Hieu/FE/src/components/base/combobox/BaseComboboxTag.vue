@@ -183,6 +183,8 @@ export default {
                     if (this.openClear) {
                         this.clearIp = true;
                     }
+                } else {
+                    this.clearIp = false;
                 }
             } else {
                 this.dataInputSpan = [];
@@ -198,7 +200,7 @@ export default {
             this.dataInputSpan = [];
             this.dataValue = [];
             // Biding các dữ liệu có sẵn
-            if (Object.getOwnPropertyNames(this.valueCombobox).length != 0) {
+            if (Object.getOwnPropertyNames(this.valueCombobox).length != 0 && Object.entries(this.valueCombobox).length != 0) {
                 for (let i = 0; i < this.data.length; i++) {
                     for (let j = 0; j < this.valueCombobox.length; j++) {
                         if (this.data[i][this.propValue] == this.valueCombobox[j]) {
@@ -217,6 +219,8 @@ export default {
                     if (this.openClear) {
                         this.clearIp = true;
                     }
+                } else {
+                    this.clearIp = true;
                 }
             } else {
                 this.dataInputSpan = [];
@@ -288,6 +292,7 @@ export default {
 
         if (!this.dataValue.includes(value)){
             this.dataValue.push(value);
+            this.$emit("update:modelValue", this.dataValue);
         }
         
         if (this.openClear) {
@@ -381,6 +386,7 @@ export default {
         const itemIndex = this.dataInputSpan.findIndex(item => item == removeItem);
         this.dataInputSpan.splice(itemIndex, 1);
         this.dataValue.splice(itemIndex, 1);
+        this.$emit("update:modelValue", this.dataValue);
         if (this.dataInputSpan.length == 0) {
             this.showInput = true;
             this.$refs.input.placeholder = this.placeholder;
@@ -457,6 +463,39 @@ export default {
 
     mounted() {
         this.dataFilter = this.data;
+
+        this.dataInputSpan = [];
+        this.dataValue = [];
+        // Biding các dữ liệu có sẵn
+        if (Object.getOwnPropertyNames(this.valueCombobox).length != 0) {
+            for (let i = 0; i < this.data.length; i++) {
+                for (let j = 0; j < this.valueCombobox.length; j++) {
+                    if (this.data[i][this.propValue] == this.valueCombobox[j]) {
+                        if (!this.dataInputSpan.includes(this.data[i][this.propText])) {
+                            this.dataInputSpan.push(this.data[i][this.propText]);
+                        }
+                        if (!this.dataValue.includes(this.data[i][this.propValue])) {
+                            this.dataValue.push(this.data[i][this.propValue]);
+                        }
+                    }
+                }
+            } 
+            if (this.dataInputSpan.length > 0)
+            {
+                this.$refs.input.placeholder = "";
+                if (this.openClear) {
+                    this.clearIp = true;
+                }
+            }
+        } else {
+            this.dataInputSpan = [];
+            this.dataValue = [];
+            this.$refs.input.placeholder = this.placeholder;
+            this.clearIp = false;
+            this.indexItemFocus = null;
+            this.indexItemSelected = null;
+            this.$emit("update:modelValue", "");
+        }
     },
     beforeDestroy() {
         this.$refs.input.placeholder = "";

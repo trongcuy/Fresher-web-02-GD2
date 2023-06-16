@@ -43,7 +43,7 @@ const handleClosePopup = () => {
     right: 0;
     bottom: 0;
     left: 0;
-    z-index: 2000;
+    z-index: 4000;
     height: 100%;
     background-color: rgba(0,0,0,.5);
     overflow: auto;

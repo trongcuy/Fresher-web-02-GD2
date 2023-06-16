@@ -128,6 +128,14 @@
     <value>Lỗi file ảnh</value>
     <comment>Lỗi file ảnh</comment>
   </data>
+  <data name="ErrorImportFile" xml:space="preserve">
+    <value>File đầu vào không đúng định dạng</value>
+    <comment>File đầu vào không đúng định dạng</comment>
+  </data>
+  <data name="ErrorImportSize" xml:space="preserve">
+    <value>File đầu vào có dung lượng quá lớn</value>
+    <comment>File đầu vào có dung lượng quá lớn</comment>
+  </data>
   <data name="ExceptionDelete" xml:space="preserve">
     <value>Xóa dữ liệu không thành công</value>
     <comment>Xóa dữ liệu không thành công</comment>
@@ -139,6 +147,10 @@
   <data name="ExceptionUpdate" xml:space="preserve">
     <value>Cập nhật dữ liệu không thành công</value>
     <comment>Cập nhật dữ liệu không thành công</comment>
+  </data>
+  <data name="ExerciseNameMaxLength" xml:space="preserve">
+    <value>Tên bài tập không vượt quá 255 kí tự</value>
+    <comment>Tên bài tập không vượt quá 255 kí tự</comment>
   </data>
   <data name="ExerciseStatus" xml:space="preserve">
     <value>Trạng thái bài tập không đúng</value>
@@ -167,6 +179,10 @@
   <data name="LimitAnswer" xml:space="preserve">
     <value>Đạt giới hạn đáp án</value>
     <comment>Đạt giới hạn đáp án</comment>
+  </data>
+  <data name="LimitAnswerCorrect" xml:space="preserve">
+    <value>Giới hạn đáp án đúng</value>
+    <comment>Giới hạn đáp án đúng</comment>
   </data>
   <data name="NotAnswerCorrect" xml:space="preserve">
     <value>Câu hỏi phải có đáp án đúng</value>

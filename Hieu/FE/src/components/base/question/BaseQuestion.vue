@@ -1,6 +1,13 @@
 <template>
     <div class="question-item">
-        <div class="question-decore"></div>
+        <div class="question-decore"
+            :class="{
+                'question-select': props.data.TypeQuestion == Enum.FormQuestion.Select,
+                'question-yesno': props.data.TypeQuestion == Enum.FormQuestion.YesOrNo,
+                'question-fill': props.data.TypeQuestion == Enum.FormQuestion.Fill,
+                'question-essay':  props.data.TypeQuestion == Enum.FormQuestion.Essay,
+            }"
+        ></div>
         <div class="question-main">
             <div class="question-content flex">
                 <div class="question-number">
@@ -168,6 +175,22 @@ const trashImg = require("@/assets/img/trash.svg");
     height: 8px;
     border-radius: 6px 6px 0 0;
     background-color: rgb(255, 88, 140);
+}
+
+.question-select{
+    background-color: rgb(0, 169, 236);
+}
+
+.question-yesno{
+    background-color: rgb(255, 88, 140);
+}
+
+.question-fill{
+    background-color: rgb(254, 152, 130);
+}
+
+.question-essay{    
+    background-color: rgb(255, 210, 0);
 }
 
 .question-main{

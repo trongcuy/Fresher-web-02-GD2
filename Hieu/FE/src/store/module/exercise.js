@@ -2,7 +2,7 @@ import axios from "axios";
 import { constants } from "@/config/config";
 import * as Enum from "@/common/enum/Enum";
 import * as Resource from "@/common/resource/Resource";
-import { handleShowToast, getValueEnum } from "@/common/common";
+import { handleShowToast, getValueEnum, handleError } from "@/common/common";
 
 const state = {
     showFormExercise: false, // Show form bài tập
@@ -254,7 +254,6 @@ const actions = {
                 `status=${state.filterDatas.ExerciseStatus}&skip=${constants.Skip}&take=${state.take}`);
             if (res.data) {
                 context.commit("getPaging", res.data);
-                context.commit("showLoading", false);
             }  else {
                 // Hiện toast thất bại
                 handleShowToast(context, Resource.ToastFail.InvalidDataResponse, Enum.ToastStatus.Fail);
@@ -262,6 +261,8 @@ const actions = {
         } catch (error) {
             // Hiện toast thất bại
             handleShowToast(context, Resource.ToastFail.LoadFail, Enum.ToastStatus.Fail);
+        } finally {
+            context.commit("showLoading", false);
         }
     },
 
@@ -301,7 +302,8 @@ const actions = {
             handleShowToast(context, Resource.ToastSuccess.AddSuccess, Enum.ToastStatus.Success);
         } catch (error) {
             // hiện toast thất bại
-            handleShowToast(context, Resource.ToastFail.AddFail, Enum.ToastStatus.Fail);
+            //handleShowToast(context, Resource.ToastFail.AddFail, Enum.ToastStatus.Fail);
+            handleError(context, error?.response?.data?.errorMsg, Enum.PopupStatus.ErrorServer);
         }
     },
 
@@ -313,11 +315,13 @@ const actions = {
         try {
             const res = await axios.post(`${constants.API_URL}/api/${constants.API_VERSION}/exercise/multiple`, data)
             context.commit('postMultipleData', res.data);
+            context.commit('showFormQuestion', false);
             // Hiện toast thành công
             handleShowToast(context, Resource.ToastSuccess.AddSuccess, Enum.ToastStatus.Success);
         } catch (error) {
             // hiện toast thất bại
             handleShowToast(context, Resource.ToastFail.AddFail, Enum.ToastStatus.Fail);
+            handleError(context, error?.response?.data?.errorMsg, Enum.PopupStatus.ErrorServer);
         }
     },
 
@@ -329,11 +333,13 @@ const actions = {
         try {
             const res = await axios.put(`${constants.API_URL}/api/${constants.API_VERSION}/exercise/multiple`, data)
             //context.commit('postMultipleData', res.data);
+            context.commit('showFormQuestion', false);
             // Hiện toast thành công
             handleShowToast(context, Resource.ToastSuccess.EditSuccess, Enum.ToastStatus.Success);
         } catch (error) {
             // hiện toast thất bại
             handleShowToast(context, Resource.ToastFail.EditFail, Enum.ToastStatus.Fail);
+            handleError(context, error?.response?.data?.errorMsg, Enum.PopupStatus.ErrorServer);
         }
     },
 
@@ -352,6 +358,7 @@ const actions = {
         } catch (error) {
             // hiện toast thất bại
             handleShowToast(context, Resource.ToastFail.EditFail, Enum.ToastStatus.Fail);
+            handleError(context, error?.response?.data?.errorMsg, Enum.PopupStatus.ErrorServer);
         }
     },
 
@@ -405,7 +412,7 @@ const actions = {
             );
             if (res) {
                 context.commit("checkFile", res.data);
-                context.commit("showLoading", false);
+                context.commit("showImport", true);
             }  else {
                 // Hiện toast thất bại
                 handleShowToast(context, Resource.ToastFail.InvalidDataResponse, Enum.ToastStatus.Fail);
@@ -413,8 +420,10 @@ const actions = {
         } catch (error) {
             // Hiện toast thất bại
             handleShowToast(context, Resource.ToastFail.CheckFail, Enum.ToastStatus.Fail);
+            handleError(context, error.response.data.errorMsg, Enum.PopupStatus.ErrorServer);
         } finally {
-            context.commit("showImport", true);
+
+            context.commit("showLoading", false);
         }
     },
 
@@ -444,7 +453,6 @@ const actions = {
             if (res) {
                 context.commit("importExcel", res.data);
                 handleShowToast(context, Resource.ToastSuccess.ImportSuccess, Enum.ToastStatus.Success);
-                context.commit("showLoading", true);
             }  else {
                 // Hiện toast thất bại
                 handleShowToast(context, Resource.ToastFail.InvalidDataResponse, Enum.ToastStatus.Fail);

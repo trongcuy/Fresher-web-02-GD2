@@ -37,6 +37,15 @@ const mutations = {
      */
     postTopicMultiple(state, payload) {
         const a = 0;
+    },
+
+    /**
+     * Xóa danh sách topics
+     * @param {*} context 
+     * VMHieu 15/06/2023
+     */
+    clearExerciseTopics(state) {
+        state.listExerciseTopic = [];
     }
 }
 
@@ -81,6 +90,15 @@ const actions = {
             handleShowToast(context, Resource.ToastFail.LoadFail, Enum.ToastStatus.Fail);
         }
     },
+
+    /**
+     * Xóa danh sách topics
+     * @param {*} context 
+     * VMHieu 15/06/2023
+     */
+    clearExerciseTopics(context) {
+        context.commit('clearExerciseTopics');
+    }
 }
 
 export default {

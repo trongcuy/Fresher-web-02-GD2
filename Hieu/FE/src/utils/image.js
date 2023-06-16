@@ -12,12 +12,16 @@ export async function uploadImage(file, id) {
     let formData = new FormData()
     formData.append("file", file);
 
-    const res = await axios.post(`${constants.API_URL}/api/${constants.API_VERSION}/exercise/image?idImage=${id}`, formData, {
-        headers: {
-            "Content-Type": "multipart/form-data",
-        }});
-    if (res) {
-        url = res.data;
+    try {
+        const res = await axios.post(`${constants.API_URL}/api/${constants.API_VERSION}/exercise/image?idImage=${id}`, formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            }});
+        if (res) {
+            url = res.data;
+        }
+    } catch (e) {
+        console.log(e);
     }
 
     return url;

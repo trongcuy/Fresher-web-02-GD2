@@ -16,6 +16,7 @@
             contenteditable="true" 
             class="new-tag"
             ref="inputTag"
+            autocomplete="off"
         ></span>
     </div>
 </template>
@@ -122,9 +123,9 @@ watch((props), () => {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    padding-right: 46px;
     border: 1px solid rgb(182, 185, 206);
     padding: 0 4px 0px;
+    padding-right: 46px;
     border-radius: 10px;
     min-height: 42px;
     width: 100%;

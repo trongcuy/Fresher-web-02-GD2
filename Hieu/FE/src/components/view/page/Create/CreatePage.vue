@@ -69,6 +69,7 @@
             <CreateList v-show="showListQuestion" :data="dataQuestion"></CreateList>
         </div>
         <ToastMessage></ToastMessage>
+        <PopupMessage></PopupMessage>
     </div>
     <FormQuestion :data="dataQuestion" :dataExercise="dataExercise"></FormQuestion>
     <FormExercise :data="dataExercise" v-model="dataExerciseAdd" @saveForm="saveForm"></FormExercise>
@@ -82,6 +83,7 @@ import FormQuestion from '@/components/view/FormQuestion.vue';
 import FormExercise from '@/components/view/FormExercise.vue';
 import FormImport from '@/components/view/FormImport.vue';
 import ToastMessage from '@/components/view/ToastMessage.vue';
+import PopupMessage from '@/components/view/PopupMessage.vue';
 import CreateForm from '@/components/view/page/Create/CreatePage/CreateForm.vue'
 import CreateList from '@/components/view/page/Create/CreatePage/CreateList.vue'
 import { useRouter, useRoute } from 'vue-router';
@@ -161,8 +163,15 @@ const validateExercise = () => {
     if (!dataExercise.value.ExerciseName || !dataExercise.value.GradeID || !dataExercise.value.SubjectID) {
         isValid = false;
     } 
+    if (dataExercise.value.ExerciseName.length > 255) {
+        store.dispatch('updatePopupMsg', Resource.PopupMessage.ExerciseNameMaxLength);
+        store.dispatch('showPopup', true);
+        store.dispatch('updatePopupStatus', Enum.PopupStatus.Error);
+        isValid = false;
+    }
     return isValid;
 }
+
 /**
  * Sự kiện lưu form bài tập
  * VMHieu 06/01/2023
@@ -197,7 +206,7 @@ const saveExercise = async () => {
             await store.dispatch("postExercise", dataExercise.value);
         }
 
-        if (dataExercise.value.Topics.length > 0) {
+        if (dataExercise.value.Topics && dataExercise.value.Topics.length > 0) {
             let dataTopic = {
                 ExerciseID: dataExercise.value.ExerciseID || exerciseID.value,
                 Topics: Object.values(dataExercise.value.Topics)

@@ -88,6 +88,24 @@ namespace WEB02.EMIS.API.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File đầu vào không đúng định dạng.
+        /// </summary>
+        public static string ErrorImportFile {
+            get {
+                return ResourceManager.GetString("ErrorImportFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File đầu vào có dung lượng quá lớn.
+        /// </summary>
+        public static string ErrorImportSize {
+            get {
+                return ResourceManager.GetString("ErrorImportSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Xóa dữ liệu không thành công.
         /// </summary>
         public static string ExceptionDelete {
@@ -111,6 +129,15 @@ namespace WEB02.EMIS.API.Common {
         public static string ExceptionUpdate {
             get {
                 return ResourceManager.GetString("ExceptionUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tên bài tập không vượt quá 255 kí tự.
+        /// </summary>
+        public static string ExerciseNameMaxLength {
+            get {
+                return ResourceManager.GetString("ExerciseNameMaxLength", resourceCulture);
             }
         }
         
@@ -174,6 +201,15 @@ namespace WEB02.EMIS.API.Common {
         public static string LimitAnswer {
             get {
                 return ResourceManager.GetString("LimitAnswer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Giới hạn đáp án đúng.
+        /// </summary>
+        public static string LimitAnswerCorrect {
+            get {
+                return ResourceManager.GetString("LimitAnswerCorrect", resourceCulture);
             }
         }
         

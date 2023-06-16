@@ -94,7 +94,9 @@ export const ToastSuccess = {
  */
 export const ToastWarning = {
     LeastAnswer: "Câu hỏi phải có ít nhất một đáp án!",
-    LimitAnswer: "Số đáp án đạt giới hạn!"
+    LimitAnswer: "Số đáp án đạt giới hạn!",
+    ErrorFileExcel: "Định dạng file không hợp lệ",
+    ErrorFileSize: "Dung lượng file quá lớn"
 }
 /**
  * Nội dung thông báo toast message
@@ -137,6 +139,7 @@ export const PopupMessage = {
     NotQuestion: "Bạn vui lòng nhập nội dung câu hỏi",
     NotAnswerCheck: "Bạn vui lòng nhập nội dung đáp án, chọn đáp án đúng",
     NotAnswerFill: "Bạn vui lòng nhập nội dung đáp án",
+    ExerciseNameMaxLength: "Tên bài tập không vượt quá 255 kí tự",
     Breakpoint: "*", // Kí tự ngắt dòng để thay thế 
 }
 /**
@@ -163,6 +166,37 @@ export const AnswerNo = {
     AnswerStatus: "",
     SortOder: 1,
 }
+
+/**
+ * Tên môn học
+ */
+export const SubjectName = {
+    Math: "Toán",
+    English: "Tiếng Anh",
+    Literature: "Ngữ Văn",
+    History: "Lịch Sử",
+    CivicEducation: "Giáo dục công dân",
+    Geography: "Địa Lý"
+}
+
+/**
+ * Định dạng file import chấp nhận
+ * CreatedBy VMHieu 13/04/2023
+ */
+export const FileFormat = [
+    'xls',
+    'xlsx',
+]
+
+/**
+ * Định dạng file image chấp nhận
+ * CreatedBy VMHieu 13/04/2023
+ */
+export const FileFormatImage = [
+    'png',
+    'jpg',
+    'jpeg',
+]
 
 
 export default Resource;

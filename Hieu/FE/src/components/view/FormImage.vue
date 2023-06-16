@@ -47,15 +47,19 @@
                 <BaseButton class="ms-button btn-active btn-blue btn-gray" ref="refBtn" text="Thêm" @click="uploadImg"></BaseButton>
             </div>
         </div>
+        <ToastMessage></ToastMessage>
     </div>
 </template>
 
 <script setup>
 import BaseButton from "@/components/base/button/BaseButton.vue";
+import ToastMessage from "@/components/view/ToastMessage"
 import { computed, ref, defineEmits, onMounted, nextTick } from 'vue';
 import { useStore } from "vuex";
 import { generateUUID } from "@/common/common";
-import { uploadImage } from "@/utils/image.js"
+import { uploadImage } from "@/utils/image.js";
+import * as Resource from "@/common/resource/Resource";
+import * as Enum from "@/common/enum/Enum";
 // Đường dẫn ảnh
 const importImg = require("@/assets/img/import-file.svg");
 const searchImg = require("@/assets/img/icon-search.svg");
@@ -75,7 +79,19 @@ const refBtn = ref("refBtn");
  * VMHieu 07/06/2023
  */
 const handleUploadFile = () => {
-    files.value = upload.value.files[0];
+    let file = upload.value.files[0];
+    var extension = file.name.split('.').pop().toLowerCase();
+    let fileSize = (file.size/1024/1024).toFixed(3);
+    if (!Resource.FileFormatImage.includes(extension)) {
+        showToast(Enum.ToastStatus.Warning, Resource.ToastWarning.ErrorFileExcel)
+    } 
+    else if (fileSize > 5) {
+        showToast(Enum.ToastStatus.Warning, Resource.ToastWarning.ErrorFileSize)
+    }
+    else {
+        files.value = upload.value.files[0];
+    }
+
     let btn = refBtn.value.btn;
     if (files.value) {
         const reader = new FileReader();
@@ -87,8 +103,18 @@ const handleUploadFile = () => {
         reader.readAsDataURL(files.value);
         btn.classList.remove("btn-gray");
     } else {
-        btn.classList.remove("btn-gray");
+        btn.classList.add("btn-gray");
     }
+}
+
+/** 
+ * Hiển thị toast theo status và msg
+ * VMHieu 15/06/2023
+ */
+ const showToast = (status, msg) => {
+    store.dispatch("showToast", true);
+    store.dispatch("updateToastStatus", status);
+    store.dispatch("updateToastMsg", msg);
 }
 
 /**

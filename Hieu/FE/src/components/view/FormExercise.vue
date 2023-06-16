@@ -1,5 +1,5 @@
 <template>
-    <div class="form-exercise" v-show="showFormExercise">
+    <div class="form-exercise" v-if="showFormExercise">
         <div class="exercise-container">
             <div class="exercise-header flex">
                 <div class="exercise-title">
@@ -98,7 +98,7 @@
                                     propText="TopicName"
                                     propValue="TopicID"
                                     v-model="dataExerciseClone.Topics"
-                                    :valueCombobox="listExerciseTopic"
+                                    :valueCombobox="dataExerciseClone.Topics || listExerciseTopic"
                                     :openClear="true"
                                     :tabindex="4"
                                     :getValue="getValue"
@@ -113,6 +113,7 @@
                 <BaseButton class="ms-button btn-active btn-blue" tabindex="5" text="Lưu" @click="saveDataExercise"></BaseButton>
             </div>
         </div>
+        <ToastMessage></ToastMessage>
     </div>
 </template>
 
@@ -120,9 +121,10 @@
 import BaseButton from "@/components/base/button/BaseButton.vue";
 import BaseCombobox from "../base/combobox/BaseCombobox.vue";
 import BaseComboboxTag from "../base/combobox/BaseComboboxTag.vue";
+import ToastMessage from "./ToastMessage.vue";
 import { useStore } from 'vuex';
 import { useRoute } from 'vue-router';
-import { computed, watch, ref, isReactive, reactive, nextTick, onBeforeMount, defineProps, defineEmits } from 'vue';
+import { computed, watch, ref, isReactive, reactive, nextTick, onBeforeMount, defineProps, defineEmits, onMounted } from 'vue';
 import BaseInput from "../base/input/BaseInput.vue";
 import * as Resource from "@/common/resource/Resource";
 import * as Enum from "@/common/enum/Enum";
@@ -148,7 +150,6 @@ const grades = computed(() => store.state.grade.grades);
 const subjects = computed(() => store.state.subject.subjects);
 const listTopic = computed(() => store.state.topic.listTopic);
 const listExerciseTopic = computed(() => store.state.exercisetopic.listExerciseTopic);
-const formModeExercise = computed(() => store.state.exercise.formModeExercise);
 // Thông tin bản ghi bài tập
 const dataExercise = ref({});
 let dataExerciseClone = reactive({
@@ -208,9 +209,11 @@ const saveDataExercise = () => {
  * VMHieu 01/06/2023
  */
 const changeValue = () => {
+
     for (let prop in listExerciseTopic) {
         delete listExerciseTopic[prop];
     }
+    dataExerciseClone.Topics = '';
 
     let dataGradeSubject = {
         gradeID: dataExerciseClone.GradeID,
@@ -232,21 +235,37 @@ const openUploadFile = () => {
  */
 const handleFileUpload = async (event) => {
     const file = event.target.files[0];
-    // const reader = new FileReader();
 
-    // reader.onload = (e) => {
-    //     imageUrl.value = e.target.result;
-    // };
+    if (file) {
+        var extension = file.name.split('.').pop().toLowerCase();
+        let fileSize = (file.size/1024/1024).toFixed(3);
+        if (!Resource.FileFormatImage.includes(extension)) {
+            showToast(Enum.ToastStatus.Warning, Resource.ToastWarning.ErrorFileExcel)
+        } 
+        else if (fileSize > 5) {
+            showToast(Enum.ToastStatus.Warning, Resource.ToastWarning.ErrorFileSize)
+        }
+        else {
+            const id = generateUUID();
+            const urlImage = await uploadImage(file, id);
 
-    // reader.readAsDataURL(file);
-    const id = generateUUID();
-    const urlImage = await uploadImage(file, id);
-
-    if (urlImage) {
-        dataExerciseClone.ExerciseImage = urlImage;
-        imageUrl.value = urlImage;
+            if (urlImage) {
+                dataExerciseClone.ExerciseImage = urlImage;
+                imageUrl.value = urlImage;
+            }
+        }
     }
 };
+
+/** 
+ * Hiển thị toast theo status và msg
+ * VMHieu 15/06/2023
+ */
+const showToast = (status, msg) => {
+    store.dispatch("showToast", true);
+    store.dispatch("updateToastStatus", status);
+    store.dispatch("updateToastMsg", msg);
+}
 
 onBeforeMount(() => {
     const id = route.query.id;
@@ -279,10 +298,19 @@ watch((exercise), () => {
 watch((showFormExercise), () => {
     if (showFormExercise.value) {
         dataExerciseClone = _.cloneDeep(props.data);
+
         const id = route.query.id;
         if (id) {
             store.dispatch("getTopicByID", id);
-        } 
+        } else {
+            store.dispatch("clearExerciseTopics");
+        }
+
+        let dataGradeSubject = {
+            gradeID: dataExerciseClone.GradeID,
+            subjectID: dataExerciseClone.SubjectID
+        }
+        store.dispatch("getTopicByGradeSubject", dataGradeSubject);
     } 
 })
 
