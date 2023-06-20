@@ -1,5 +1,7 @@
 ﻿using Dapper;
+using EMIS.Common;
 using EMIS.Common.Entity;
+using EMIS.Common.ExceptionEntity;
 using EMIS.DL.BaseDL;
 using EMIS.DL.QuestionDL;
 using Microsoft.Extensions.Configuration;
@@ -36,6 +38,11 @@ namespace EMIS.DL.TopicDL
             parameters.Add("gradeID", gradeID);
             // Thực hiện gọi vào db để chạy câu lệnh 
             var result = conn.Query<Topic>(getAllCommand, param: parameters, commandType: System.Data.CommandType.StoredProcedure);
+            // Xử lý kết quả trả về ở db
+            if (result == null)
+            {
+                throw new ErrorException(devmsg: Resource.ResourceManager.GetString(name: "ResultNull"));
+            }
             conn.Close();
             return result;
         }

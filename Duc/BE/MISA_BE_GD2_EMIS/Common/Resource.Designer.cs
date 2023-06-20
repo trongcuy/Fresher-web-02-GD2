@@ -97,6 +97,15 @@ namespace EMIS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File Excel không tồn tại.
+        /// </summary>
+        public static string ExcelNull {
+            get {
+                return ResourceManager.GetString("ExcelNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Số lượng đáp án đúng không hợp lệ.
         /// </summary>
         public static string ExcelNumAnswerInvalid {
@@ -106,11 +115,47 @@ namespace EMIS.Common {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Dung lượng file vượt quá 25Mb.
+        /// </summary>
+        public static string ExcelTooBig {
+            get {
+                return ResourceManager.GetString("ExcelTooBig", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Thiếu loại câu hỏi .
         /// </summary>
         public static string ExcelTypeNull {
             get {
                 return ResourceManager.GetString("ExcelTypeNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Xóa không thành công.
+        /// </summary>
+        public static string ExceptionDelete {
+            get {
+                return ResourceManager.GetString("ExceptionDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Thêm không thành công.
+        /// </summary>
+        public static string ExceptionInsert {
+            get {
+                return ResourceManager.GetString("ExceptionInsert", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cập nhật không thành công.
+        /// </summary>
+        public static string ExceptionUpdate {
+            get {
+                return ResourceManager.GetString("ExceptionUpdate", resourceCulture);
             }
         }
         
@@ -192,6 +237,15 @@ namespace EMIS.Common {
         public static string InvalidQuestionType {
             get {
                 return ResourceManager.GetString("InvalidQuestionType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Không có dữ liệu.
+        /// </summary>
+        public static string ResultNull {
+            get {
+                return ResourceManager.GetString("ResultNull", resourceCulture);
             }
         }
     }

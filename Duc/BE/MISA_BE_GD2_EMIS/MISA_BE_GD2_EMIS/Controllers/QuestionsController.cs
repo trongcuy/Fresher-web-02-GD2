@@ -49,6 +49,7 @@ namespace MISA_BE_GD2_EMIS.Controllers
         /// CreatedBy: Trịnh Huỳnh Đức (4-6-2023)
         /// </summary>
         /// <param name="questionID"></param>
+        /// <param name="answers"></param>
         /// <returns></returns>
         [HttpPost("{questionID}/Answer")]
         public IActionResult InsertAnswer(string questionID, List<Answer> answers)
@@ -63,6 +64,7 @@ namespace MISA_BE_GD2_EMIS.Controllers
                 return HandleException(ex);
             }
         }
+
         #endregion
     }
 }

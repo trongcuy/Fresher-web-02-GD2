@@ -43,6 +43,8 @@ namespace EMIS.DL.ExcelDL
         /// Lưu các bản ghi hợp lệ vào database
         /// CreatedBy: Trịnh Huỳnh Đức (14-6-2023)
         /// </summary>
+        /// <param name="exercise"></param>
+        /// <param name="excelRows"></param>
         /// <returns></returns>
         public string InsertExcelToDB(Exercise exercise, List<ExcelRow> excelRows)
         {
@@ -143,7 +145,8 @@ namespace EMIS.DL.ExcelDL
         /// lấy trạng thái đáp án
         /// CreatedBy: Trịnh Huỳnh Đức (14-6-2023)
         /// </summary>
-        /// <param name="type"></param>
+        /// <param name="index"></param>
+        /// <param name="answer"></param>
         /// <returns></returns>
         private int GetStateAnswer(int index, string answer)
         {

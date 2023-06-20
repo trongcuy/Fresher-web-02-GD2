@@ -11,6 +11,7 @@ using EMIS.DL.QuestionDL;
 using EMIS.BL.ExerciseBL;
 using EMIS.Common;
 using EMIS.Common.ExceptionEntity;
+using EMIS.Common.Enum;
 
 namespace EMIS.BL.QuestionBL
 {
@@ -44,7 +45,9 @@ namespace EMIS.BL.QuestionBL
         /// CreatedBy: Trịnh Huỳnh Đức (3-6-2023)
         /// </summary>
         /// <param name="questionID"></param>
+        /// <param name="answers"></param>
         /// <returns></returns>
+        /// <exception cref="ErrorException"></exception>
         public int InsertAnswer(string questionID, List<Answer> answers)
         {
             if (ValidateAnswer(answers))
@@ -68,13 +71,13 @@ namespace EMIS.BL.QuestionBL
             errorList.Clear();
 
             // Check tên câu hỏi đã nhập chưa
-            if (string.IsNullOrEmpty(question.QuestionContent))
+            if (string.IsNullOrEmpty(question.QuestionContent)  && (string.IsNullOrEmpty(question.QuestionImage)))
             {
                 errorList.Add(Resource.ResourceManager.GetString(name: "InvalidQuestionName"));
             }
 
             // Check loại câu hỏi đã nhập đúng chưa
-            if (question.QuestionType>4 || question.QuestionType<1)
+            if ((question.QuestionType > (int)QuestionType.MaxQuestionType) || (question.QuestionType < (int)QuestionType.MinQuestionType))
             {
                 errorList.Add(Resource.ResourceManager.GetString(name: "InvalidQuestionType"));
             }
@@ -99,7 +102,7 @@ namespace EMIS.BL.QuestionBL
         /// hàm validate answer
         /// CreatedBy: Trịnh Huỳnh Đức (7-6-2023)
         /// </summary>
-        /// <param name="question"></param>
+        /// <param name="answers"></param>
         /// <returns></returns>
         private bool ValidateAnswer(List<Answer> answers)
         {
@@ -108,7 +111,7 @@ namespace EMIS.BL.QuestionBL
             foreach (var answer in answers)
             {
                 //kiểm tra trạng thái đáp án có hợp lệ không
-                if ((answer.AnswerState != 1) && (answer.AnswerState != 2))
+                if ((answer.AnswerState != (int)AnswerState.True) && (answer.AnswerState != (int)AnswerState.False))
                 {
                     //nếu chưa có lỗi này thì mới add vào
                     if (!errorList.Contains(Resource.ResourceManager.GetString(name: "InvalidAnswerState")))

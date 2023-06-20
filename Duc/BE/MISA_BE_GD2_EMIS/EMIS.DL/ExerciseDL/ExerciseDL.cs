@@ -1,6 +1,8 @@
 ﻿using Dapper;
+using EMIS.Common;
 using EMIS.Common.DTO;
 using EMIS.Common.Entity;
+using EMIS.Common.ExceptionEntity;
 using EMIS.DL.BaseDL;
 using EMIS.DL.QuestionDL;
 using EMIS.DL.TopicDL;
@@ -45,6 +47,11 @@ namespace EMIS.DL.ExerciseDL
             parameters.Add("pageIndex", pageIndex);
             // Thực hiện gọi vào db để chạy câu lệnh 
             var result = conn.Query<Exercise>(getAllCommand, param: parameters, commandType: System.Data.CommandType.StoredProcedure);
+            // Xử lý kết quả trả về ở db
+            if (result == null)
+            {
+                throw new ErrorException(devmsg: Resource.ResourceManager.GetString(name: "ResultNull"));
+            }
             conn.Close();
             return result;
         }
@@ -76,6 +83,11 @@ namespace EMIS.DL.ExerciseDL
             parameters.Add("pageIndex", pageIndex);
             // Thực hiện gọi vào db để chạy câu lệnh 
             var result = conn.Query<Exercise>(getAllCommand, param: parameters, commandType: System.Data.CommandType.StoredProcedure);
+            // Xử lý kết quả trả về ở db
+            if (result == null)
+            {
+                throw new ErrorException(devmsg: Resource.ResourceManager.GetString(name: "ResultNull"));
+            }
             conn.Close();
             return result;
         }
@@ -97,6 +109,11 @@ namespace EMIS.DL.ExerciseDL
             parameters.Add("exerciseID", exerciseID);
             // Thực hiện gọi vào db để chạy câu lệnh 
             var result = conn.Query<Question>(getAllCommand, param: parameters, commandType: System.Data.CommandType.StoredProcedure);
+            // Xử lý kết quả trả về ở db
+            if (result == null)
+            {
+                throw new ErrorException(devmsg: Resource.ResourceManager.GetString(name: "ResultNull"));
+            }
             conn.Close();
             return result;
         }
@@ -118,6 +135,11 @@ namespace EMIS.DL.ExerciseDL
             parameters.Add("exerciseID", exerciseID);
             // Thực hiện gọi vào db để chạy câu lệnh 
             var result = conn.Query<Topic>(getAllCommand, param: parameters, commandType: System.Data.CommandType.StoredProcedure);
+            // Xử lý kết quả trả về ở db
+            if (result == null)
+            {
+                throw new ErrorException(devmsg: Resource.ResourceManager.GetString(name: "ResultNull"));
+            }
             conn.Close();
             return result;
         }
@@ -127,6 +149,7 @@ namespace EMIS.DL.ExerciseDL
         /// CreatedBy: Trịnh Huỳnh Đức (1-6-2023)
         /// </summary>
         /// <param name="exerciseID"></param>
+        /// <param name="topicIDs"></param>
         /// <returns></returns>
         public int InsertTopic(string exerciseID, string? topicIDs)
         {
@@ -148,7 +171,7 @@ namespace EMIS.DL.ExerciseDL
         /// thêm chủ đề theo id bài tập
         /// CreatedBy: Trịnh Huỳnh Đức (1-6-2023)
         /// </summary>
-        /// <param name="exerciseID"></param>
+        /// <param name="dataAll"></param>
         /// <returns></returns>
         public string InsertAll(DataAll dataAll)
         {
@@ -158,7 +181,6 @@ namespace EMIS.DL.ExerciseDL
             var transaction = conn.BeginTransaction();
             try
             {
-
                 // thêm bài tập
                 // Chuẩn bị câu lệnh 
                 var insertCommand = "Proc_Exercise_Insert";
@@ -167,15 +189,6 @@ namespace EMIS.DL.ExerciseDL
                 // Thực hiện gọi vào db để chạy câu lệnh
                 var resultExercise = conn.ExecuteScalar<string>(insertCommand, param: parameters, transaction: transaction, commandType: System.Data.CommandType.StoredProcedure);
 
-                // Kiem tra ket qua
-                if (resultExercise == "")
-                {
-                    // rollback 
-                    transaction.Rollback();
-                    return "";
-                }
-
-                // thêm bài tập thành công
                 // thêm câu hỏi
                 // Chuẩn bị câu lệnh 
                 insertCommand = "Proc_Question_Insert";
@@ -183,14 +196,7 @@ namespace EMIS.DL.ExerciseDL
                 dataAll.question.ExerciseID = Guid.Parse(resultExercise);
                 parameters = new DynamicParameters(dataAll.question);
                 // Thực hiện gọi vào db để chạy câu lệnh
-                var resultQuestion = conn.ExecuteScalar<string>(insertCommand, param: parameters, transaction: transaction, commandType: System.Data.CommandType.StoredProcedure);
-                // Kiem tra ket qua
-                if (resultQuestion == "")
-                {
-                    // rollback 
-                    transaction.Rollback();
-                    return "";
-                }
+                var resultQuestion = conn.ExecuteScalar<string>(insertCommand, param: parameters, transaction: transaction, commandType: System.Data.CommandType.StoredProcedure);              
 
                 //thêm câu hỏi thành công
                 // thêm đáp án
@@ -209,13 +215,6 @@ namespace EMIS.DL.ExerciseDL
                         var result = conn.Execute(insertCommand, param: parameters, transaction: transaction, commandType: System.Data.CommandType.StoredProcedure);
                         resultAnswer += result;
                     }
-                    // Kiem tra ket qua
-                    if (resultAnswer == 0)
-                    {
-                        // rollback 
-                        transaction.Rollback();
-                        return "";
-                    }
                 }
 
                 // thêm chủ đề          
@@ -230,13 +229,7 @@ namespace EMIS.DL.ExerciseDL
                     parameters.Add("topicIDs", dataAll.topicIDs);
                     // Thực hiện gọi vào db để chạy câu lệnh 
                     resultTopic = conn.Execute(getAllCommand, param: parameters, transaction: transaction, commandType: System.Data.CommandType.StoredProcedure);
-                    // Kiem tra ket qua
-                    if (resultTopic == 0)
-                    {
-                        // rollback 
-                        transaction.Rollback();
-                        return "";
-                    }
+                    
                 }
 
                 // Xác nhận thay đổi

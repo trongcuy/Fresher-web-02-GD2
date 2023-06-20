@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
 using Aspose.Cells;
@@ -16,6 +17,7 @@ using EMIS.DL.ExcelDL;
 using EMIS.DL.QuestionDL;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
 
 namespace EMIS.BL.ExcelBL
 {
@@ -25,19 +27,20 @@ namespace EMIS.BL.ExcelBL
         private List<string> errorList;
         private IMemoryCache _cache;
         private IExcelDL _excelDL;
+        private string pathExcel;
         #endregion
 
         #region Constructor
-        public ExcelBL(IMemoryCache cache, IExcelDL excelDL)
+        public ExcelBL(IMemoryCache cache, IExcelDL excelDL, IConfiguration configuration)
         {
             _cache = cache;
             errorList = new List<string>();
             _excelDL = excelDL;
+            pathExcel = configuration.GetConnectionString("pathExcel");
         }
         #endregion
 
         #region 
-
         /// <summary>
         /// dowload fiel excel mẫu
         /// CreatedBy: Trịnh Huỳnh Đức (8-6-2023)
@@ -45,15 +48,45 @@ namespace EMIS.BL.ExcelBL
         /// <returns></returns>
         public byte[] DownloadExcelSample()
         {
-            // Đường dẫn đến file XLSX trong thư mục Backend
-            string filePath = "C:\\Users\\DELL\\OneDrive\\Tài liệu\\TaiLieuCodeVue\\Fresher-web-02-GD2\\Duc\\BE\\MISA_BE_GD2_EMIS\\Common\\Excel\\Mau_nhap_khau_cau_hoi_loai_1.xlsx";
-
             // Kiểm tra sự tồn tại của file
-            if (System.IO.File.Exists(filePath))
+            if (System.IO.File.Exists(pathExcel))
             {
-                byte[]  fileByte = System.IO.File.ReadAllBytes(filePath);
+                byte[]  fileByte = System.IO.File.ReadAllBytes(pathExcel);
+                return fileByte;
             }
             return null;
+        }
+
+        public bool  CheckFileExcel(IFormFile excelFile)
+        {
+            errorList.Clear();
+
+            // Kiểm tra định dạng của tệp (.xls, .xlsx)
+            if (!Path.GetExtension(excelFile.FileName).Equals(".xlsx", StringComparison.OrdinalIgnoreCase))
+            {
+                errorList.Add(Resource.ResourceManager.GetString(name: "ExcelNull"));
+            }
+
+            // Kiểm tra tệp có tồn tại không
+            if (excelFile == null || excelFile.Length <= 0)
+            {
+                errorList.Add(Resource.ResourceManager.GetString(name: "ExcelNull"));
+            }
+
+            // Kiểm tra dung lượng tệp không lớn hơn 25MB
+            else if (excelFile.Length > 26214400) 
+            {
+                errorList.Add(Resource.ResourceManager.GetString(name: "ExcelTooBig"));
+            }
+
+            if (errorList.Count > 0)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
 
         /// <summary>
@@ -64,6 +97,12 @@ namespace EMIS.BL.ExcelBL
         /// <returns></returns>
         public Object CheckExcel(IFormFile file)
         {
+            //kiểm tra file có hợp lệ không trước
+            if(!CheckFileExcel(file))
+            {
+                throw new ErrorException(devmsg: Resource.ResourceManager.GetString(name: "InvalidData"), errors: errorList);
+            }
+
             // Đường dẫn tới file Excel tạm thời
             var filePath = Path.GetTempFileName();
 
@@ -157,31 +196,28 @@ namespace EMIS.BL.ExcelBL
             return result;
         }
 
-        
+
 
         /// <summary>
         /// validate từng hàng trong bảng
         /// CreatedBy: Trịnh Huỳnh Đức (13-6-2023)
         /// </summary>
+        /// <param name="excelRow"></param>
         /// <returns></returns>
         private bool ValidateExcelRow(ExcelRow excelRow)
         {
             errorList.Clear();
-            bool result = true;
             //kiểm tra nội dung câu hỏi, loại câu hỏi, đáp án không được để trống
             if (excelRow.QuestionContent == "")
             {
-                result = false;
                 errorList.Add(Resource.ResourceManager.GetString(name: "ExcelContenNull"));
             }
             if (excelRow.QuestionType == "")
             {
-                result = false;
                 errorList.Add(Resource.ResourceManager.GetString(name: "ExcelTypeNull"));
             }
             if (excelRow.AnswerTrue == "" && (excelRow.QuestionType != "Tự luận" && excelRow.QuestionType != "Điền vào chỗ trống"))
             {
-                result = false;
                 errorList.Add(Resource.ResourceManager.GetString(name: "ExcelAnswerTrueNull"));
             }
 
@@ -191,21 +227,18 @@ namespace EMIS.BL.ExcelBL
                 case "Đúng sai":
                     if (excelRow.Answers.Count != 2)
                     {
-                        result = false;
                         errorList.Add(Resource.ResourceManager.GetString(name: "ExcelNumAnswerInvalid"));
                     }
                     break;
                 case "Điền vào chỗ trống":
                     if (excelRow.Answers.Count == 0)
                     {
-                        result = false;
                         errorList.Add(Resource.ResourceManager.GetString(name: "ExcelNumAnswerInvalid"));
                     }
                     break;
                 case "Chọn đáp án":
                     if (excelRow.Answers.Count == 0)
                     {
-                        result = false;
                         errorList.Add(Resource.ResourceManager.GetString(name: "ExcelNumAnswerInvalid"));
                     }
                     break;
@@ -222,20 +255,26 @@ namespace EMIS.BL.ExcelBL
                     int num;
                     if (!int.TryParse(answerTrue[i], out num))
                     {
-                        result = false;
                         errorList.Add(Resource.ResourceManager.GetString(name: "ExcelAnswerTrueInvalid"));
                         break;
                     }
                 }
             }
-
-            return result;
+            if (errorList.Count > 0)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
 
         /// <summary>
         /// Lưu các bản ghi hợp lệ vào database
         /// CreatedBy: Trịnh Huỳnh Đức (14-6-2023)
         /// </summary>
+        /// <param name="exercise"></param>
         /// <returns></returns>
         public string InsertExcelToDB(Exercise exercise)
         {

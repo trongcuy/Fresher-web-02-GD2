@@ -9,16 +9,16 @@ namespace EMIS.Common.Entity
     public class Question : BaseEntity
     {
         public Guid QuestionID { get; set; }
-        public string QuestionContent { get; set; }
+        public string? QuestionContent { get; set; }
         public int QuestionType { get; set; }
         public string? QuestionExplane { get; set; }
         public string QuestionNumber { get; set; }
         public Guid ExerciseID { get; set; }
-        public Guid? QuestionImage { get; set; }
+        public string? QuestionImage { get; set; }
         public Question()
         {
             ExerciseID = Guid.NewGuid();
-            QuestionImage = Guid.Empty;
+            QuestionImage = "00000000-0000-0000-0000-000000000000";
         }
     }
 }

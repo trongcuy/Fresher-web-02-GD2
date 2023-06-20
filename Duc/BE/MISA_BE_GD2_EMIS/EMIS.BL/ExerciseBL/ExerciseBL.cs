@@ -2,6 +2,7 @@
 using EMIS.Common;
 using EMIS.Common.DTO;
 using EMIS.Common.Entity;
+using EMIS.Common.Enum;
 using EMIS.Common.ExceptionEntity;
 using EMIS.DL.BaseDL;
 using EMIS.DL.ExerciseDL;
@@ -83,6 +84,7 @@ namespace EMIS.BL.ExerciseBL
         /// CreatedBy: Trịnh Huỳnh Đức (1-6-2023)
         /// </summary>
         /// <param name="exerciseID"></param>
+        /// <param name="topicIDs"></param>
         /// <returns></returns>
         public int InsertTopic(string exerciseID, string? topicIDs)
         {
@@ -93,7 +95,9 @@ namespace EMIS.BL.ExerciseBL
         /// thêm mới một đáp án, câu hỏi, bài tập
         /// CreatedBy: Trịnh Huỳnh Đức (6-6-2023)
         /// </summary>
+        /// <param name="dataAll"></param>
         /// <returns></returns>
+        /// <exception cref="ErrorException"></exception>
         public string InsertAll(DataAll dataAll)
         {
             if (ValidateAll(dataAll))
@@ -123,7 +127,7 @@ namespace EMIS.BL.ExerciseBL
             }
 
             // Check trạng thái bài tập đã nhập đúng chưa
-            if (exercise.ExerciseState!=1 && exercise.ExerciseState!=2)
+            if ((exercise.ExerciseState != (int)ExerciseState.Editing)  && (exercise.ExerciseState!= (int)ExerciseState.Edited))
             {
                 errorList.Add(Resource.ResourceManager.GetString(name: "InvalidExerciseState"));
             }
@@ -147,13 +151,13 @@ namespace EMIS.BL.ExerciseBL
         private void ValidateQuestion(Question question)
         {
             // Check tên câu hỏi đã nhập chưa
-            if (string.IsNullOrEmpty(question.QuestionContent))
+            if (string.IsNullOrEmpty(question.QuestionContent) && (string.IsNullOrEmpty(question.QuestionImage)))
             {
                 errorList.Add(Resource.ResourceManager.GetString(name: "InvalidQuestionName"));
             }
 
             // Check loại câu hỏi đã nhập đúng chưa
-            if (question.QuestionType>4 || question.QuestionType<1)
+            if ((question.QuestionType > (int)QuestionType.MaxQuestionType) || (question.QuestionType < (int)QuestionType.MinQuestionType))
             {
                 errorList.Add(Resource.ResourceManager.GetString(name: "InvalidQuestionType"));
             }
@@ -169,14 +173,13 @@ namespace EMIS.BL.ExerciseBL
         /// hàm validate answer
         /// CreatedBy: Trịnh Huỳnh Đức (7-6-2023)
         /// </summary>
-        /// <param name="question"></param>
-        /// <returns></returns>
+        /// <param name="answers"></param>
         private void ValidateAnswer(List<Answer> answers)
         {
             foreach (var answer in answers)
             {
                 //kiểm tra trạng thái đáp án có hợp lệ không
-                if ((answer.AnswerState != 1) && (answer.AnswerState != 2))
+                if ((answer.AnswerState != (int)AnswerState.True) && (answer.AnswerState != (int)AnswerState.False))
                 {
                     //nếu chưa có lỗi này thì mới add vào
                     if (!errorList.Contains(Resource.ResourceManager.GetString(name: "InvalidAnswerState")))
@@ -197,7 +200,7 @@ namespace EMIS.BL.ExerciseBL
         /// hàm validate insert tất cả
         /// CreatedBy: Trịnh Huỳnh Đức (7-6-2023)
         /// </summary>
-        /// <param name="exercise"></param>
+        /// <param name="dataAll"></param>
         /// <returns></returns>
         private bool ValidateAll(DataAll dataAll)
         {

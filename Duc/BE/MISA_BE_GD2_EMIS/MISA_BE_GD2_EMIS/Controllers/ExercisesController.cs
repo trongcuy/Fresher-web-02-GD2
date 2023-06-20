@@ -116,6 +116,7 @@ namespace MISA_BE_GD2_EMIS.Controllers
         /// CreatedBy: Trịnh Huỳnh Đức (1-6-2023)
         /// </summary>
         /// <param name="exerciseID"></param>
+        /// <param name="topicIDs"></param>
         /// <returns></returns>
         [HttpPost("{exerciseID}/Topic")]
         public IActionResult InsertTopic(string exerciseID, string? topicIDs)
@@ -135,6 +136,7 @@ namespace MISA_BE_GD2_EMIS.Controllers
         /// thêm mới đáp án, câu hỏi, bài tập
         /// CreatedBy: Trịnh Huỳnh Đức (6-6-2023)
         /// </summary>
+        /// <param name="dataAll"></param>
         /// <returns></returns>
         [HttpPost("All")]
         public IActionResult InsertAll(DataAll dataAll)

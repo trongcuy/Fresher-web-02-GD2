@@ -129,11 +129,26 @@
   <data name="ExcelContenNull" xml:space="preserve">
     <value>Thiếu nội dung câu hỏi</value>
   </data>
+  <data name="ExcelNull" xml:space="preserve">
+    <value>File Excel không tồn tại</value>
+  </data>
   <data name="ExcelNumAnswerInvalid" xml:space="preserve">
     <value>Số lượng đáp án đúng không hợp lệ</value>
   </data>
+  <data name="ExcelTooBig" xml:space="preserve">
+    <value>Dung lượng file vượt quá 25Mb</value>
+  </data>
   <data name="ExcelTypeNull" xml:space="preserve">
     <value>Thiếu loại câu hỏi </value>
+  </data>
+  <data name="ExceptionDelete" xml:space="preserve">
+    <value>Xóa không thành công</value>
+  </data>
+  <data name="ExceptionInsert" xml:space="preserve">
+    <value>Thêm không thành công</value>
+  </data>
+  <data name="ExceptionUpdate" xml:space="preserve">
+    <value>Cập nhật không thành công</value>
   </data>
   <data name="InvalidAnswerContent" xml:space="preserve">
     <value>Nội dung đáp án không được để trống</value>
@@ -163,5 +178,8 @@
   </data>
   <data name="InvalidQuestionType" xml:space="preserve">
     <value>Loại câu hỏi không hợp lệ</value>
+  </data>
+  <data name="ResultNull" xml:space="preserve">
+    <value>Không có dữ liệu</value>
   </data>
 </root>

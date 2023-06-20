@@ -15,6 +15,8 @@ namespace EMIS.DL.ExcelDL
         /// Lưu các bản ghi hợp lệ vào database
         /// CreatedBy: Trịnh Huỳnh Đức (14-6-2023)
         /// </summary>
+        /// <param name="exercise"></param>
+        /// <param name="excelRows"></param>
         /// <returns></returns>
         public string InsertExcelToDB(Exercise exercise, List<ExcelRow> excelRows);
     }

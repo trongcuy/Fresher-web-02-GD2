@@ -34,14 +34,22 @@ namespace MISA_BE_GD2_EMIS.Controllers
         [HttpGet("Sample")]
         public IActionResult DownloadExcelSample()
         {
-            byte[] fileBytes = _excelBL.DownloadExcelSample();
-
-            if (fileBytes != null)
+            try
             {
-                return File(fileBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "file.xlsx");
-            }
+                byte[] fileBytes = _excelBL.DownloadExcelSample();
 
-            return NotFound();
+                if (fileBytes != null)
+                {
+                    return File(fileBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "file.xlsx");
+                }
+
+                return NotFound("File không tồn tại");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return HandleException(ex);
+            }         
         }
 
         /// <summary>
@@ -53,10 +61,7 @@ namespace MISA_BE_GD2_EMIS.Controllers
         [HttpPost]
         public IActionResult CheckExcel(IFormFile file)
         {
-            if (file == null || file.Length <= 0)
-            {
-                return BadRequest("Invalid file");
-            }
+
             try
             {
                 // Trả về kết quả thành công
@@ -65,7 +70,7 @@ namespace MISA_BE_GD2_EMIS.Controllers
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return BadRequest(ex);
+                return HandleException(ex);
             }
         }
 
@@ -73,6 +78,7 @@ namespace MISA_BE_GD2_EMIS.Controllers
         /// insert số bản ghi hợp lệ vào db
         /// CreatedBy: Trịnh Huỳnh Đức (13-6-2023)
         /// </summary>
+        /// <param name="exercise"></param>
         /// <returns></returns>
         [HttpPost("FileValid")]
         public IActionResult InsertExcelToDB(Exercise exercise)
@@ -84,7 +90,7 @@ namespace MISA_BE_GD2_EMIS.Controllers
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return BadRequest(ex);
+                return HandleException(ex);
             }
         }
 
@@ -96,15 +102,44 @@ namespace MISA_BE_GD2_EMIS.Controllers
         [HttpGet("FileInvalid")]
         public IActionResult DownloadExcelInvalid()
         {
-            byte[] fileBytes = _excelBL.DownloadExcelInvalid();
-
-            if (fileBytes != null)
+            try
             {
-                return File(fileBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "file.xlsx");
-            }
+                byte[] fileBytes = _excelBL.DownloadExcelInvalid();
 
-            return NotFound();
-        } 
+                if (fileBytes != null)
+                {
+                    return File(fileBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "file.xlsx");
+                }
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return HandleException(ex);
+            }         
+        }
+
+        /// <summary>
+        /// Hàm xử lý ngoại lệ
+        /// CreatedBy: Trịnh Huỳnh Đức (10-6-2023)
+        /// </summary>
+        /// <param name="ex"></param>
+        /// <returns></returns>
+        protected IActionResult HandleException(Exception ex)
+        {
+            var error = new
+            {
+                devMsg = ex.Message,
+                userMsg = Resource.ResourceManager.GetString(name: "ErrorMessage"),
+                errorMsg = ex.Data["Error"]
+            };
+
+            if (ex is ErrorException)
+            {
+                return BadRequest(error);
+            }
+            return StatusCode((int)HttpStatusCode.InternalServerError, error);
+        }
         #endregion
     }
 }

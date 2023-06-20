@@ -1,5 +1,7 @@
 ﻿using Dapper;
+using EMIS.Common;
 using EMIS.Common.Entity;
+using EMIS.Common.ExceptionEntity;
 using EMIS.DL.BaseDL;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -36,6 +38,11 @@ namespace EMIS.DL.QuestionDL
             parameters.Add("questionID", questionID);
             // Thực hiện gọi vào db để chạy câu lệnh 
             var result = conn.Query<Answer>(getAllCommand, param: parameters, commandType: System.Data.CommandType.StoredProcedure);
+            // Xử lý kết quả trả về ở db
+            if (result == null)
+            {
+                throw new ErrorException(devmsg: Resource.ResourceManager.GetString(name: "ResultNull"));
+            }
             conn.Close();
             return result;
         }
@@ -66,6 +73,7 @@ namespace EMIS.DL.QuestionDL
         /// CreatedBy: Trịnh Huỳnh Đức (3-6-2023)
         /// </summary>
         /// <param name="questionID"></param>
+        /// <param name="answers"></param>
         /// <returns></returns>
         public int InsertAnswer(string questionID, List<Answer> answers)
         {

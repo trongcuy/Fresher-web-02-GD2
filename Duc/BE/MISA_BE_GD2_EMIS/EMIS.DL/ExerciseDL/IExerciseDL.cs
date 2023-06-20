@@ -54,6 +54,7 @@ namespace EMIS.DL.ExerciseDL
         /// CreatedBy: Trịnh Huỳnh Đức (1-6-2023)
         /// </summary>
         /// <param name="exerciseID"></param>
+        /// <param name="topicIDs"></param>
         /// <returns></returns>
         public int InsertTopic(string exerciseID, string? topicIDs);
 
@@ -61,7 +62,7 @@ namespace EMIS.DL.ExerciseDL
         /// thêm mới một đáp án, câu hỏi, bài tập
         /// CreatedBy: Trịnh Huỳnh Đức (6-6-2023)
         /// </summary>
-        /// <param name="exerciseID"></param>
+        /// <param name="dataAll"></param>
         /// <returns></returns>
         public string InsertAll(DataAll dataAll);
     }

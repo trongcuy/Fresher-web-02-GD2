@@ -30,6 +30,7 @@ namespace EMIS.BL.ExcelBL
         /// lưu số bản ghi hợp lệ vào db
         /// CreatedBy: Trịnh Huỳnh Đức (13-6-2023)
         /// </summary>
+        /// <param name="exercise"></param>
         /// <returns></returns>
         public string InsertExcelToDB(Exercise exercise);
 

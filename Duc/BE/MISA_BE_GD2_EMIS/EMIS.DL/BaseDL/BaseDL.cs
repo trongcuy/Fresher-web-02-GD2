@@ -1,4 +1,6 @@
 ﻿using Dapper;
+using EMIS.Common;
+using EMIS.Common.ExceptionEntity;
 using Microsoft.Extensions.Configuration;
 using MySqlConnector;
 using System;
@@ -54,6 +56,11 @@ namespace EMIS.DL.BaseDL
             var parameters = new DynamicParameters();
             // Thực hiện gọi vào db để chạy câu lệnh 
             var result = conn.Query<T>(getAllCommand, param: parameters, commandType: System.Data.CommandType.StoredProcedure);
+            // Xử lý kết quả trả về ở db
+            if (result == null)
+            {
+                throw new ErrorException(devmsg: Resource.ResourceManager.GetString(name: "ResultNull"));
+            }
             conn.Close();
             return result;
         }
@@ -75,6 +82,11 @@ namespace EMIS.DL.BaseDL
             parameters.Add("id", id);
             // Thực hiện gọi vào db để chạy câu lệnh 
             var result = conn.QueryFirstOrDefault<T>(getAllCommand, param: parameters, commandType: System.Data.CommandType.StoredProcedure);
+            // Xử lý kết quả trả về ở db
+            if (result == null)
+            {
+                throw new ErrorException(devmsg: Resource.ResourceManager.GetString(name: "ResultNull"));
+            }
             conn.Close();
             return result;
         }
@@ -93,9 +105,15 @@ namespace EMIS.DL.BaseDL
             var getAllCommand = $"Proc_{nameEntity}_Insert";
             // Chuẩn bị các tham số đầu vào
             var parameters = new DynamicParameters(value);
-            //parameters.Add("value", value);
             // Thực hiện gọi vào db để chạy câu lệnh 
             var result = conn.ExecuteScalar<string>(getAllCommand, param: parameters, commandType: System.Data.CommandType.StoredProcedure);
+            
+            // Xử lý kết quả trả về ở db
+            if (result == null)
+            {
+                throw new ErrorException(devmsg: Resource.ResourceManager.GetString(name: "ExceptionInsert"));
+            }
+
             conn.Close();
             return result;
         }
@@ -116,6 +134,13 @@ namespace EMIS.DL.BaseDL
             var parameters = new DynamicParameters(value);
             // Thực hiện gọi vào db để chạy câu lệnh 
             var result = conn.Execute(getAllCommand, param: parameters, commandType: System.Data.CommandType.StoredProcedure);
+
+            // Xử lý kết quả trả về ở db
+            if (result == 0)
+            {
+                throw new ErrorException(devmsg: Resource.ResourceManager.GetString(name: "ExceptionUpdate"));
+            }
+
             conn.Close();
             return result;
         }
@@ -137,6 +162,13 @@ namespace EMIS.DL.BaseDL
             parameters.Add("id", id);
             // Thực hiện gọi vào db để chạy câu lệnh 
             var result = conn.Execute(getAllCommand, param: parameters, commandType: System.Data.CommandType.StoredProcedure);
+
+            // Xử lý kết quả trả về ở db
+            if (result == 0)
+            {
+                throw new ErrorException(devmsg: Resource.ResourceManager.GetString(name: "ExceptionDelete"));
+            }
+
             conn.Close();
             return result;
         } 
