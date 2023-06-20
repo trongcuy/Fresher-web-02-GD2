@@ -1,4 +1,4 @@
-//import axious
+//import axios
 import axios from 'axios'
 axios.defaults.baseURL = 'https://localhost:44393/api/v1'
 export default {
@@ -14,12 +14,14 @@ export default {
             .then(response => {
                 commit('setExerciseList', response.data);//gọi đến mutation để set list bài tập
                 console.log(response.data)
-                commit('setShowLoading', false)//ẩn màn hình loading
             })
             .catch(error => {
                 console.log(error)
+                handleException(error.response, { commit })
             })
-
+            .finally(() => {
+                commit('setShowLoading', false) // Ẩn màn hình loading
+            })
     },
     /**
      * lấy danh sách môn học
@@ -40,6 +42,7 @@ export default {
             })
             .catch(error => {
                 console.log(error)
+                handleException(error.response, { commit })
             })
     },
     /**
@@ -61,6 +64,7 @@ export default {
             })
             .catch(error => {
                 console.log(error)
+                handleException(error.response, { commit })
             })
     },
     /**
@@ -74,10 +78,13 @@ export default {
         axios.get(`/Exercises/Filter?state=${state.dataFilter.state}&search=${state.dataFilter.search}&subjectID=${state.dataFilter.subjectID}&gradeID=${state.dataFilter.gradeID}&pageSize=${state.pageSize}&pageIndex=${state.pageIndex}`)
             .then(response => {
                 commit('setExerciseList', response.data);//gọi đến mutation để set list bài tập
-                commit('setShowLoading', false)//ẩn màn hình loading
             })
             .catch(error => {
                 console.log(error)
+                handleException(error.response, { commit })
+            })
+            .finally(() => {
+                commit('setShowLoading', false)// Ẩn màn hình loading
             })
     },
     /**
@@ -91,16 +98,21 @@ export default {
             .then(response => {
                 commit('setQuestionList', response.data);//gọi đến mutation để set list câu hỏi
                 commit('setNumQuestion', response.data.length)
-                commit('setShowLoading', false)//ẩn màn hình loading
             })
             .catch(error => {
                 console.log(error)
+                handleException(error.response, { commit })
+            })
+            .finally(() => {
+                commit('setShowLoading', false) // Ẩn màn hình loading
             })
     },
     /**
      * lấy bài tập theo id
      * CreatedBy: Trịnh Huỳnh Đức (31-5-2023)
      * @param {*} param0 
+     * @param {*} exerciseID 
+     * @returns 
      */
     async getExerciseById({ commit }, exerciseID) {
         commit('setShowLoading', true)
@@ -108,9 +120,10 @@ export default {
             const res = await axios.get(`/Exercises/${exerciseID}`)
             commit('setExerciseSelected', res.data)
             commit('setShowLoading', false)
-            return res.data;
+            return res.data
         } catch (error) {
-            console.error(error);
+            console.error(error)
+            handleException(error.response, { commit })
         }
     },
     /**
@@ -122,9 +135,10 @@ export default {
         try {
             const res = await axios.get(`Topics/SubjectGrade?subjectID=${data.subjectID}&gradeID=${data.gradeID}`);
             commit('setTopicList', res.data)
-            return res.data;
+            return res.data
         } catch (error) {
-            console.error(error);
+            console.error(error)
+            handleException(error.response, { commit })
         }
     },
     /**
@@ -135,26 +149,23 @@ export default {
     async addExercise({ commit, dispatch }, data) {
         try {
             commit('setShowLoading', true)
-            var jsondata = {
-                "exerciseName": data.exerciseName,
-                "exerciseState": data.exerciseState,
-                "exerciseImage": data.exerciseImage ? data.exerciseImage : '00000000-0000-0000-0000-000000000000',
-                "subjectID": data.subjectID,
-                "gradeID": data.gradeID
-            }
+            data.exerciseImage = data.exerciseImage ? data.exerciseImage : '00000000-0000-0000-0000-000000000000'
             //gọi api thêm bài tập
-            const response = await axios.post('/Exercises', JSON.stringify(jsondata), {
+            const response = await axios.post('/Exercises', JSON.stringify(data), {
                 headers: {
                     'Content-Type': 'application/json'
                 }
             })
             commit('setExerciseIDSelected', response.data)
             dispatch('getListExercise')
-            commit('setShowLoading', false)
             return response.data
         }
         catch (error) {
             console.log(error)
+            handleException(error.response, { commit })
+        }
+        finally {
+            commit('setShowLoading', false)
         }
     },
     /**
@@ -165,7 +176,7 @@ export default {
      */
     editExercise({ commit, dispatch }, data) {
         commit('setShowLoading', true)
-        //gọi api thêm bài tập
+        //gọi api sửa bài tập
         axios.put('/Exercises', JSON.stringify(data), {
             headers: {
                 'Content-Type': 'application/json'
@@ -173,33 +184,42 @@ export default {
         })
             .then(response => {
                 dispatch('getListExercise')
-                commit('setShowLoading', false)
             })
             .catch(error => {
                 console.log(error)
+                handleException(error.response, { commit })
+            })
+            .finally(() => {
+                commit('setShowLoading', false) // Ẩn màn hình loading
             })
     },
     /**
      * xóa bài tập theo id
      * CreatedBy: Trịnh Huỳnh Đức (31-5-2023)
      * @param {*} param0 
+     * @param {*} exerciseID 
      */
     deleteExerciseById({ commit, dispatch }, exerciseID) {
         commit('setShowLoading', true)
         axios.delete(`/Exercises/${exerciseID}`)
             .then(response => {
-                commit('setShowLoading', false)
                 dispatch('getListExercise')
                 commit('setShowNotify', "success")
             })
             .catch(error => {
                 console.log(error)
+                handleException(error.response, { commit })
+            })
+            .finally(() => {
+                commit('setShowLoading', false) // Ẩn màn hình loading
             })
     },
     /**
      * lấy danh sách chủ đề theo id bài tập
      * CreatedBy: Trịnh Huỳnh Đức (1-6-2023)
      * @param {*} param0 
+     * @param {*} exerciseID 
+     * @returns 
      */
     async getTopicExercise({ commit }, exerciseID) {//commit này để gọi đến mutation
         try {
@@ -209,13 +229,13 @@ export default {
         }
         catch (error) {
             console.log(error)
+            handleException(error.response, { commit })
         }
     },
     /**
      * thêm nhiều chủ đề cho bài tập
      * CreatedBy: Trịnh Huỳnh Đức (1-6-2023)
      * @param {*} param0 
-     * @param {*} topicIDs 
      */
     addTopic({ commit, dispatch, state }) {
         commit('setShowLoading', true)
@@ -230,10 +250,13 @@ export default {
         axios.post(`/Exercises/${state.exerciseIDSelected}/Topic?topicIDs=${topicIDs}`)
             .then(response => {
                 dispatch('getListExercise')
-                commit('setShowLoading', false)
             })
             .catch(error => {
                 console.log(error)
+                handleException(error.response, { commit })
+            })
+            .finally(() => {
+                commit('setShowLoading', false) // Ẩn màn hình loading
             })
     },
     /**
@@ -245,16 +268,9 @@ export default {
     async addQuestion({ commit, dispatch, state }, data) {
         try {
             commit('setShowLoading', true)
-            var jsondata = {
-                "questionContent": data.questionContent,
-                "questionType": data.questionType,
-                "questionExplane": data.questionExplane,
-                "questionNumber": data.questionNumber.toString(),
-                "exerciseID": data.exerciseID,
-                "questionImage": data.questionImage
-            }
+            data.questionNumber = data.questionNumber.toString()
             //gọi api thêm câu hỏi
-            const response = await axios.post('/Questions', JSON.stringify(jsondata), {
+            const response = await axios.post('/Questions', JSON.stringify(data), {
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -266,23 +282,28 @@ export default {
         }
         catch (error) {
             console.log(error)
+            handleException(error.response, { commit })
         }
     },
     /**
      * xóa câu hỏi theo id
      * CreatedBy: Trịnh Huỳnh Đức (2-6-2023)
      * @param {*} param0 
+     * @param {*} questionID 
      */
     deleteQuestionById({ commit, dispatch, state }, questionID) {
         commit('setShowLoading', true)
         axios.delete(`/Questions/${questionID}`)
             .then(response => {
-                commit('setShowLoading', false)
                 dispatch('getListQuestion', state.exerciseIDSelected)
                 commit('setShowNotify', "success")
             })
             .catch(error => {
                 console.log(error)
+                handleException(error.response, { commit })
+            })
+            .finally(() => {
+                commit('setShowLoading', false) // Ẩn màn hình loading
             })
     },
     /**
@@ -294,17 +315,9 @@ export default {
     async updateQuestion({ commit, dispatch, state }, data) {
         try {
             commit('setShowLoading', true)
-            var jsondata = {
-                "questionID": data.questionID,
-                "questionContent": data.questionContent,
-                "questionType": data.questionType,
-                "questionExplane": data.questionExplane,
-                "questionNumber": data.questionNumber.toString(),
-                "exerciseID": data.exerciseID,
-                "questionImage": data.questionImage
-            }
+            data.questionNumber = data.questionNumber.toString()
             //gọi api thêm câu hỏi
-            const response = await axios.put('/Questions', JSON.stringify(jsondata), {
+            const response = await axios.put('/Questions', JSON.stringify(data), {
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -314,12 +327,15 @@ export default {
         }
         catch (error) {
             console.log(error)
+            handleException(error.response, { commit })
         }
     },
     /**
      * lấy danh sách đáp án theo id câu hỏi
      * CreatedBy: Trịnh Huỳnh Đức (3-6-2023)
      * @param {*} param0 
+     * @param {*} questionID 
+     * @returns 
      */
     async getAnswers({ commit }, questionID) {//commit này để gọi đến mutation
         try {
@@ -330,6 +346,7 @@ export default {
         }
         catch (error) {
             console.log(error)
+            handleException(error.response, { commit })
         }
     },
     /**
@@ -352,11 +369,13 @@ export default {
         }
         catch (error) {
             console.log(error)
+            handleException(error.response, { commit })
         }
     },
 
     /**
      * thêm một bài tập, câu hỏi, đáp án, chủ đề
+     * CreatedBy: Trịnh Huỳnh Đức (8-6-2023)
      * @param {*} param0 
      * @param {*} data 
      */
@@ -371,6 +390,7 @@ export default {
             })
             commit('setExerciseIDSelected', response.data)
             dispatch('getListQuestion', state.exerciseIDSelected)
+            dispatch('getExerciseById', state.exerciseIDSelected)
             commit('setShowLoading', false)
             return response.data
         }
@@ -420,9 +440,10 @@ export default {
             .catch(error => {
                 console.error(error);
                 handleException(error.response, { commit });
-            });
-
-        commit('setShowLoading', false)
+            })
+            .finally(() => {
+                commit('setShowLoading', false) // Ẩn màn hình loading
+            })
     },
 
     /**
@@ -467,13 +488,16 @@ export default {
                 console.error(error);
                 handleException(error.response, { commit });
             })
-        commit('setShowLoading', false)
+            .finally(() => {
+                commit('setShowLoading', false) // Ẩn màn hình loading
+            })
     },
-
     /**
      * insert bản ghi hợp lệ vào db
      * CreatedBy: Trịnh Huỳnh Đức (14-6-2023)
      * @param {*} param0 
+     * @param {*} exercise 
+     * @returns 
      */
     async insertFileValid({ commit, dispatch }, exercise) {
         commit('setShowLoading', true)
@@ -489,8 +513,8 @@ export default {
             return response.data
         }
         catch (error) {
-            console.error(error);
-            handleException(error.response, { commit });
+            console.error(error)
+            handleException(error.response, { commit })
         }
         commit('setShowLoading', false)
     },
@@ -505,19 +529,18 @@ export default {
 export const handleException = (response, { commit }) => {
     switch (response.status) {
         case 500:
-            //commit('addListException', response.data.userMsg)
             //hiển thị thông báo
             commit('setShowNotify', "exception")
-            break;
+            break
         case 400: {
             //hiển thị thông báo
             commit('setShowNotify', 'error')
-            break;
+            break
         }
         default: {
             //hiển thị thông báo
             commit('setShowNotify', "exception")
-            break;
+            break
         }
     }
 }

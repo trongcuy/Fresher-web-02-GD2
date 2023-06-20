@@ -32,7 +32,7 @@
   
 <script>
 import MSButton from '../button/MSButton.vue'
-import { mapActions } from 'vuex'
+import { mapActions, mapMutations } from 'vuex'
 export default {
     name: 'MSPopupAddImage',
     components: {
@@ -46,6 +46,7 @@ export default {
     },
     methods: {
         ...mapActions(['uploadImage']),
+        ...mapMutations(['setShowNotify']),
         /**
          * bắt sự kiện đóng popup
          * CreatedBy: Trịnh Huỳnh Đức (10-6-2023)
@@ -79,6 +80,11 @@ export default {
          */
         onUploadImage(event) {
             var input = event.target
+            //validate ảnh trước
+            if(!this.validateImage(input.files[0].type)) {
+                this.setShowNotify('errorFile')
+                return
+            }
             var img = document.getElementById('img-upload')
             //gán ảnh mới tải lên vào thẻ img
             if (input.files && input.files[0]) {
@@ -203,6 +209,7 @@ export default {
                 #img-upload {
                     border-radius: 10px;
                     position: absolute;
+                    object-fit: cover;
                     width: 100%;
                     height: 100%;
                     top: 0px;

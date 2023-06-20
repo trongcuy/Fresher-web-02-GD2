@@ -76,21 +76,3 @@ transform: scale(1.1); /* Áp dụng hiệu ứng phóng to 1.1 lần khi di chu
     white-space: nowrap;
 }
 
-/* combobox của popupadd */
-.combobox-popup {
-    width: 312px;
-}
-
-.combobox-popup>input {
-    border-radius: 0px 0px 10px 0px;
-    width: 100%;
-    padding-left: 70px;
-    font-weight: 700;
-    font-size: 16px;
-    background-color: #f8e373;
-    border: none;
-}
-
-.combobox-popup>input:hover {
-    border: none;
-}

@@ -2,7 +2,7 @@
     <div class="div-main">
         <img src="../../../assets/img/emis.jpg" />
         <div class="div-input">
-            <MSInput defaultValue="Nhập tên môn học để tìm kiếm" type="icon-left" :value="searchValue"
+            <MSInput :defaultValue="resource.input.search" type="icon-left" :value="searchValue"
                 @keydown.enter="onClickFilter" @setValueInput="setValueInput" />
             <div class="div-search div-center"><img src="../../../assets/img/icon_search.svg" /></div>
             <div v-if="this.searchValue" class="icon-select" @click="onClickRemoveSearch"><img
@@ -10,15 +10,15 @@
         </div>
 
         <div class="div-combobox">
-            <MSCombobox class="cb-document" :listSelect="['Đang soạn', 'Đã soạn']" :defaultValue="stateValue"
+            <MSCombobox class="cb-document" :listSelect="resource.combobox.stateExercise" :defaultValue="stateValue"
                 :iconRemove="true" @setDefaultValue="setValueState"
-                src="https://cegovapp.misacdn.net/cegov/img/ic_drop-down.fa70eead.svg">
+                :src="imgDropdow">
             </MSCombobox>
             <MSCombobox class="cb-subject" :listSelect="subjectOptions" :defaultValue="subjectValue" :iconRemove="true"
-                @setDefaultValue="setValueSubject" src="https://cegovapp.misacdn.net/cegov/img/ic_drop-down.fa70eead.svg">
+                @setDefaultValue="setValueSubject" :src="imgDropdow">
             </MSCombobox>
             <MSCombobox class="cb-grade" :listSelect="gradeOptions" :defaultValue="gradeValue" :iconRemove="true"
-                @setDefaultValue="setValueGrade" src="https://cegovapp.misacdn.net/cegov/img/ic_drop-down.fa70eead.svg">
+                @setDefaultValue="setValueGrade" :src="imgDropdow">
             </MSCombobox>
         </div>
         <!-- div chứa các card -->
@@ -29,16 +29,16 @@
                 @onClickOpen="onClickCardExercise(item.exerciseID)"/>
         </div>
         <!-- button xem thêm -->
-        <MSButton title="Xem thêm" class="btn-more" @click="onClickMore" v-if="exerciseList.length==pageSize"/>
+        <MSButton :title="resource.button.more" class="btn-more" @click="onClickMore" v-if="exerciseList.length==pageSize"/>
         <!-- ảnh khi ko có bài tập -->
         <div class="no-content" v-if="exerciseList.length==0">
             <img src="../../../assets/img/not-found.svg"/>
-            <p>Không tìm thấy học liệu</p>
+            <p>{{ resource.dialogContent.noContent }}</p>
         </div>
     </div>
     <MSDialog v-if="showDialog" 
-        :firstContent="this.resource.DialogContent.removeExercise.firtContent" 
-        :lastContent="this.resource.DialogContent.removeExercise.lastContent"
+        :firstContent="this.resource.dialogContent.removeExercise.firtContent" 
+        :lastContent="this.resource.dialogContent.removeExercise.lastContent"
         :data="this.exerciseSelected.exerciseName"
         @onClickOk="onClickOkRemove" 
         @onClickCancel="onClickCancelRemove"/>
@@ -77,6 +77,7 @@ export default {
             subjectValue: 'Tất cả các môn',//giá trị môn học trong combobox
             gradeValue: 'Tất cả các khối',//giá trị môn học trong combobox
             exerciseSelected: {},//lưu id bài tập đang chọn
+            imgDropdow: 'https://cegovapp.misacdn.net/cegov/img/ic_drop-down.fa70eead.svg'
         }
     },
     watch: {
@@ -239,6 +240,7 @@ export default {
     height: auto;
     border-radius: 10px;
     margin-bottom: 16px;
+    cursor: unset;
 }
 
 .div-combobox {
@@ -299,7 +301,9 @@ export default {
     height: 40px;
     width: 34px;
 }
-
+.div-search img{
+    cursor: unset;
+}
 .div-input img {
     width: 16px;
     height: 40px;

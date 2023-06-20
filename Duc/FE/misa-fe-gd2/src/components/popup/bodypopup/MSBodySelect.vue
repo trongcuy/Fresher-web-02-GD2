@@ -3,7 +3,7 @@
     <div class="popup-body">
         <MSCardAnswer v-for="(item, index) in answers" :key="item" 
             :title="item.answerContent" 
-            :answer="this.indexToLetter(index)"  
+            :answer="index"  
             :state="item.answerState"
             :image="item.answerImage"
             @onClickRemove="onClickRemoveAnswer(index)" placeholder="Nhập đáp án..."
@@ -33,15 +33,6 @@ export default {
         }
     },
     methods: {
-        /**
-         * hàm chuyển từ index sang chữ cái tương ứng
-         * CreatedBy: Trịnh Huỳnh Đức (3-6-2023)
-         * @param {*} index 
-         */
-        indexToLetter(index) {
-            const letterCode = 65 + index;
-            return String.fromCharCode(letterCode);
-        },
         /**
          * hàm xóa một đáp án
          * CreatedBy: Trịnh Huỳnh Đức (3-6-2023)

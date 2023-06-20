@@ -1,7 +1,7 @@
 <template>
     <div class="div-input div-flex-row">
         <div>Ô trống {{ num + 1 }} </div>
-        <div class="list-fill div-flex-row">
+        <div class="list-fill div-flex-row" @click="() => { showPlaceHolder = false }">
             <span v-for="(item, index) in listFill" :key="index">{{ item }} <img src="../../assets/img/ic_x.svg"
                     @click="onRemoveFill(index)" /></span>
             <p v-if="showPlaceHolder && this.listFill.length==0">Nhập đáp án rồi nhấn Enter...</p>

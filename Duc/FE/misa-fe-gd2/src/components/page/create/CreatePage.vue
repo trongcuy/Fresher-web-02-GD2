@@ -10,15 +10,15 @@
         <div class="div-body" v-if="questionList.length == 0">
             <div class="div-import">
                 <p class="title">Tách câu hỏi tự động sử dụng công nghệ AI</p>
-                <div class="import">
+                <div class="import" @click="onClickUploadFile">
                     <img src="../../../assets/img/import.svg" />
                     <div class="text">Nhấn để tải lên file bài tập hoặc kéo thả file vào đây.
-                        <br />File có định dạng xls, xlsx, doc, docx, pdf
+                        <br />File có định dạng xls, xlsx
                     </div>
                     <div class="btn-import">
-                        <MSButton title="Tải lên file bài tập" class="btn-dowload-file" @click="onClickUploadFile"/>
-                        <input ref="fileInput" hidden type="file" accept=".xls,.xlsx,.doc,.docx,.pdf" @change="onUploadFile" />
-                        <MSButton title="Tải file Excel mẫu" class="btn-dowload-excel" @click="onDowloadExcelSample"/>
+                        <MSButton title="Tải lên file bài tập" class="btn-dowload-file" @click="onClickUploadFile" @click.stop=""/>
+                        <input ref="fileInput" hidden type="file" accept=".xls,.xlsx" @change="onUploadFile" />
+                        <MSButton title="Tải file Excel mẫu" class="btn-dowload-excel" @click="onDowloadExcelSample" @click.stop=""/>
                     </div>
                 </div>
             </div>
@@ -46,6 +46,7 @@
             @alertQuestionNull="alertQuestionNull" 
             @alertAnswerNull="alertAnswerNull"
             @changeModePopup="()=>{this.modePage='edit'}"
+            @exerciseNameInvalid="exerciseNameInvalid"
             :data="this.questionSelected"
             :dataAnswers="this.answersSelected"
         />
@@ -108,7 +109,9 @@ export default {
     },
     data() {
         const resource = window.Resource
+        const enums = window.Enums
         return {
+            enums,
             resource,
             showDialog: false,
             showOverlay: false,
@@ -124,6 +127,14 @@ export default {
             showPopupImport: false,//ẩn hiện popup import
             validRecord: 0,//số bản ghi hơpj lệ
             invalidRecord: 0,//số bản ghi ko hợp lệ
+        }
+    },
+    watch: {
+        exerciseSelected: {
+            handler(newVal) {
+                this.exercise = newVal
+            },
+            deep: true // Sử dụng deep watch
         }
     },
     computed: {
@@ -153,7 +164,9 @@ export default {
             'setTopicExercise',
             'setNumQuestion',
             'setImageIdExercise',
-            'setUrlImageExercise'
+            'setUrlImageExercise',
+            'setShowNotify',
+            'setShowNotify'
         ]),
         ...mapActions([
             'getListSubject',
@@ -195,7 +208,7 @@ export default {
                 }
             }
             //gán state 
-            this.exercise.exerciseState = 1
+            this.exercise.exerciseState = this.enums.exerciseState.editing
             //nếu tên chưa nhập thì lấy giá trị mặc định
             if(!this.exercise.exerciseName) 
                 this.exercise.exerciseName = "Bài nháp "+this.exercise.subjectName+" - "+this.exercise.gradeName
@@ -233,7 +246,7 @@ export default {
             this.$nextTick(() => {
                 // Gửi sự kiện để thêm mới câu hỏi
                 this.onClickNewQuesion(type)
-            });          
+            })        
         },
         /**
          * bắt sự kiện click nút bổ sung thêm thông tin
@@ -303,19 +316,34 @@ export default {
             this.setExerciseSelected(this.exercise)
         },
         /**
+         * sự kiên hiện dialog khi tên bài tập vượt quá 255 ký tự
+         * CreatedBy: Trịnh Huỳnh Đức (31-5-2023)
+         */
+        exerciseNameInvalid() {
+            this.contentDialog = this.resource.dialogContent.exerciseNameTooLong
+            this.typeDialog = 'alert'
+            this.showDialog = true
+        },
+        /**
          * bắt sự kiện lưu bài tập
          * CreatedBy: Trịnh Huỳnh Đức (31-5-2023)
          */
         async onClickSaveExercise() {
+
             //nếu chưa điền tên thì mở form bổ sung thông tin
             if(!this.exercise.exerciseName) {
                 this.showPopupAddInfor = true
                 this.showOverlay = true
                 return
             }
+            //validate tên không vượt quá 255 ký tự
+            if(this.exercise.exerciseName.length>255){
+                this.exerciseNameInvalid()
+                return
+            }
             //lấy các thông tin bài tập để lưu
             //lấy trạng thái
-            this.exercise.exerciseState = 2
+            this.exercise.exerciseState = this.enums.exerciseState.edited
             //lấy id môn học
             for (const key in this.subjectList) {
                 if (this.subjectList[key].subjectName == this.exercise.subjectName) {
@@ -344,7 +372,9 @@ export default {
                 this.addTopic()              
             }        
             //back về trang chủ
-            this.onClickBack()     
+            this.onClickBack()   
+            //thông báo thành công
+            this.setShowNotify('successAddExercise')  
         },
         /**
          * bắt sự kiện ấn lưu popup thêm thông tin
@@ -357,7 +387,7 @@ export default {
             this.exercise.subjectName = value.subjectName
             this.exercise.gradeName = value.gradeName
             //lấy trạng thái
-            this.exercise.exerciseState = 1
+            this.exercise.exerciseState = this.enums.exerciseState.editing
             //lấy id môn học
             for (const key in this.subjectList) {
                 if (this.subjectList[key].subjectName == this.exercise.subjectName) {
@@ -379,7 +409,7 @@ export default {
          */
         onRemoveQuestion(idQuestion) {
             this.typeDialog = ''
-            this.contentDialog = this.resource.DialogContent.removeQuestion
+            this.contentDialog = this.resource.dialogContent.removeQuestion
             //hiện dialog xác nhận xóa
             this.showDialog = true
             this.idQuestionSelected = idQuestion
@@ -393,6 +423,9 @@ export default {
             this.showOverlay = false
             this.showDialog = false
             this.deleteQuestionById(this.idQuestionSelected)
+            //cập nhật bài tập 
+            this.exerciseSelected.exerciseState = this.enums.exerciseState.editing
+                this.editExercise(this.exerciseSelected)
         },
         /**
          * hủy xóa câu hỏi
@@ -412,7 +445,7 @@ export default {
             this.questionSelected = data.question
             this.answersSelected = _.cloneDeep(data.answers)
             //set loại câu hỏi           
-            this.setTypePopupAdd(this.resource.TypeQuestion[data.question.questionType])
+            this.setTypePopupAdd(this.resource.typeQuestion[data.question.questionType])
             this.showOverlay = true
             this.showPopupAdd = true
         },
@@ -425,7 +458,7 @@ export default {
             this.questionSelected = data.question
             this.answersSelected = _.cloneDeep(data.answers)
             //set loại câu hỏi           
-            this.setTypePopupAdd(this.resource.TypeQuestion[data.question.questionType])
+            this.setTypePopupAdd(this.resource.typeQuestion[data.question.questionType])
             this.showOverlay = true
             this.showPopupAdd = true
         },
@@ -434,7 +467,7 @@ export default {
          * CreatedBy: Trịnh Huỳnh Đức (2-6-2023)
          */
         alertQuestionNull(){
-            this.contentDialog = this.resource.DialogContent.questionNull
+            this.contentDialog = this.resource.dialogContent.questionNull
             this.typeDialog = 'alert'
             this.showOverlay = true
             this.showDialog = true
@@ -444,7 +477,7 @@ export default {
         * CreatedBy: Trịnh Huỳnh Đức (2-6-2023)
         */
         alertAnswerNull() {
-            this.contentDialog = this.resource.DialogContent.answerNull
+            this.contentDialog = this.resource.dialogContent.answerNull
             this.typeDialog = 'alert'
             this.showOverlay = true
             this.showDialog = true
@@ -462,6 +495,15 @@ export default {
         */
         onUploadFile(event) {
             const file = event.target.files[0]
+            //validate file có đúng định dạng và kích thước < 5Mb không
+            if(!this.validateExcel(event.target.files[0].type)) {
+                this.setShowNotify('errorFile')
+                return
+            }
+            if(event.target.files[0].size > 5242880) {
+                this.setShowNotify('errorSizeExcel')
+                return
+            }
             const formData = new FormData()
             formData.append('file', file)
             this.uploadExcel(formData).then(data => {
@@ -515,7 +557,7 @@ export default {
                 }
             }
             //gán state 
-            this.exercise.exerciseState = 1
+            this.exercise.exerciseState = this.enums.exerciseState.editing
             //nếu tên chưa nhập thì lấy giá trị mặc định
             if(!this.exercise.exerciseName) 
                 this.exercise.exerciseName = "Bài nháp "+this.exercise.subjectName+" - "+this.exercise.gradeName
@@ -523,6 +565,7 @@ export default {
             this.onClosePopupImport()
             this.insertFileValid(this.exercise).then(res=> {
                 this.$router.push({ path: "/course/create", query: { exerciseID: res } })
+                this.modePage = 'edit'
             })           
         },
     },
@@ -615,6 +658,7 @@ export default {
     border-radius: 10px;
     padding: 24px 0;
     box-sizing: border-box;
+    cursor: pointer;
 }
 
 .import>img {

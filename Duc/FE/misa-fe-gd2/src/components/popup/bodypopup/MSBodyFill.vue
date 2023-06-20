@@ -16,6 +16,7 @@
     </div>
 </template>
 <script>
+import { mapMutations } from 'vuex'
 import MSInputTag from '../../input/MSInputTag.vue'
 export default {
     name: "MSBodyFill",
@@ -35,6 +36,7 @@ export default {
         }
     },
     methods: {
+        ...mapMutations(['setShowNotify']),
         /**
          * click thêm một đáp án
          * CreatedBy: Trịnh Huỳnh Đức (4-6-2023)
@@ -47,6 +49,10 @@ export default {
          * CreatedBy: Trịnh Huỳnh Đức (4-6-2023)
          */
         onClickRemoveAnswer(index){
+            if(this.answers.length==1) {
+                this.setShowNotify('warnning')
+                return 
+            }
             this.$emit('onClickRemoveAnswer', index)
         }
     }

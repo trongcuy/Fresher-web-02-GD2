@@ -1,5 +1,5 @@
 <template>
-    <div class="overlay">
+    <div class="overlay" v-esc="onClosePopupImage">
         <div class="div-image">
             <div class="header">
                 <div class="div-center" @click="onClosePopupImage">

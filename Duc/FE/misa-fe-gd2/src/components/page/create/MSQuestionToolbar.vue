@@ -1,28 +1,44 @@
 <template>
     <div class="list-btn" :class="{ 'list-btn-column': mode == 'vertical' }">
-        <MSButtonQuestion :title="mode == 'horizontal' ? 'Thư viện học tập' : ''" v-if="mode == 'horizontal'"
-            :src="urlLibrary" :dimention="this.dimention" />
+        <MSButtonQuestion 
+            :title="mode == 'horizontal' ? 'Thư viện học tập' : ''" 
+            v-if="mode == 'horizontal'"
+            :src="urlLibrary" 
+            :dimention="this.dimention" />
         <img src="../../../assets/img/line.svg" v-if="mode == 'horizontal'" />
-        <MSButtonQuestion @click="onClickNewQuesion('select')" :title="mode == 'horizontal' ? 'Chọn đáp án' : ''"
-            v-tooltip:left="mode == 'vertical' ? 'Thêm câu chọn đáp án' : ''" :dimention="this.dimention"
+        <MSButtonQuestion @click="onClickNewQuesion('select')" 
+            :title="mode == 'horizontal' ? 'Chọn đáp án' : ''"
+            v-tooltip:left="mode == 'vertical' ? 'Thêm câu chọn đáp án' : ''" 
+            :dimention="this.dimention"
             :src="urlSelect" />
-        <MSButtonQuestion @click="onClickNewQuesion('truefalse')" :title="mode == 'horizontal' ? 'Đúng sai' : ''"
-            v-tooltip:left="mode == 'vertical' ? 'Thêm câu đúng sai' : ''" :dimention="this.dimention"
+        <MSButtonQuestion @click="onClickNewQuesion('truefalse')" 
+            :title="mode == 'horizontal' ? 'Đúng sai' : ''"
+            v-tooltip:left="mode == 'vertical' ? 'Thêm câu đúng sai' : ''" 
+            :dimention="this.dimention"
             :src="urlTrueFalse" />
-        <MSButtonQuestion @click="onClickNewQuesion('fill')" :title="mode == 'horizontal' ? 'Điền vào chỗ trống' : ''"
-            v-tooltip:left="mode == 'vertical' ? 'Thêm câu điền chỗ trống' : ''" :dimention="this.dimention"
+        <MSButtonQuestion @click="onClickNewQuesion('fill')" 
+            :title="mode == 'horizontal' ? 'Điền vào chỗ trống' : ''"
+            v-tooltip:left="mode == 'vertical' ? 'Thêm câu điền chỗ trống' : ''" 
+            :dimention="this.dimention"
             :src="urlFill" />
-        <MSButtonQuestion @click="onClickNewQuesion('match')" :title="mode == 'horizontal' ? 'Ghép nối' : ''"
-            v-tooltip:left="mode == 'vertical' ? 'Thêm câu ghép nối' : ''" :dimention="this.dimention"
+        <MSButtonQuestion @click="onClickNewQuesion('essay')" 
+            :title="mode == 'horizontal' ? 'Tự luận' : ''"
+            v-tooltip:left="mode == 'vertical' ? 'Thêm câu tự luận' : ''" 
+            :dimention="this.dimention"
+            :src="urlEssay" />
+        <!-- <MSButtonQuestion @click="onClickNewQuesion('match')" 
+            :title="mode == 'horizontal' ? 'Ghép nối' : ''"
+            v-tooltip:left="mode == 'vertical' ? 'Thêm câu ghép nối' : ''" 
+            :dimention="this.dimention"
             :src="urlMatch" />
         <MSButtonQuestion @click="onClickNewQuesion('group')" :title="mode == 'horizontal' ? 'Câu hỏi nhóm' : ''"
-            v-tooltip:left="mode == 'vertical' ? 'Thêm câu hỏi nhóm' : ''" :dimention="this.dimention"
-            :src="urlGroup" />
-        <MSButtonQuestion @click="onClickNewQuesion('essay')" :title="mode == 'horizontal' ? 'Tự luận' : ''"
-            v-tooltip:left="mode == 'vertical' ? 'Thêm câu tự luận' : ''" :dimention="this.dimention"
-            :src="urlEssay" />
+            v-tooltip:left="mode == 'vertical' ? 'Thêm câu hỏi nhóm' : ''" 
+            :dimention="this.dimention"
+            :src="urlGroup" /> -->
         <div class="line" v-if="mode == 'vertical'"></div>
-        <MSButtonQuestion @click="onClickNewQuesion('essay')" v-if="mode == 'vertical'" dimention="small"
+        <MSButtonQuestion  
+            v-if="mode == 'vertical'" 
+            dimention="small"
             v-tooltip:left="'Sắp xếp thứ tự câu hỏi'" :src="urlArrange">
         </MSButtonQuestion>
     </div>

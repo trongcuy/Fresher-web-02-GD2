@@ -1,9 +1,11 @@
 <template>
     <div class="div-notify div-flex-row">
         <div class="div-flex-row">
-            <div class="div-line" :class="{'div-line-error': this.showNotify!='success' && this.showNotify!='successImport'}"></div>
-            <img src='../../assets/img/icon-success.jpg' class="icon-success" v-if="this.showNotify=='success' || this.showNotify=='successImport'"/>
-            <img src='../../assets/img/ic_error.svg' class="icon-error" v-if="this.showNotify!='success' && this.showNotify!='successImport'"/>
+            <div class="div-line" 
+                :class="{'div-line-error': this.showNotify!='success' && this.showNotify!='successImport' && this.showNotify!='successAddExercise', 'div-line-warning':this.showNotify=='warnning'}"></div>
+            <img src='../../assets/img/icon-success.jpg' class="icon-success" v-if="this.showNotify=='success' || this.showNotify=='successImport' || this.showNotify=='successAddExercise'"/>
+            <img src='../../assets/img/ic_error.svg' class="icon-error" v-if="this.showNotify=='exception' || this.showNotify=='errorRemove' || this.showNotify=='error' || this.showNotify=='errorFile' || this.showNotify=='errorSizeExcel'"/>
+            <img src='../../assets/img/ic_warning.svg' class="icon-error" v-if="this.showNotify=='warnning'"/>
             {{ this.content }}
         </div>
         <img src="../../assets/img/ic_close_notify.jpg" class="icon-close" @click="onClickClose" />
@@ -75,6 +77,9 @@ export default {
 }
 .div-line-error {
     background-color: #ff6161;
+}
+.div-line-warning {
+    background-color: #FFD200;
 }
 .icon-close {
     height: 100%;

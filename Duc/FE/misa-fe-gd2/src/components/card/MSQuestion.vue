@@ -1,13 +1,19 @@
 <template>
     <div class="div-question" :class="{ 'card-rightwrong': typePopupAdd == 'truefalse' }">
-        <div class="div-decor"></div>
+        <div class="div-decor" :class="{
+            'decor-yellow': question.questionType == enums.typeQuestion.essay,
+            'decor-blue': question.questionType == enums.typeQuestion.select,
+            'decor-orange': question.questionType == enums.typeQuestion.fill
+        }">
+        </div>
         <div class="div-main">
             <div class="div-title">
                 <p><b>{{ question.questionNumber }}.</b> <span v-html="question.questionContent"></span></p>
             </div>
             <div class="div-body">
                 <!-- ảnh câu hỏi nếu có -->
-                <div class="img-question" v-if="imgQuestion"><img :src="imgQuestion" @click="onShowImage(imgQuestion)" />
+                <div class="img-question div-flex-row" v-if="imgQuestion.length > 0"><img
+                        v-for="(image, index) in imgQuestion" :src="image" @click="onShowImage(image)" />
                 </div>
                 <!-- câu trả lời tự luận -->
                 <div v-if="isEssay" class="answer-essay"></div>
@@ -72,19 +78,26 @@ export default {
     },
     computed: {
         isSelect() {
-            return this.resource.TypeQuestion[this.question.questionType] == 'select'
+            return this.resource.typeQuestion[this.question.questionType] == 'select'
         },
         isTrueFalse() {
-            return this.resource.TypeQuestion[this.question.questionType] == 'truefalse'
+            return this.resource.typeQuestion[this.question.questionType] == 'truefalse'
         },
         isFill() {
-            return this.resource.TypeQuestion[this.question.questionType] == 'fill'
+            return this.resource.typeQuestion[this.question.questionType] == 'fill'
         },
         isEssay() {
-            return this.resource.TypeQuestion[this.question.questionType] == 'essay'
+            return this.resource.typeQuestion[this.question.questionType] == 'essay'
         },
         imgQuestion() {
-            return this.buildImage(this.question.questionImage)
+            var images = this.question.questionImage.split(';')
+            var urlImages = []
+            images.forEach(image => {
+                const urlImage = this.buildImage(image)
+                if (urlImage)
+                    urlImages.push(urlImage)
+            });
+            return urlImages
         }
     },
     methods: {
@@ -95,7 +108,6 @@ export default {
         /**
          * hàm bắt sự kiện chỉnh sửa câu hỏi
          * CreatedBy: Trịnh Huỳnh Đức (3-6-2023)
-         * @param {*} index 
          */
         onEditQuestion() {
             this.$emit('onEditQuestion', { answers: this.answers, question: this.question })
@@ -103,7 +115,6 @@ export default {
         /**
         * hàm bắt sự kiện sao chép câu hỏi
         * CreatedBy: Trịnh Huỳnh Đức (3-6-2023)
-        * @param {*} index 
         */
         onCopyQuestion() {
             //tạo câu hỏi mới và xóa id
@@ -114,6 +125,7 @@ export default {
         /**
          * hàm bắt sự kiện click vào ảnh
          * CreatedBy: Trịnh Huỳnh Đức (14-6-2023)
+         * @param {*} imgQuestion 
          */
         onShowImage(imgQuestion) {
             this.setUrlImageShow(imgQuestion)
@@ -145,6 +157,18 @@ p {
     width: 100%;
     background-color: #FF588C;
     border-radius: 10px 10px 0px 0px;
+}
+
+.decor-yellow {
+    background-color: #FFD200;
+}
+
+.decor-blue {
+    background-color: #00A9EC;
+}
+
+.decor-orange {
+    background-color: #FE9882;
 }
 
 .div-main {
@@ -228,12 +252,14 @@ p {
 }
 
 .img-question {
-    width: 300px;
+    width: 100%;
     height: auto;
     margin-bottom: 20px;
+    gap: 24px;
+    flex-wrap: wrap;
 }
 
 .img-question img {
-    width: 100%;
+    width: 300px;
     height: auto;
 }</style>

@@ -26,10 +26,14 @@ export default {
         }
     },
     methods: {
+        /**
+         * hàm thay đổi trạng thái của đáp án
+         * CreatedBy: Trịnh Huỳnh Đức (14-6-2023)
+         */
         onClickChangeState(){
-            const a = this.answers[0].answerState
+            const temp = this.answers[0].answerState
             this.answers[0].answerState=this.answers[1].answerState
-            this.answers[1].answerState=a
+            this.answers[1].answerState=temp
         }
     }
 }

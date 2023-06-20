@@ -21,7 +21,7 @@ export default {
 	},
 	watch: {
 		showNotify: function() {
-			this.contentNotify = this.resource.NotifyContent[this.showNotify]
+			this.contentNotify = this.resource.notifyContent[this.showNotify]
 			//sau 3s tự đóng
             setTimeout(() => {
                 this.setShowNotify("no")

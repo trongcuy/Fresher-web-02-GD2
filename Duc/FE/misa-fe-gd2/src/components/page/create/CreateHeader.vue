@@ -6,7 +6,7 @@
             <div class="div-name">
                 <img class="icon-back" src="../../../assets/img/icon_back.svg" @click="onClickBack" />
                 <img class="image" :src="this.urlImageExercise" />
-                <input type="text" placeholder="Nhập tên bài tập..." v-model="exercise.exerciseName" @input="onInput"/>
+                <input type="text" :placeholder="resource.input.nameExercise" v-model="exercise.exerciseName" @input="onInput"/>
             </div>
             <!-- Thanh chứa các menu -->
             <div class="div-menu">
@@ -15,14 +15,14 @@
                         @setDefaultValue="setValueSubject" />
                     <MSCombobox class="cb-grade" :defaultValue="exercise.gradeName" :listSelect="gradeOptions"
                         @setDefaultValue="setValueGrade" />
-                    <MSButton title="Bổ sung thông tin" @click="onClickAddInfor" />
-                    <MSButton title="Đổi kiểu soạn" />
+                    <MSButton :title="resource.button.addInfor" @click="onClickAddInfor" />
+                    <MSButton :title="resource.button.changeType" />
                 </div>
 
                 <div class="menu-right">
                     <div class="div-help" v-tooltip:top="'Hướng dẫn'"><img src="../../../assets/img/ic_help.svg"/></div>
-                    <MSButton title="Làm thử" />
-                    <MSButton title="Hoàn thành" class="btn-complete" @click="onClickComplete" />
+                    <MSButton :title="resource.button.tryDo" />
+                    <MSButton :title="resource.button.complete" class="btn-complete" @click="onClickComplete" />
                 </div>
             </div>
         </div>
@@ -45,8 +45,9 @@ export default {
         MSCombobox
     },
     data() {
+        const resource = window.Resource
         return {
-
+            resource
         }
     },
     computed: {

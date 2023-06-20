@@ -41,7 +41,6 @@ img {
     width: 24px;
     height: 24px;
     margin-right: 8px;
-    filter: invert(19%) sepia(289%) saturate(543%) hue-rotate(747deg);
 }
 p {
     margin: 0px;
@@ -49,9 +48,14 @@ p {
     font-size: 16px;
 }
 .active-router>div{
-    filter: invert(39%) sepia(289%) saturate(543%) hue-rotate(575deg);
     border-bottom: 2px solid #8a6bf6;
     font-weight: 700;
+}
+.active-router>div > img{
+    filter: invert(69%) sepia(72%) saturate(6261%) hue-rotate(227deg) brightness(99%) contrast(94%);
+}
+.active-router > div > p {
+    color: #8a6bf6 !important;
 }
 .rout {
     color: #000000;

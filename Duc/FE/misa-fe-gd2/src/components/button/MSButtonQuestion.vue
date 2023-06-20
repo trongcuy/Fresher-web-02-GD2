@@ -1,5 +1,5 @@
 <template>
-    <div class="div-btn" :class="{'btn-small':dimention=='small'}">        
+    <div class="div-btn" :class="{ 'btn-small': dimention == 'small' }">
         <img :src="src" class="zoom-div">
         <p class="title">{{ title }}</p>
     </div>
@@ -25,7 +25,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .div-btn {
     width: 64px;
     height: fit-content;
@@ -33,25 +33,29 @@ export default {
     flex-direction: column;
     align-items: center;
     position: relative;
+
+    img {
+        width: 64px;
+        height: 64px;
+        border-radius: 10px;
+    }
+
+    .title {
+        text-align: center;
+        margin-top: 12px;
+        white-space: nowrap;
+        color: #4e5b6a;
+    }
 }
-img {
-    width: 64px;
-    height: 64px;
-    border-radius: 10px;
-}
-.title {
-    text-align: center;
-    margin-top: 12px;
-    white-space: nowrap; 
-    color: #4e5b6a;
-}
+
+
 .btn-small {
     width: 40px;
     height: 40px;
-}
-.btn-small img {
-    width: 40px;
-    height: 40px;
-    border-radius: 4px;
-}
-</style>
+
+    img {
+        width: 40px;
+        height: 40px;
+        border-radius: 4px;
+    }
+}</style>

@@ -1,10 +1,13 @@
 <template>
     <div class="div-answer-item div-flex-row">
         <div class="div-center div-answer-true"
-            :class="{ 'div-answer-false': answer.answerState == enums.AnswerState.False }">{{
+            :class="{ 'div-answer-false': answer.answerState == enums.answerState.false }">{{
                 this.indexToLetter(index) }}</div>
-        <div v-if="answer.answerContent" ><p v-html="answer.answerContent"></p></div>
-        <div ><img class="image-answer" v-if="this.urlAnswer" :src="this.urlAnswer" @click="onShowImage(this.urlAnswer)"/></div>
+        <div v-if="answer.answerContent">
+            <p v-html="answer.answerContent"></p>
+        </div>
+        <div><img class="image-answer" v-if="this.urlAnswer" :src="this.urlAnswer" @click="onShowImage(this.urlAnswer)" />
+        </div>
     </div>
 </template>
 
@@ -54,35 +57,37 @@ export default {
     },
 }
 </script>
-<style scoped>
-.div-answer-item {  
+<style scoped lang="scss">
+.div-answer-item {
     align-items: unset;
-}
 
-.div-answer-item div:first-child {
-    margin-right: 4px;
-    width: 24px;
-    height: 24px;
-    border-radius: 50px;
-    color: white;
-}
+    div:first-child {
+        margin-right: 4px;
+        width: 24px;
+        height: 24px;
+        border-radius: 50px;
+        color: white;
+    }
 
-.div-answer-item p {
-    text-align: center;
-    height: 100%;
-    padding-top: 2px;
-    padding-left: 4px;
-}
-.div-answer-true {
-    background-color: #00C542;
-}
+    p {
+        text-align: center;
+        height: 100%;
+        padding-top: 2px;
+        padding-left: 4px;
+    }
 
-.div-answer-false {
-    background-color: #B6B9CE;
-}
+    .div-answer-true {
+        background-color: #00C542;
+    }
 
-.image-answer{
-    width: 167px;
-    height: auto;
-    object-fit: contain;
-}</style>
+    .div-answer-false {
+        background-color: #B6B9CE;
+    }
+
+    .image-answer {
+        width: 163px;
+        height: auto;
+        object-fit: contain;
+    }
+}
+</style>

@@ -11,13 +11,14 @@
                 <img :src="this.urlImageExercise" id="img-avatar" />
                 <div class="load-image">
                     <img src="../../assets/img/ic_image.svg" @click="convertToInput" />
-                    <input ref="fileInput" type="file" accept=".png,.jpg,.jpeg,.bmp" @change="onUploadImage" />
+                    <input ref="fileInput" type="file" accept=".png,.jpg,.jpeg" @change="onUploadImage" />
                 </div>
 
             </div>
             <div class="body-right div-flex-column">
-                <MSInput title="Tên bài tập" defaultValue="Nhập tên bài tập..." :value="newExercise.exerciseName"
-                    :require="true" @setValueInput="setExerciseName" />
+                <MSInput title="Tên bài tập" :defaultValue="resource.input.nameExercise" :value="newExercise.exerciseName"
+                    :require="true" @setValueInput="setExerciseName" 
+                    :validate="validateName"/>
                 <div class="div-flex-row div-select">
                     <MSCombobox title="Môn" :require="true" :defaultValue="newExercise.subjectName"
                         :listSelect="subjectOptions" @setDefaultValue="setValueSubject" />
@@ -27,13 +28,12 @@
 
                 <MSComboboxTag title="Chủ đề" defaultValue="Chọn chủ đề" valueField="topicID" labelField="topicName"
                     v-model="topicSelecteds" :data="topics" />
-                <MSInput title="Thẻ tìm kiếm" class="input-search" />
             </div>
         </div>
         <!-- nút button lấy bên popupAdd-->
         <div class="div-button">
-            <MSButton title="Đóng" @click="onClosePopup" />
-            <MSButton title="Lưu" id="btn-save-new" @click="onClickSave" />
+            <MSButton :title="resource.button.close" @click="onClosePopup" />
+            <MSButton :title="resource.button.save" id="btn-save-new" @click="onClickSave" />
         </div>
     </div>
 </template>
@@ -55,11 +55,14 @@ export default {
         MSComboboxTag
     },
     data() {
+        const resource = window.Resource
         return {
+            resource,
             newExercise: [],//lưu bài tập đang sửa
             topics: [],//danh sách chủ đề theo id lớp và môn
             topicSelecteds: [],//danh sách chủ đề đã chọn
             temporaryImgId: '',//lưu id ảnh tạm thời upload lên
+            validateName: true,//lưu trạng thái validate tên bài tập
         }
     },
 
@@ -78,7 +81,8 @@ export default {
         ...mapMutations([
             'setTopicExercise',
             'setImageIdExercise',
-            'setUrlImageExercise'
+            'setUrlImageExercise',
+            'setShowNotify'
         ]),
         ...mapActions([
             'getTopic',
@@ -146,13 +150,18 @@ export default {
          */
         onClickSave() {
             //nếu chưa nhập tên thì ko cho lưu
-            if (!this.newExercise.exerciseName)
+            if (!this.newExercise.exerciseName) {
+                this.validateName = false
                 return
-            //lưu id ảnh 
-            this.setImageIdExercise(this.temporaryImgId)
-            //lấy lại ảnh về
-            const urlImage = this.buildImage(this.temporaryImgId)
-                this.setUrlImageExercise(urlImage)
+            }
+            if(this.temporaryImgId) {
+                //lưu id ảnh 
+                this.setImageIdExercise(this.temporaryImgId)
+                //lấy lại ảnh về
+                const urlImage = this.buildImage(this.temporaryImgId)
+                    this.setUrlImageExercise(urlImage)
+            }
+           
             //lưu thông tin bài tập
             this.$emit('onSaveInfor', this.newExercise)
             //lưu thông tin chủ đề
@@ -181,6 +190,11 @@ export default {
          */
         onUploadImage(event) {
             var input = event.target
+            //validate ảnh trước
+            if(!this.validateImage(input.files[0].type)) {
+                this.setShowNotify('errorFile')
+                return
+            }
             var img = document.getElementById('img-avatar')
             //gán ảnh mới tải lên vào thẻ img
             if (input.files && input.files[0]) {
@@ -279,6 +293,7 @@ export default {
             &>img {
                 height: 156px;
                 width: 100%;
+                object-fit: cover;
             }
 
             .load-image {
@@ -306,10 +321,6 @@ export default {
 
             .div-select {
                 gap: 12px;
-            }
-
-            .input-search img {
-                height: 60px;
             }
         }
     }

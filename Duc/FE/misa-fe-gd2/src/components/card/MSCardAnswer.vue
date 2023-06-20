@@ -1,7 +1,8 @@
 <template>
-    <div class="card" :class="{ 'card-rightwrong': typePopupAdd == 'truefalse' }">
+    <div class="card"
+        :class="{ 'card-rightwrong': typePopupAdd == 'truefalse', 'card-pink': answer % 4 == 0, 'card-blue': answer % 4 == 1, 'card-orange': answer % 4 == 2, 'card-purple': answer % 4 == 3 }">
         <div class="head" :class="{ 'head-right-check': typePopupAdd == 'truefalse' }">
-            <div class="head-left" v-if="typePopupAdd == 'select'">{{ answer }}</div>
+            <div class="head-left" v-if="typePopupAdd == 'select'">{{ this.indexToLetter(answer) }}</div>
             <div class="head-right">
                 <div class="zoom-div" v-if="typePopupAdd == 'select'" @click="onClickRemove"><img
                         src="../../assets/img/icon_delete.9097d258.svg" />
@@ -15,14 +16,15 @@
             </div>
         </div>
         <div class="body" :class="{ 'body-boder': isEditting, 'remove-decor': !isEditting }" v-click-outside="onBlurEditor">
-            <textarea v-show="!isEditting && !editorData" @click="onClickEdit" @focus="onClickEdit">{{ placeholder }}</textarea>
-            <div class="div-editor" v-if="(typePopupAdd == 'select' && isEditting) || editorData" @click="onClickEdit">
-                <ckeditor ref="editorRef" :editor="editor" v-model="editorData" :config="editorConfig" ></ckeditor>
+            <textarea  v-show="!isEditting && !editorData" @click="onClickEdit"  @focus="this.onFocusInput()" v-model="textAreaData">{{ placeholder }}</textarea>
+            <div class="div-editor" :class="{ 'div-hidden': !(typePopupAdd == 'select' && isEditting) && !editorData }"
+                @click="onClickEdit" @keydown.tab="onKeyTab">
+                <ckeditor ref="editorRef" :editor="editor" v-model="editorData" :config="editorConfig"></ckeditor>
             </div>
             <!-- ảnh đáp án nếu có -->
             <div v-if="urlAnswer" class="img-answer div-center">
-                <img :src="urlAnswer" @click="onShowImage(urlAnswer)"/>
-                <img src="../../assets/img/ic_close.svg" @click="onRemoveAnswerImage"/>
+                <img :src="urlAnswer" @click="onShowImage(urlAnswer)" />
+                <img src="../../assets/img/ic_close.svg" @click="onRemoveAnswerImage" />
             </div>
         </div>
     </div>
@@ -66,21 +68,29 @@ export default {
         },
         state() {
             if (this.typePopupAdd == 'truefalse') {
-                this.stateAnswer = this.state == this.enums.AnswerState.True
+                this.stateAnswer = this.state == this.enums.answerState.true
             }
         },
+        textAreaData(newValue) {
+            if(this.typePopupAdd == 'truefalse'){
+                this.$emit('setValueAnswer', newValue)
+            }
+            
+        }
     },
     data() {
         const enums = window.Enums
         return {
             enums,
             editorData: '',//gía trị của ckeditor
+            textAreaData: '',//giá trị textarea
             editor: ClassicEditor,
             editorConfig: {
-                toolbar: ['bold', 'italic', 'Underline', 'undo']
+                toolbar: ['bold', 'italic', 'Underline']
             },
             isEditting: false,//dang hien editor,
             stateAnswer: true,//trạng thái câu trả lời đúng hay sai
+            isFocused: false
         }
     },
     computed: {
@@ -91,6 +101,15 @@ export default {
     },
     methods: {
         ...mapMutations(['setUrlImageShow']),
+        /**
+         * hàm chuyển từ index sang chữ cái tương ứng
+         * CreatedBy: Trịnh Huỳnh Đức (3-6-2023)
+         * @param {*} index 
+         */
+        indexToLetter(index) {
+            const letterCode = 65 + index;
+            return String.fromCharCode(letterCode);
+        },
         /**
          * bắt sự kiện xóa câu hỏi
          * CreatedBy: Trịnh Huỳnh Đức (23-5-2023)
@@ -105,6 +124,11 @@ export default {
         onClickEdit() {
             if (this.typePopupAdd == 'select')
                 this.isEditting = true
+
+            this.$nextTick(() => {
+                this.$el.querySelector('.ck-editor__editable').focus()
+
+            })
         },
         /**
          * bắt sự kiện blur khỏi edit
@@ -142,18 +166,37 @@ export default {
          */
         onShowImage(imgQuestion) {
             this.setUrlImageShow(imgQuestion)
+        },
+        /**
+         * bắt sự kiện tab vào input
+         * CreatedBy: Trịnh Huỳnh Đức (12-6-2023)
+         */
+        onFocusInput(){
+            this.onClickEdit()
+        },
+        /**
+         * bắt sự kiện xóa ảnh
+         * CreatedBy: Trịnh Huỳnh Đức (12-6-2023)
+         */
+        onKeyTab(){
+            this.onBlurEditor()
         }
     },
     created() {
         this.editorData = this.title
-        this.stateAnswer = this.state == this.enums.AnswerState.True
-    }
+        this.stateAnswer = this.state == this.enums.answerState.true
+        this.textAreaData = this.placeholder
+    },
 }
 </script>
 
 <style scoped>
 .zoom-div {
     cursor: pointer;
+}
+
+.div-hidden {
+    display: none;
 }
 
 .card {
@@ -167,13 +210,30 @@ export default {
 }
 
 .card-rightwrong {
-    width: 197px;
+    width: 25%;
+    min-height: 88px;
 }
 
 .card-rightwrong textarea {
     padding-top: 4px;
     font-size: 24px;
     color: #4e5b6a;
+}
+
+.card-pink {
+    background-color: rgb(255, 214, 240);
+}
+
+.card-blue {
+    background-color: #ACEBF1;
+}
+
+.card-orange {
+    background-color: #FCD0C6;
+}
+
+.card-purple {
+    background-color: #C4E5FF;
 }
 
 img {
@@ -237,6 +297,12 @@ img {
     box-sizing: border-box;
 }
 
+.div-textarea {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+
 textarea {
     color: #606266;
     resize: none;
@@ -255,6 +321,7 @@ textarea {
 .answer-true {
     background-color: #00C542 !important;
 }
+
 .img-answer {
     height: 95%;
     width: 100%;
@@ -264,6 +331,7 @@ textarea {
     background-color: #fff;
     border-radius: 6px;
 }
+
 .img-answer img:first-child {
     width: 80%;
     height: 70%;
@@ -276,6 +344,7 @@ textarea {
     top: 2px;
     right: 4px;
 }
+
 .div-editor {
     width: 100%;
     box-sizing: border-box;

@@ -1,69 +1,71 @@
 <template>
     <div class="div-popup-add" :class="{ 'popup-essay': typePopupAdd == 'essay' || typePopupAdd == 'more-explane' }">
-        <div class="popup-content" v-if="typePopupAdd != 'more-explane'" :class="{'popup-image':srcImgQuestion}">
+        <div class="popup-content" v-if="typePopupAdd != 'more-explane'"
+            :class="{ 'popup-content-image': imgQuestion.length > 0 }">
             <!-- khối header trái -->
             <div class="header-left">
-                <MSCombobox customClass="combobox-popup"
-                    :listSelect="['Chọn đáp án', 'Đúng sai', 'Điền vào chỗ trống', 'Ghép nối', 'Câu hỏi nhóm', 'Tự luận']"
-                    :defaultValue="this.resource.TitleQuestion[typePopupAdd]" @setDefaultValue="setTypeQuestion" />
+                <MSCombobox customClass="combobox-popup" :listSelect="resource.combobox.typeQuestion"
+                    :defaultValue="this.resource.titleQuestion[typePopupAdd]" @setDefaultValue="setTypeQuestion" />
                 <div class="num-question">Câu {{ this.question.questionNumber }} - </div>
             </div>
-            <div class="div-center icon-help"><img src="../../assets/img/ic_help.svg" /></div>
+            <div class="div-center icon-help" v-tooltip:top="'Hướng dẫn'"><img src="../../assets/img/ic_help.svg" /></div>
             <ckeditor :editor="editor" v-model="question.questionContent" :config="editorConfig">
             </ckeditor>
-            
+
             <!-- tạo khối bắt sự kiện click img ckeditor -->
             <div class="div-center icon-img" @click="onClickAddImageQuestion"></div>
-            
-            <p v-if="typePopupAdd == 'fill' && !question.questionContent" class="placeholder-fill">(Sau khi nhập câu hỏi và
-                nhấn ra ngoài,
-                phần mềm sẽ tự động nhận diện dấu cách, dấu 3 chấm, dấu gạch chân để tạo ô trống.)</p>
-            
-                <!-- ảnh câu hỏi nếu có -->
-            <div class="img-question" v-if="srcImgQuestion">
-                <img :src="srcImgQuestion" @click="onShowImage(srcImgQuestion)"/>
-                <img src="../../assets/img/x_sign.svg" @click="onRemoveImageQuestion"/>                
+
+            <!-- ảnh câu hỏi nếu có -->
+            <div class="img-question div-flex-row" v-if="imgQuestion.length > 0">
+                <div class="div-img" v-for="(image, index) in imgQuestion">
+                    <div>
+                        <img :src="image" @click="onShowImage(image)" />
+                        <img src="../../assets/img/x_sign.svg" @click="onRemoveImageQuestion(index)" />
+                    </div>
+                </div>
+                <div class="div-add-img div-center" @click="onClickAddImageQuestion">
+                    <p>Thêm tệp đính kèm</p>
+                    <img src="../../assets/img/ic_add_img.svg" />
+                </div>
             </div>
         </div>
         <!-- popup thêm lời giải -->
         <MSPopupAddExplane v-if="typePopupAdd == 'more-explane'" @setQuestionExplane="setQuestionExplane"
             :content="!this.question.questionExplane !== undefined ? this.question.questionExplane : ''"
             :numQuestion="this.question.questionNumber" />
-        
+
         <!-- phần nội dung -->
-        <component :is="currentBody" :answers="this.answers" 
-            @onClickRemoveAnswer="onClickRemoveAnswer"
-            @onClickAddAnswer="onClickAddAnswer" 
-            @onClickAddImage="onClickAddImageAnswer"
+        <component :is="currentBody" :answers="this.answers" @onClickRemoveAnswer="onClickRemoveAnswer"
+            @onClickAddAnswer="onClickAddAnswer" @onClickAddImage="onClickAddImageAnswer"
             @onClickRemoveImage="onClickRemoveImageAnswer"></component>
     </div>
     <!-- phần button cuối popup -->
     <div class="popup-button popup-button-left" v-if="typePopupAdd == 'select'">
-        <MSButton title="Thêm đáp án" @click="onClickAddAnswer" />
+        <MSButton :title="resource.button.addAnswer" @click="onClickAddAnswer" />
     </div>
     <div class="popup-button" v-if="typePopupAdd != 'more-explane'">
-        <MSButton title="Hủy" @click="onClickClosePopup" />
-        <MSButton title="Lưu và đóng" @click="onClickSave" />
-        <MSButton id="btn-save-new" title="Lưu và thêm câu" @click="onClickSaveAndMore" />
+        <MSButton :title="resource.button.cancel" @click="onClickClosePopup" />
+        <MSButton :title="resource.button.saveAndClose" @click="onClickSave" />
+        <MSButton id="btn-save-new" :title="resource.button.saveAndNew" @click="onClickSaveAndMore" />
     </div>
     <div class="popup-button" v-if="typePopupAdd == 'more-explane'">
-        <MSButton title="Hủy" @click="onClickCancelExplane" />
-        <MSButton title="Lưu" id="btn-save-new" @click="onClickReturnQuestion" />
+        <MSButton :title="resource.button.cancel" @click="onClickCancelExplane" />
+        <MSButton :title="resource.button.save" id="btn-save-new" @click="onClickReturnQuestion" />
     </div>
 
     <!-- nuts thêm lời giải -->
     <div class="more-explane" @click="onClickMoreExplane" v-if="showMoreExplane">
         <div>
             <img src="../../assets/img/icon_answer.svg" />
-            <div>Thêm lời giải</div>
+            <div>{{ resource.button.addExplane }}</div>
         </div>
     </div>
-    
+
     <!-- nut quay lại câu hỏi -->
     <div class="more-explane return-question" @click="onClickReturnQuestion" v-if="!showMoreExplane">
         <div>
             <img src="../../assets/img/icon_back2.svg" />
-            <div>Quay lại câu hỏi</div>
+            <div>{{ resource.button.backToQuestion }}</div>
         </div>
     </div>
 
@@ -120,11 +122,11 @@ export default {
             typeQuestionBefore: '',//lưu loại câu hỏi lúc thêm lời giải xong còn quay lại
             editor: ClassicEditor,
             editorConfig: {
-                toolbar: ['bold', 'italic', 'underline', 'uploadImage', 'undo', 'redo', '|', '|'],
+                toolbar: ['bold', 'italic', 'underline', 'uploadImage', 'undo', 'redo', '|'],
                 placeholder: "Nhập câu hỏi tại đây..."
             },
             editorConfigExplane: {
-                toolbar: ['bold', 'italic', 'underline', 'uploadImage', 'undo', 'redo', '|', '|'],
+                toolbar: ['bold', 'italic', 'underline', 'uploadImage', 'undo', 'redo', '|'],
                 placeholder: "Nhập lời giải tại đây..."
             },
             question: {},//lưu đối tượng câu hỏi 
@@ -132,18 +134,35 @@ export default {
             indexAnswerEditing: 0,//lưu câu hỏi đang chỉnh sửa
             formMode: 'add',//lưu chế độ form sửa hay thêm
             imageType: '',//ảnh upload lên của câu hỏi hay đáp án
+            imageIdDefault: '00000000-0000-0000-0000-000000000000',//id ảnh mặc định
         }
     },
     computed: {
         ...mapGetters(['typePopupAdd', 'numQuestion', 'exerciseIDSelected', 'exerciseSelected', 'topicExercise']),
-        srcImgQuestion() {
-            return this.buildImage(this.question.questionImage)
+        imgQuestion() {
+            if (this.question.questionImage) {
+                var images = this.question.questionImage.split(';')
+                var urlImages = []
+                images.forEach(image => {
+                    debugger
+                    const urlImage = this.buildImage(image)
+                    if (urlImage)
+                        urlImages.push(urlImage)
+                });
+                return urlImages
+            }
+            return []
         }
     },
-    
+    watch: {
+        //theo dõi sự thay đổi số câu để lúc lưu và thêm câu nó được cập nhật
+        numQuestion(newVal) {
+            this.question.questionNumber = newVal + 1
+        },
+    },
     methods: {
-        ...mapMutations(['setTypePopupAdd', 'setUrlImageShow']),
-        ...mapActions(['addQuestion', 'updateQuestion', 'addExercise', 'addAnswer', 'insertAll']),
+        ...mapMutations(['setTypePopupAdd', 'setUrlImageShow', 'setNumQuestion']),
+        ...mapActions(['addQuestion', 'updateQuestion', 'addExercise', 'editExercise', 'addAnswer', 'insertAll']),
         /**
          * hàm bắt sự kiện đóng popup
          * CreatedBy: Trịnh Huỳnh Đức (21-5-2023)
@@ -158,27 +177,39 @@ export default {
          */
         setTypeQuestion(typeQuestion) {
             switch (typeQuestion) {
-                case this.resource.TitleQuestion.select:
+                case this.resource.titleQuestion.select:
                     this.setTypePopupAdd('select')
                     this.currentBody = 'MSBodySelect'
+                    //tạo lại đáp án mới
+                    this.answers = []
+                    for (let i = 1; i <= 4; i++) {
+                        this.answers.push({ questionID: this.question.questionID })
+                    }
                     break;
-                case this.resource.TitleQuestion.truefalse:
+                case this.resource.titleQuestion.truefalse:
                     this.setTypePopupAdd('truefalse')
                     this.currentBody = 'MSBodyTrueFalse'
+                    //tạo đáp án mới
+                    this.answers = []
+                    this.answers.push({ questionID: this.question.questionID, answerContent: "Đúng", answerState: this.enums.answerState.true })
+                    this.answers.push({ questionID: this.question.questionID, answerContent: "Sai", answerState: this.enums.answerState.false })
                     break;
-                case this.resource.TitleQuestion.fill:
+                case this.resource.titleQuestion.fill:
                     this.setTypePopupAdd('fill')
                     this.currentBody = 'MSBodyFill'
+                    //tạo đáp án mới
+                    this.answers = []
+                    this.answers.push({ answerState: this.enums.answerState.true })
                     break;
-                case this.resource.TitleQuestion.match:
+                case this.resource.titleQuestion.match:
                     this.setTypePopupAdd('match')
                     this.currentBody = ''
                     break;
-                case this.resource.TitleQuestion.group:
+                case this.resource.titleQuestion.group:
                     this.setTypePopupAdd('group')
                     this.currentBody = ''
                     break;
-                case this.resource.TitleQuestion.essay:
+                case this.resource.titleQuestion.essay:
                     this.setTypePopupAdd('essay')
                     this.currentBody = ''
                     break;
@@ -233,7 +264,7 @@ export default {
          * CreatedBy: Trịnh Huỳnh Đức (2-6-2023)
          */
         validateQuestion() {
-            if (!this.question.questionContent) {
+            if (!this.question.questionContent && !this.question.questionImage) {
                 this.$emit('alertQuestionNull')
                 return false
             }
@@ -245,8 +276,12 @@ export default {
          */
         validateAnswer() {
             //đếm số đáp án đúng và có nội dung
-            let answerTrue = this.answers.filter(answer => answer.answerState == 1 && (answer.answerContent || answer.answerImage)).length
+            let answerTrue = this.answers.filter(answer => answer.answerState == this.enums.answerState.true && (answer.answerContent || answer.answerImage)).length
             if ((this.typePopupAdd == 'select') && answerTrue == 0) {
+                this.$emit('alertAnswerNull')
+                return false
+            }
+            if ((this.typePopupAdd == 'truefalse') && (answerTrue != 1 || this.answers.filter(answer => answer.answerContent).length != 2)) {
                 this.$emit('alertAnswerNull')
                 return false
             }
@@ -262,11 +297,16 @@ export default {
                 return
             }
             //lấy loại câu hỏi
-            this.question.questionType = this.enums.TypeQuestion[this.typePopupAdd]
+            this.question.questionType = this.enums.typeQuestion[this.typePopupAdd]
             //lấy id bài tập
             this.question.exerciseID = this.exerciseIDSelected
             //nếu chưa tạo bài tập thì gọi api insertAll
             if (!this.question.exerciseID) {
+                //validate tên không vượt quá 255 ký tự
+                if (this.exerciseSelected.exerciseName.length > 255) {
+                    this.$emit('exerciseNameInvalid')
+                    return
+                }
                 //lấy các id của chủ đề
                 let topicIDs = ""
                 for (const key in this.topicExercise) {
@@ -284,7 +324,7 @@ export default {
                 const data = {
                     exercise: this.exerciseSelected,
                     question: this.question,
-                    answer: this.answers.filter(answer => answer.answerContent || (answer.answerImage != '00000000-0000-0000-0000-000000000000' && answer.answerImage)),
+                    answer: this.answers.filter(answer => answer.answerContent || (answer.answerImage != this.imageIdDefault && answer.answerImage)),
                     topicIDs: topicIDs
                 }
                 this.insertAll(data).then(data => {
@@ -296,11 +336,14 @@ export default {
             }
             //đã tạo bài tập
             else {
+                //cập nhật bài tập 
+                this.exerciseSelected.exerciseState = this.enums.exerciseState.editing
+                this.editExercise(this.exerciseSelected)
                 //nếu là thêm câu hỏi
                 if (this.formMode == 'add') {
                     this.addQuestion(this.question).then(data => {
                         //thay đổi đáp án
-                        this.addAnswer({ answers: this.answers.filter(answer => answer.answerContent || answer.answerImage != '00000000-0000-0000-0000-000000000000'), questionID: data })
+                        this.addAnswer({ answers: this.answers.filter(answer => answer.answerContent || answer.answerImage != this.imageIdDefault), questionID: data })
                     })
                 }
                 //nếu là sửa câu hỏi
@@ -308,7 +351,7 @@ export default {
                     this.updateQuestion(this.question)
                     //thay đổi đáp án
                     this.addAnswer({
-                        answers: this.answers.filter(answer => answer.answerContent || answer.answerImage != '00000000-0000-0000-0000-000000000000'),
+                        answers: this.answers.filter(answer => answer.answerContent || answer.answerImage != this.imageIdDefault),
                         questionID: this.question.questionID
                     })
                 }
@@ -321,11 +364,11 @@ export default {
          * CreatedBy: Trịnh Huỳnh Đức (3-6-2023)
          */
         onClickAddAnswer() {
-            if (this.typePopupAdd == 'fill'){
-                this.answers.push({ questionID: this.question.questionID, answerState: 1 })
+            if (this.typePopupAdd == 'fill') {
+                this.answers.push({ questionID: this.question.questionID, answerState: this.enums.answerState.true })
             }
             else
-            this.answers.push({ questionID: this.question.questionID })
+                this.answers.push({ questionID: this.question.questionID })
         },
         /**
          * sự kiện click xóa đáp án
@@ -340,8 +383,12 @@ export default {
          */
         onClickSaveAndMore() {
             this.onClickSave()
-            // Gửi sự kiện để đóng popup và thêm mới câu
-            this.$emit('onClosePopupAndNew', this.typePopupAdd)
+            //validate tên câu hỏi và đáp án
+            //đảm bảo lưu câu này mới tạo câu mới->cách này chưa hay
+            if (this.validateQuestion() && this.validateAnswer()) {
+                // Gửi sự kiện để đóng popup và thêm mới câu
+                this.$emit('onClosePopupAndNew', this.typePopupAdd)
+            }
         },
 
         /**
@@ -365,7 +412,7 @@ export default {
          * CreatedBy: Trịnh Huỳnh Đức (12-6-2023)
          */
         onClickRemoveImageAnswer(index) {
-            this.answers[index].answerImage = "00000000-0000-0000-0000-000000000000"
+            this.answers[index].answerImage = this.imageIdDefault
         },
         /**
          * bắt sự kiện lưu hình ảnh của đáp án
@@ -377,7 +424,10 @@ export default {
                 this.answers[this.indexAnswerEditing].answerContent = ''
             }
             else {
-                this.question.questionImage = idImage
+                if (this.question.questionImage === undefined) {
+                    this.question.questionImage = ""
+                }
+                this.question.questionImage = this.question.questionImage + ";" + idImage
             }
             this.showPopupAddImage = false
         },
@@ -393,8 +443,12 @@ export default {
          * bắt sự kiện xóa hình ảnh của câu hỏi
          * CreatedBy: Trịnh Huỳnh Đức (12-6-2023)
          */
-        onRemoveImageQuestion() {
-            this.question.questionImage = "00000000-0000-0000-0000-000000000000"
+        onRemoveImageQuestion(index) {
+            // Tách chuỗi thành mảng
+            var imageArray = this.question.questionImage.split(";")
+            // Xóa phần tử có chỉ số 1 trong mảng
+            imageArray.splice(index, 1)
+            this.question.questionImage = imageArray.join(";")
         },
         /**
          * hàm bắt sự kiện click vào ảnh
@@ -408,17 +462,17 @@ export default {
         //nếu sửa câu hỏi
         if (this.data.questionContent !== undefined && this.data.questionID !== undefined) {
             this.formMode = 'edit'
-            this.question = {...this.data}
+            this.question = { ...this.data }
             this.answers = this.dataAnswers.slice()
-            this.setTypePopupAdd(this.resource.TypeQuestion[this.question.questionType])
+            this.setTypePopupAdd(this.resource.typeQuestion[this.question.questionType])
         }
         //nếu  sao chép câu hỏi
         else if (this.data.questionContent !== undefined) {
             this.formMode = 'add'
-            this.question = {...this.data}
+            this.question = { ...this.data }
             this.question.questionNumber = this.numQuestion + 1
             this.answers = [...this.dataAnswers]
-            this.setTypePopupAdd(this.resource.TypeQuestion[this.question.questionType])
+            this.setTypePopupAdd(this.resource.typeQuestion[this.question.questionType])
         }
         //nếu thêm mới
         else {
@@ -434,11 +488,11 @@ export default {
                 }
             }
             if (this.typePopupAdd == 'truefalse') {
-                this.answers.push({ questionID: this.question.questionID, answerContent: "Đúng", answerState: 1 })
-                this.answers.push({ questionID: this.question.questionID, answerContent: "Sai", answerState: 2 })
+                this.answers.push({ questionID: this.question.questionID, answerContent: "Đúng", answerState: this.enums.answerState.true })
+                this.answers.push({ questionID: this.question.questionID, answerContent: "Sai", answerState: this.enums.answerState.false })
             }
             if (this.typePopupAdd == 'fill') {
-                this.answers.push({ answerState: 1 })
+                this.answers.push({ answerState: this.enums.answerState.true })
             }
         }
         //set loại body của form 
@@ -466,7 +520,8 @@ export default {
     border-radius: 10px;
     width: calc(72vw);
     height: calc(83vh);
-    overflow: auto;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
     left: calc(14vw);
     top: 24px;
     position: absolute;
@@ -533,9 +588,7 @@ export default {
     box-sizing: border-box;
     position: relative;
 }
-.popup-image {
-    padding-bottom: 80px;
-}
+
 .popup-content .header-left {
     position: absolute;
     top: 0px;
@@ -581,40 +634,80 @@ export default {
 /* câu tự luận */
 .popup-essay {
     background-color: #fff2ab;
+
+    .popup-content {
+        // height: 89%;
+        min-height: 100%;
+        height: auto;
+    }
+
+    .input-question {
+        height: 100%;
+    }
+
+    .popup-body {
+        display: none;
+    }
 }
 
-.popup-essay .popup-content {
-    height: 89%;
-}
-
-.popup-essay .input-question {
-    height: 100%;
-}
-
-.popup-essay .popup-body {
-    display: none;
-}
-.placeholder-fill {
-    padding: 0px 24px;
-    margin-top: -164px;
-    position: relative;
-    z-index: 102;
-}
-.img-question img:first-child{
+.img-question {
+    height: 72px;
     position: absolute;
-    bottom: 12px;
-    width: 150px;
-    height: 80px;
     left: 12px;
-    border-radius: 4px;
-}
-.img-question img:nth-child(2){
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    left: 146px;
-    bottom: 76px;
-    border-radius: 4px;
+    bottom: 12px;
+    gap: 12px;
 }
 
+.div-img {
+    position: relative;
+    background-color: #fff;
+    width: 144px;
+    height: 72px;
+    box-sizing: border-box;
+
+    img:first-child {
+        width: 100%;
+        height: auto;
+        max-height: 72px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    img:nth-child(2) {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        right: 0px;
+        top: -4px;
+        right: -4px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+}
+
+.div-add-img {
+    height: 100%;
+    position: relative;
+    background-color: #f1f2f7;
+    border-radius: 4px;
+    width: 144px;
+    box-sizing: border-box;
+    cursor: pointer;
+
+    p {
+        color: rgba(138, 107, 246, 1);
+        font-weight: 700;
+        font-size: 14px;
+        line-height: 20px;
+        margin-top: 10px;
+    }
+
+    img {
+        position: absolute;
+        width: 13px;
+        height: 13px;
+        top: 14px;
+        left: 67px;
+    }
+}
 </style>

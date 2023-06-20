@@ -12,7 +12,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .button {
     min-width: 113px;
     background-color: #f1f2f7;
@@ -25,23 +25,26 @@ export default {
     color: #606266;
     font-weight: 500;
     cursor: pointer;
+
+    img {
+        position: absolute;
+        top: 7px;
+        left: 10px;
+        height: 20px;
+        width: 20px
+    }
 }
 
 .button:hover {
     opacity: .8;
 }
+
 .button:active {
     transform: translateY(4px);
     box-shadow: inset 1px 1px 4px #c9c8c7;
     transition: all .1s ease;
 }
-img {
-    position: absolute;
-    top: 7px;
-    left: 10px;
-    height: 20px;
-    width: 20px
-}
+
 .button-icon {
     padding-left: 35px;
 }</style>

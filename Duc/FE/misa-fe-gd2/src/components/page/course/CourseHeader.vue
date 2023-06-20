@@ -6,9 +6,9 @@
             <MSSubMenuItem path="/course/community" title="Cộng đồng" class="menu-item"/>
         </div>
         <div class="header-right">
-            <MSButton title="Chia sẻ" class="header-share"/>
-            <MSButton title="Tạo trò chơi" class="header-game"/>
-            <MSButton title="Soạn bài" class="header-edit header-game" @click="onClickCreate"/>
+            <MSButton :title="resource.button.share" class="header-share"/>
+            <MSButton :title="resource.button.play" class="header-game"/>
+            <MSButton :title="resource.button.createExercise" class="header-edit header-game" @click="onClickCreate"/>
         </div>
 	</div>
 </template>
@@ -24,8 +24,9 @@ export default {
         MSSubMenuItem
     },
     data() {
+        const resource = window.Resource
         return {
-
+            resource
 		}
     },
     methods: {

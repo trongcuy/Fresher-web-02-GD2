@@ -1,5 +1,5 @@
 
-import HelloWorld from '../components/HelloWorld.vue'
+import BasePage from '../components/BasePage.vue'
 import CoursePage from '../components/page/course/CoursePage.vue'
 import CourseMain from '../components/page/course/CourseMain.vue'
 import CreatePage from '../components/page/create/CreatePage.vue'
@@ -7,21 +7,21 @@ const routes =
 	[
 		{
 			path: "/overview",
-			components: {main:HelloWorld},
+			components: { main: BasePage },
 			props: {
 
 			}
 		},
 		{
 			path: "/class",
-			components: {main:HelloWorld},
+			components: { main: BasePage },
 			props: {
 				title: "class"
 			}
 		},
 		{
 			path: "/course",
-			components: {main:CoursePage},
+			components: { main: CoursePage },
 			children: [
 				{
 					path: "/course",
@@ -29,25 +29,25 @@ const routes =
 				},
 				{
 					path: "/course/personal",
-					components: {course:CourseMain},
+					components: { course: CourseMain },
 				},
 				{
 					path: "/course/school",
-					components: {course:HelloWorld},
+					components: { course: BasePage },
 				},
 				{
 					path: "/course/community",
-					components: {course:HelloWorld},
+					components: { course: BasePage },
 				},
 			]
 		},
 		{
 			path: "/course/create",
-			components: {main:CreatePage},
+			components: { main: CreatePage },
 		},
 		{
 			path: "/training",
-			components: {main:HelloWorld},
+			components: { main: BasePage },
 			props: {
 
 			}

@@ -2,8 +2,11 @@
     <!-- phan tư input -->
     <div class="div-input">
         <p v-if="title">{{ title }}<span style="color: red;" v-if="require"> *</span></p>
-        <input class="input" type="text" :placeholder="defaultValue" v-model="inputValue"
-            :class="{ 'icon-left': type == 'icon-left' }" @blur="onBlurInput" @input="onInput" />
+        <input class="input" type="text" 
+            :placeholder="defaultValue" 
+            v-model="inputValue"
+            :class="{ 'icon-left': type == 'icon-left','input-error': this.require &&showError}" 
+            @blur="onBlurInput" @input="onInput" />
         <p class="error" v-if="this.require && showError">Không được bỏ trống</p>
     </div>
 </template>
@@ -31,6 +34,10 @@ export default {
         value: {
             type: String,
             default: ''
+        },
+        validate: {
+            type:Boolean,
+            default: true
         }
     },
     data() {
@@ -44,6 +51,9 @@ export default {
         //->binding chiều cha sang con
         value(newValue) {
             this.inputValue = newValue
+        },
+        validate(newValue) {
+            this.showError = !newValue
         }
     },
     methods: {
@@ -90,7 +100,9 @@ export default {
     .input:focus {
         border: 1px solid #8a6bf6;
     }
-
+    .input-error {
+        border: 1px solid #ff6161 !important;
+    }
     .icon-left {
         padding-left: 34px;
     }
